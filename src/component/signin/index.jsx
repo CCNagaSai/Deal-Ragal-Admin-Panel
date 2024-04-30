@@ -215,23 +215,7 @@ function LeftSide() {
               Agent
             </label>
           </div>
-          <div className="flex items-center space-x-3">
-            <input
-              type="checkbox"
-              className="w-5 h-5 dark:bg-darkblack-500 focus:ring-transparent rounded-full border border-bgray-300 focus:accent-success-300 text-success-300"
-              name="logintype"
-              id="logintype"
-              value="Shop"
-              checked={formData.logintype === "Shop"}
-              onChange={OnChange}
-            />
-            <label
-              htmlFor="Shop"
-              className="text-bgray-900 dark:text-white text-base font-semibold"
-            >
-              Shop
-            </label>
-          </div>
+          
 
 
         </div>
