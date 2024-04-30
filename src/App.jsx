@@ -33,7 +33,7 @@ function App() {
     console.log("URL ",url)
 
     if(url[1] != "/signin"){
-      window.location.href =  "http://192.168.0.203:5175/signin"//'http://51.21.131.138:5175/signin'; //
+      window.location.href = 'http://93.127.194.87:5175/signin'; // "http://192.168.0.203:5175/signin"//
       return false
     }
     //return (<Router><Login/></Router>)

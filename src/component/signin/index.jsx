@@ -6,7 +6,7 @@ import PasswordResetModal from "../modal/PasswordResetModal";
 import { useState } from "react";
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
-const host = "http://192.168.0.203:9999"//"http://13.50.221.113:4949";//
+const host = "http://93.127.194.87:9999";//"http://192.168.0.203:9999"//
 
 
 function LeftSide() {
