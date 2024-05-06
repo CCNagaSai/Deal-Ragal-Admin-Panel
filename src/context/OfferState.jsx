@@ -718,6 +718,35 @@ const OfferState = (props) => {
             console.log("e :", e)
         }
     }
+
+
+    // History GetRouletteHistoryData
+    const GetRouletteHistoryData = async (userId) => {
+        try {
+            console.log("PlayerList :::::::", `${host}/admin/userhistory/GetRouletteHistoryData`, userId)
+            const response = await fetch(`${host}/admin/userhistory/GetRouletteHistoryData?userId=` + userId, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'token': cookies.get('token')
+                }
+            }).then(data => data.json())
+
+            const json = response
+            console.log("data api from :GetOneToTwelveHistoryData :::...", json)
+
+            if (json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")) {
+                LogoutClick()
+
+                return []
+            } else {
+                return await json.GameHistoryData
+            }
+        } catch (e) {
+            console.log("e :", e)
+        }
+    }
    
     //=================================================================================
 
@@ -1154,6 +1183,36 @@ const OfferState = (props) => {
         }
     }
 
+    
+
+    const GetGameBetInfo = async () => {
+        try {
+            console.log("PlayerList :::::::", `${host}/admin/games/GetGameBetInfo`)
+            const response = await fetch(`${host}/admin/games/GetGameBetInfo`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'token': cookies.get('token')
+                }
+            }).then(data => data.json())
+
+            const json = response
+            console.log("data api from :latatestUser :::...", json)
+
+            if (json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")) {
+                LogoutClick()
+
+                return json
+            } else {
+                return await json.tabInfo
+            }
+
+
+        } catch (e) {
+            console.log("e :", e)
+        }
+    }
 
     //==================================== Commission
 
@@ -2446,7 +2505,7 @@ const OfferState = (props) => {
         <offerContext.Provider value={{
             host,
             adminname, adminEmail, dashboardData, latatestUser,latatestShop,latatestAgent ,PlayerList, PlayerData,
-            PlayerAdd, PlayerDelete, GameLogicSet, GetGameLogic, GetCompleteWithdrawalData,
+            PlayerAdd, PlayerDelete, GameLogicSet,GetGameBetInfo, GetGameLogic, GetCompleteWithdrawalData,
             GetCompleteDespositeData, GetRegisterReferralBonusData, GetMyReferralData,
             SocailURLsList, SocailURLsAdd, DeleteSocailURLs,
             CoinsList, CoinPackeAdd, DeleteCoinpack,
@@ -2462,7 +2521,7 @@ const OfferState = (props) => {
             AgentList,AgentAdd,AgentDelete,AgentData,AgentUpdate,
             ShopList,ShopAdd,ShopDelete,ShopData,ShopUpdate,
             SoratGameHistory,SpinGameHistory,AndarBaharGameHistory,WheelofFortuneGameHistory,BaraKaDumGameHistory,RouletteGameHistory,
-            GetGameCom,GameComSet,
+            GetGameCom,GameComSet,GetRouletteHistoryData,
             GetSpinnerHistoryData,GetSoratHistoryData,GetandarbaharHistoryData,GetOneToTwelveHistoryData,Chnageidpwd 
         }}>
             {props.children}

@@ -2,7 +2,8 @@ import ProtoTypes from "prop-types";
 import offerContext from '../../context/offerContext';
 import React, { useState, useContext, useEffect } from 'react';
 
-function PlayerInfo({ UserId,name,email,mobileno,dateOfdeposit,screenshort,depositamount,bankAc,IFSCcode,acname,upi_id,paymentmode,status}) {
+
+function PlayerInfo({ UserId,DateandTime,trnxAmount,oppChips,chips,trnxTypeTxt ,agentname ,adminid}) {
 
   const context = useContext(offerContext)
   const { host } = context
@@ -21,74 +22,41 @@ function PlayerInfo({ UserId,name,email,mobileno,dateOfdeposit,screenshort,depos
       </td>
       <td className="w-[165px] px-6 py-5 xl:px-0">
           <p className="text-base font-semibold text-bgray-900 dark:text-white">
-            {name}
+            {DateandTime}
           </p>
       </td>
       <td className="w-[165px] px-6 py-5 xl:px-0">
         <p className="text-base font-medium text-bgray-900 dark:text-white">
-          {email}
+        ₹{trnxAmount}
         </p>
       </td>
       <td className="w-[165px] px-6 py-5 xl:px-0">
         <p className="text-base font-medium text-bgray-900 dark:text-white">
-          {mobileno}
+        ₹{oppChips}
         </p>
       </td>
       <td className="w-[165px] px-6 py-5 xl:px-0">
         <p className="text-base font-semibold text-bgray-900 dark:text-white">
-          {dateOfdeposit}
+        ₹{chips}
+        </p>
+      </td>
+   
+      <td className="w-[165px] px-6 py-5 xl:px-0">
+        <p className="text-base font-medium text-bgray-900 dark:text-white">
+        {trnxTypeTxt} 
         </p>
       </td>
       <td className="w-[165px] px-6 py-5 xl:px-0">
         <p className="text-base font-medium text-bgray-900 dark:text-white">
-          
-          <div className="h-10 w-10 overflow-hidden rounded-full">
-            <img
-              src={host+"/"+screenshort}
-              alt="avatar"
-              className="h-full w-full object-cover"
-            />
-          </div>
-
+          {agentname}
         </p>
       </td>
       <td className="w-[165px] px-6 py-5 xl:px-0">
         <p className="text-base font-medium text-bgray-900 dark:text-white">
-        ₹{depositamount} 
+          {adminid}
         </p>
       </td>
-      <td className="w-[165px] px-6 py-5 xl:px-0">
-        <p className="text-base font-medium text-bgray-900 dark:text-white">
-          {bankAc}
-        </p>
-      </td>
-      <td className="w-[165px] px-6 py-5 xl:px-0">
-        <p className="text-base font-medium text-bgray-900 dark:text-white">
-          {IFSCcode}
-        </p>
-      </td>
-      <td className="w-[165px] px-6 py-5 xl:px-0">
-        <p className="text-base font-medium text-bgray-900 dark:text-white">
-          {acname}
-        </p>
-      </td>
-      <td className="w-[165px] px-6 py-5 xl:px-0">
-        <p className="text-base font-medium text-bgray-900 dark:text-white">
-          {upi_id}
-        </p>
-      </td>
-      <td className="w-[165px] px-6 py-5 xl:px-0">
-        <p className="text-base font-medium text-bgray-900 dark:text-white">
-          {paymentmode}
-        </p>
-      </td>
-      <td className="w-[165px] px-6 py-5 xl:px-0">
-
-        <p style={styles}>
-
-          {status == -1 ? "pendding":status == 0 ? "Rejected":"Success"}
-        </p>
-      </td>
+      
       
     </tr>
   );

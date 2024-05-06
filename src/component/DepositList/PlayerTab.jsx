@@ -3,6 +3,9 @@ import ProtoTypes from "prop-types";
 import CustomerInfo from "./PlayerInfo";
 import users from "../../data/user";
 import offerContext from '../../context/offerContext';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 
 
 function PlayerTab({ }) {
@@ -72,6 +75,38 @@ function PlayerTab({ }) {
     setFromDate("")
     setToDate("")
   }
+
+
+  
+  const [backgroundColor, setBackgroundColor] = useState('');
+
+  const generatePDF = async () => {
+    //style={{"background-color": "lightgray"}}
+    await setBackgroundColor("#1D1E24"); // Change to the desired color
+
+    const input = document.getElementById("tableId");
+
+    console.log("input ::::::::::::::: ", input)
+    html2canvas(input)
+      .then(async (canvas) => {
+        console.log("canvas ", canvas)
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.setFillColor(204, 204, 204, 0);
+
+        const imgWidth = 210;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+        pdf.save(`${new Date() + 'UserPage'}.pdf`);
+
+        await setBackgroundColor('');
+      })
+      .catch((error) => console.log(error));
+
+
+  };
+
+
   //-----------------------------------------------------------------------------------------------
 
 
@@ -136,11 +171,27 @@ function PlayerTab({ }) {
           <button aria-label="none"
             className="bg-success-300 dark:bg-success-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm" onClick={resetDate}>Reset</button>
 
-        
+
+            <button aria-label="none"
+                className="bg-success-300 dark:bg-success-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm">
+                <ReactHTMLTableToExcel
+                  id="test-table-xls-button"
+                  className="download-table-xls-button"
+                  table="tableId"
+                  filename={new Date() + 'UserPage'}
+                  sheet="tablexls"
+                  buttonText="Download as XLS" />
+              </button>
+
+              <button aria-label="none"
+                className="bg-success-300 dark:bg-success-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm" onClick={generatePDF}>
+
+                Download as PDF
+              </button> 
         </div>
       </div>
       <div className="table-content w-full overflow-x-auto">
-        <table className="w-full">
+        <table style={{ "backgroundColor": backgroundColor }} id="tableId" className="w-full">
           <tbody>
             <tr className="border-b border-bgray-300 dark:border-darkblack-400">
 
@@ -192,7 +243,7 @@ function PlayerTab({ }) {
               <td className="w-[165px] px-6 py-5 xl:px-0">
                 <div className="flex w-full items-center space-x-2.5">
                   <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                    Player Name
+                   Date and Time 
                   </span>
                   <span>
                     <svg
@@ -237,7 +288,7 @@ function PlayerTab({ }) {
               <td className="w-[165px] px-6 py-5 xl:px-0">
                 <div className="flex w-full items-center space-x-2.5">
                   <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                    Email
+                  Amount
                   </span>
                   <span>
                     <svg
@@ -282,7 +333,7 @@ function PlayerTab({ }) {
               <td className="w-[165px] px-6 py-5 xl:px-0">
                 <div className="flex items-center space-x-2.5">
                   <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                    Mobile Number
+                  Previous chips
                   </span>
                   <span>
                     <svg
@@ -327,7 +378,7 @@ function PlayerTab({ }) {
               <td className="w-[165px] px-6 py-5 xl:px-0">
                 <div className="flex w-full items-center space-x-2.5">
                   <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                    Deposit Date
+                  Current Chips
                   </span>
                   <span>
                     <svg
@@ -372,322 +423,7 @@ function PlayerTab({ }) {
               <td className="w-[165px] px-6 py-5 xl:px-0">
                 <div className="flex w-full items-center space-x-2.5">
                   <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                    Image
-                  </span>
-                  <span>
-                    <svg
-                      width="14"
-                      height="15"
-                      viewBox="0 0 14 15"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M10.332 1.31567V13.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M5.66602 11.3157L3.66602 13.3157L1.66602 11.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M3.66602 13.3157V1.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M12.332 3.31567L10.332 1.31567L8.33203 3.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </span>
-                </div>
-              </td>
-              <td className="w-[165px] px-6 py-5 xl:px-0">
-                <div className="flex w-full items-center space-x-2.5">
-                  <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                    Deposit Amount
-                  </span>
-                  <span>
-                    <svg
-                      width="14"
-                      height="15"
-                      viewBox="0 0 14 15"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M10.332 1.31567V13.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M5.66602 11.3157L3.66602 13.3157L1.66602 11.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M3.66602 13.3157V1.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M12.332 3.31567L10.332 1.31567L8.33203 3.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </span>
-                </div>
-              </td>
-              <td className="w-[165px] px-6 py-5 xl:px-0">
-                <div className="flex w-full items-center space-x-2.5">
-                  <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                    Bank A/c.
-                  </span>
-                  <span>
-                    <svg
-                      width="14"
-                      height="15"
-                      viewBox="0 0 14 15"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M10.332 1.31567V13.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M5.66602 11.3157L3.66602 13.3157L1.66602 11.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M3.66602 13.3157V1.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M12.332 3.31567L10.332 1.31567L8.33203 3.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </span>
-                </div>
-              </td>
-              <td className="w-[165px] px-6 py-5 xl:px-0">
-                <div className="flex w-full items-center space-x-2.5">
-                  <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                    IFSC Code
-                  </span>
-                  <span>
-                    <svg
-                      width="14"
-                      height="15"
-                      viewBox="0 0 14 15"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M10.332 1.31567V13.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M5.66602 11.3157L3.66602 13.3157L1.66602 11.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M3.66602 13.3157V1.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M12.332 3.31567L10.332 1.31567L8.33203 3.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </span>
-                </div>
-              </td>
-              <td className="w-[165px] px-6 py-5 xl:px-0">
-                <div className="flex w-full items-center space-x-2.5">
-                  <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                    Acount Name
-                  </span>
-                  <span>
-                    <svg
-                      width="14"
-                      height="15"
-                      viewBox="0 0 14 15"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M10.332 1.31567V13.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M5.66602 11.3157L3.66602 13.3157L1.66602 11.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M3.66602 13.3157V1.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M12.332 3.31567L10.332 1.31567L8.33203 3.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </span>
-                </div>
-              </td>
-              <td className="w-[165px] px-6 py-5 xl:px-0">
-                <div className="flex w-full items-center space-x-2.5">
-                  <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                    UPI ID
-                  </span>
-                  <span>
-                    <svg
-                      width="14"
-                      height="15"
-                      viewBox="0 0 14 15"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M10.332 1.31567V13.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M5.66602 11.3157L3.66602 13.3157L1.66602 11.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M3.66602 13.3157V1.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M12.332 3.31567L10.332 1.31567L8.33203 3.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </span>
-                </div>
-              </td>
-              <td className="w-[165px] px-6 py-5 xl:px-0">
-                <div className="flex w-full items-center space-x-2.5">
-                  <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                    Payment Mode
-                  </span>
-                  <span>
-                    <svg
-                      width="14"
-                      height="15"
-                      viewBox="0 0 14 15"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M10.332 1.31567V13.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M5.66602 11.3157L3.66602 13.3157L1.66602 11.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M3.66602 13.3157V1.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M12.332 3.31567L10.332 1.31567L8.33203 3.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </span>
-                </div>
-              </td>
-              <td className="w-[165px] px-6 py-5 xl:px-0">
-                <div className="flex w-full items-center space-x-2.5">
-                  <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                    Status
+                  Txn Type
                   </span>
                   <span>
                     <svg
@@ -730,6 +466,96 @@ function PlayerTab({ }) {
                 </div>
               </td>
              
+              <td className="w-[165px] px-6 py-5 xl:px-0">
+                <div className="flex w-full items-center space-x-2.5">
+                  <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
+                    Agent Name
+                  </span>
+                  <span>
+                    <svg
+                      width="14"
+                      height="15"
+                      viewBox="0 0 14 15"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M10.332 1.31567V13.3157"
+                        stroke="#718096"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M5.66602 11.3157L3.66602 13.3157L1.66602 11.3157"
+                        stroke="#718096"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M3.66602 13.3157V1.31567"
+                        stroke="#718096"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M12.332 3.31567L10.332 1.31567L8.33203 3.31567"
+                        stroke="#718096"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </div>
+              </td>
+              <td className="w-[165px] px-6 py-5 xl:px-0">
+                <div className="flex w-full items-center space-x-2.5">
+                  <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
+                    Agent ID
+                  </span>
+                  <span>
+                    <svg
+                      width="14"
+                      height="15"
+                      viewBox="0 0 14 15"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M10.332 1.31567V13.3157"
+                        stroke="#718096"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M5.66602 11.3157L3.66602 13.3157L1.66602 11.3157"
+                        stroke="#718096"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M3.66602 13.3157V1.31567"
+                        stroke="#718096"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M12.332 3.31567L10.332 1.31567L8.33203 3.31567"
+                        stroke="#718096"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </div>
+              </td> 
             </tr>
             {filteredUsers?.map((user, index) =>
               pageSize
@@ -737,37 +563,26 @@ function PlayerTab({ }) {
                   <CustomerInfo
                     key={user._id}
                     UserId={user._id}
-                    name={user.name}
-                    email={user.email}
-                    mobileno={user.mobileno}
-                    dateOfdeposit={user.dateOfdeposit}
-                    screenshort={user.screenshort}
-                    depositamount={user.depositamount}
-                    bankAc={user.bankAc}
-                    IFSCcode={user.IFSCcode}
-                    acname={user.acname}
-                    upi_id={user.upi_id}
-                    paymentmode={user.paymentmode}
-                    status={user.status}
-
-                  />
+                    DateandTime={user.DateandTime}
+                    trnxAmount={user.trnxAmount}
+                    oppChips={user.oppChips}
+                    chips={user.chips}
+                    trnxTypeTxt={user.trnxTypeTxt}
+                    agentname={user.adminname}
+                    adminid={user.adminid}
+                     />
                 )
                 : index < 3 && (
                   <CustomerInfo
                     key={user._id}
                     UserId={user._id}
-                    name={user.name}
-                    email={user.email}
-                    mobileno={user.mobileno}
-                    dateOfdeposit={user.dateOfdeposit}
-                    screenshort={user.screenshort}
-                    depositamount={user.depositamount}
-                    bankAc={user.bankAc}
-                    IFSCcode={user.IFSCcode}
-                    acname={user.acname}
-                    upi_id={user.upi_id}
-                    paymentmode={user.paymentmode}
-                    status={user.status}
+                    DateandTime={user.DateandTime}
+                    trnxAmount={user.trnxAmount}
+                    oppChips={user.oppChips}
+                    chips={user.chips}
+                    trnxTypeTxt={user.trnxTypeTxt}
+                    agentname={user.adminname}
+                    adminid={user.adminid}
                   />
                 )
             )}

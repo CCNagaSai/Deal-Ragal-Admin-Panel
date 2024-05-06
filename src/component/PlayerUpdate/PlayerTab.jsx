@@ -4,6 +4,9 @@ import CustomerInfo from "./PlayerInfo";
 import users from "../../data/user";
 import offerContext from '../../context/offerContext';
 import { useNavigate, useLocation } from 'react-router-dom';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 
 function PlayerTab({ UserId, gameName }) {
 
@@ -26,7 +29,7 @@ function PlayerTab({ UserId, gameName }) {
   let [gameHistoryData, setGameHistoryData] = useState([]);
 
   const context = useContext(offerContext)
-  const { GetSpinnerHistoryData,GetSoratHistoryData,GetandarbaharHistoryData,GetOneToTwelveHistoryData} = context
+  const { GetSpinnerHistoryData,GetSoratHistoryData,GetandarbaharHistoryData,GetOneToTwelveHistoryData,GetRouletteHistoryData} = context
 
 
   useEffect(() => {
@@ -61,6 +64,9 @@ function PlayerTab({ UserId, gameName }) {
       }else if (gameName == "One To Twelve") {
 
         setGameHistoryData(await GetOneToTwelveHistoryData( Botinfo.UserId))
+      }else if (gameName == "Roulette") {
+
+        setGameHistoryData(await GetRouletteHistoryData( Botinfo.UserId))
       }
       // else if(gameName == "Withdrawal"){
 
@@ -123,6 +129,35 @@ function PlayerTab({ UserId, gameName }) {
     setFromDate("")
     setToDate("")
   }
+
+  const [backgroundColor, setBackgroundColor] = useState('');
+
+  const generatePDF = async () => {
+    //style={{"background-color": "lightgray"}}
+    await setBackgroundColor("#1D1E24"); // Change to the desired color
+
+    const input = document.getElementById("tableId");
+
+    console.log("input ::::::::::::::: ", input)
+    html2canvas(input)
+      .then(async (canvas) => {
+        console.log("canvas ", canvas)
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.setFillColor(204, 204, 204, 0);
+
+        const imgWidth = 210;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+        pdf.save(`${new Date() + 'UserPage'}.pdf`);
+
+        await setBackgroundColor('');
+      })
+      .catch((error) => console.log(error));
+
+
+  };
+
   //-----------------------------------------------------------------------------------------------
 
 
@@ -188,15 +223,31 @@ function PlayerTab({ UserId, gameName }) {
             className="bg-success-300 dark:bg-success-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm" onClick={resetDate}>Reset</button>
 
 
+            <button aria-label="none"
+                className="bg-success-300 dark:bg-success-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm">
+                <ReactHTMLTableToExcel
+                  id="test-table-xls-button"
+                  className="download-table-xls-button"
+                  table="tableId"
+                  filename={new Date() + 'UserPage'}
+                  sheet="tablexls"
+                  buttonText="Download as XLS" />
+              </button>
+
+              <button aria-label="none"
+                className="bg-success-300 dark:bg-success-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm" onClick={generatePDF}>
+
+                Download as PDF
+              </button> 
         </div>
       </div>
 
       <div className="table-content w-full overflow-x-auto">
-        <table className="w-full">
+        <table style={{ "backgroundColor": backgroundColor }} id="tableId" className="w-full">
           <tbody>
             <tr className="border-b border-bgray-300 dark:border-darkblack-400">
 
-              <td className="inline-block w-[250px] px-6 py-5 lg:w-auto xl:px-0">
+              <td className="w-[185px] px-6 py-5 xl:px-0">
                 <div className="flex w-full items-center space-x-2.5">
                   <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
                     Date Time
@@ -241,7 +292,7 @@ function PlayerTab({ UserId, gameName }) {
                   </span>
                 </div>
               </td>
-              <td className="px-6 py-5 xl:px-0">
+              <td className="w-[155px] px-6 py-5 xl:px-0">
                 <div className="flex w-full items-center space-x-2.5">
                   <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
                     TypeOfAction
@@ -286,7 +337,7 @@ function PlayerTab({ UserId, gameName }) {
                   </span>
                 </div>
               </td>
-              <td className="px-6 py-5 xl:px-0">
+              <td className="w-[155px] px-6 py-5 xl:px-0">
                 <div className="flex items-center space-x-2.5">
                   <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
                     Amount
@@ -331,7 +382,7 @@ function PlayerTab({ UserId, gameName }) {
                   </span>
                 </div>
               </td>
-              <td className="w-[165px] px-6 py-5 xl:px-0">
+              <td className="w-[155px] px-6 py-5 xl:px-0">
                 <div className="flex w-full items-center space-x-2.5">
                   <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
                   previouschips
@@ -376,7 +427,7 @@ function PlayerTab({ UserId, gameName }) {
                   </span>
                 </div>
               </td>
-              <td className="w-[165px] px-6 py-5 xl:px-0">
+              <td className="w-[155px] px-6 py-5 xl:px-0">
                 <div className="flex w-full items-center space-x-2.5">
                   <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
                   currentchips
@@ -421,7 +472,7 @@ function PlayerTab({ UserId, gameName }) {
                   </span>
                 </div>
               </td>
-              <td className="w-[165px] px-6 py-5 xl:px-0">
+              <td className="w-[155px] px-6 py-5 xl:px-0">
                 <div className="flex w-full items-center space-x-2.5">
                   <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
                   previousWinner
@@ -466,7 +517,7 @@ function PlayerTab({ UserId, gameName }) {
                   </span>
                 </div>
               </td>
-              <td className="w-[165px] px-6 py-5 xl:px-0">
+              <td className="w-[155px] px-6 py-5 xl:px-0">
                 <div className="flex w-full items-center space-x-2.5">
                   <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
                   currentWinner

@@ -139,7 +139,7 @@ function PlayerTab({ }) {
             value={fromDate}
             onChange={(e) => setFromDate(e.target.value)}
           />
-          <p className="text-1xl font-bold leading-[48px] text-bgray-900 dark:text-white">Date :</p>
+          
           <input
             type="date"
             placeholder="To Date"

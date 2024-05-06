@@ -3,7 +3,9 @@ import ProtoTypes from "prop-types";
 import CustomerInfo from "./PlayerInfo";
 import users from "../../data/user";
 import offerContext from '../../context/offerContext';
-
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 
 function PlayerTab({ gameName }) {
 
@@ -91,6 +93,36 @@ function PlayerTab({ gameName }) {
     setFromDate("")
     setToDate("")
   }
+
+
+  const [backgroundColor, setBackgroundColor] = useState('');
+
+  const generatePDF = async () => {
+    //style={{"background-color": "lightgray"}}
+    await setBackgroundColor("#1D1E24"); // Change to the desired color
+
+    const input = document.getElementById("tableId");
+
+    console.log("input ::::::::::::::: ", input)
+    html2canvas(input)
+      .then(async (canvas) => {
+        console.log("canvas ", canvas)
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.setFillColor(204, 204, 204, 0);
+
+        const imgWidth = 210;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+        pdf.save(`${new Date() + 'UserPage'}.pdf`);
+
+        await setBackgroundColor('');
+      })
+      .catch((error) => console.log(error));
+
+
+  };
+
   //-----------------------------------------------------------------------------------------------
 
 
@@ -155,16 +187,33 @@ function PlayerTab({ gameName }) {
       <button aria-label="none"
       className="bg-success-300 dark:bg-success-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm" onClick={resetDate}>Reset</button>
 
+
+      <button aria-label="none"
+      className="bg-success-300 dark:bg-success-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm">
+      <ReactHTMLTableToExcel
+        id="test-table-xls-button"
+        className="download-table-xls-button"
+        table="tableId"
+        filename={new Date() + 'UserPage'}
+        sheet="tablexls"
+        buttonText="Download as XLS" />
+    </button>
+
+    <button aria-label="none"
+      className="bg-success-300 dark:bg-success-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm" onClick={generatePDF}>
+
+      Download as PDF
+    </button> 
     
     </div>
   </div>
 
     <div className="table-content w-full overflow-x-auto">
-      <table className="w-full">
+      <table style={{ "backgroundColor": backgroundColor }} id="tableId" className="w-full">
         <tbody>
           <tr className="border-b border-bgray-300 dark:border-darkblack-400">
             
-            <td className="w-[165px] px-6 py-5 xl:px-0">
+            <td className="w-[200px] px-6 py-5 xl:px-0">
               <div className="flex w-full items-center space-x-2.5">
                 <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
                   Date Time
@@ -209,10 +258,10 @@ function PlayerTab({ gameName }) {
                 </span>
               </div>
             </td>
-            <td className="w-[165px] px-6 py-5 xl:px-0">
+            <td className="w-[200px] px-6 py-5 xl:px-0">
               <div className="flex w-full items-center space-x-2.5">
                 <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                 Name
+                User Id
                 </span>
                 <span>
                   <svg
@@ -254,10 +303,10 @@ function PlayerTab({ gameName }) {
                 </span>
               </div>
             </td>
-            <td className="w-[165px] px-6 py-5 xl:px-0">
+            <td className="w-[185px] px-6 py-5 xl:px-0">
               <div className="flex items-center space-x-2.5">
                 <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                  Mobile Number
+                  Boll Number 
                 </span>
                 <span>
                   <svg
@@ -302,7 +351,7 @@ function PlayerTab({ gameName }) {
             <td className="w-[165px] px-6 py-5 xl:px-0">
               <div className="flex w-full items-center space-x-2.5">
                 <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                Room Id
+                Play Bet
                 </span>
                 <span>
                   <svg
@@ -347,7 +396,7 @@ function PlayerTab({ gameName }) {
             <td className="w-[165px] px-6 py-5 xl:px-0">
               <div className="flex w-full items-center space-x-2.5">
                 <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                Amount
+                Won Amount
                 </span>
                 <span>
                   <svg
@@ -389,123 +438,29 @@ function PlayerTab({ gameName }) {
                 </span>
               </div>
             </td>
-            <td className="w-[165px] px-6 py-5 xl:px-0">
-              <div className="flex w-full items-center space-x-2.5">
-                <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                Type
-                </span>
-                <span>
-                  <svg
-                    width="14"
-                    height="15"
-                    viewBox="0 0 14 15"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M10.332 1.31567V13.3157"
-                      stroke="#718096"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M5.66602 11.3157L3.66602 13.3157L1.66602 11.3157"
-                      stroke="#718096"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M3.66602 13.3157V1.31567"
-                      stroke="#718096"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M12.332 3.31567L10.332 1.31567L8.33203 3.31567"
-                      stroke="#718096"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
-              </div>
-            </td>
-            <td className="w-[165px] px-6 py-5 xl:px-0">
-              <div className="flex w-full items-center space-x-2.5">
-                <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                Game
-                </span>
-                <span>
-                  <svg
-                    width="14"
-                    height="15"
-                    viewBox="0 0 14 15"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M10.332 1.31567V13.3157"
-                      stroke="#718096"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M5.66602 11.3157L3.66602 13.3157L1.66602 11.3157"
-                      stroke="#718096"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M3.66602 13.3157V1.31567"
-                      stroke="#718096"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M12.332 3.31567L10.332 1.31567L8.33203 3.31567"
-                      stroke="#718096"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
-              </div>
-            </td>
-            
+         
           </tr>
           {filteredUsers?.map((user, index) =>
             pageSize
               ? index + 1 <= pageSize && (
                   <CustomerInfo
                     key={user._id}
-                    datetime={user.DateTime}
-                    UserName={user.Name}
-                    MobileNo={user.PhoneNumber}
-                    roomid={user.RoomId}
-                    amount={user.Amount}
-                    type={user.Type}
-                    club={user.game}
+                    datetime={user.createdAt}
+                    userId={user.userId}
+                    ballposition={user.ballposition}
+                    play={user.play}
+                    won={user.won}
 
                   />
                 )
               : index < 3 && (
                   <CustomerInfo
                     key={user._id}
-                    datetime={user.DateTime}
-                    UserName={user.Name}
-                    MobileNo={user.PhoneNumber}
-                    roomid={user.RoomId}
-                    amount={user.Amount}
-                    type={user.Type}
-                    club={user.game}
+                    datetime={user.createdAt}
+                    userId={user.userId}
+                    ballposition={user.ballposition}
+                    play={user.play}
+                    won={user.won}
                   />
                 )
           )}

@@ -5,7 +5,7 @@ function PlayerInfo({ datetime,trnxTypeTxt,trnxAmount,previouschips,currentchips
   return (
     <tr className="border-b border-bgray-300 dark:border-darkblack-400">
       
-      <td className="px-6 py-5 xl:px-0">
+      <td className="w-[185px] px-6 py-5 xl:px-0">
         <div className="flex w-full items-center space-x-2.5">
           
           <p className="text-base font-semibold text-bgray-900 dark:text-white">
@@ -13,32 +13,32 @@ function PlayerInfo({ datetime,trnxTypeTxt,trnxAmount,previouschips,currentchips
           </p>
         </div>
       </td>
-      <td className="px-6 py-5 xl:px-0">
+      <td className="w-[155px] px-6 py-5 xl:px-0">
         <p className="text-base font-medium text-bgray-900 dark:text-white">
           {trnxTypeTxt}
         </p>
       </td>
-      <td className="px-6 py-5 xl:px-0">
+      <td className="w-[155px] px-6 py-5 xl:px-0">
         <p className="text-base font-medium text-bgray-900 dark:text-white">
           {trnxAmount}
         </p>
       </td>
-      <td className="w-[165px] px-6 py-5 xl:px-0">
+      <td className="w-[155px] px-6 py-5 xl:px-0">
         <p className="text-base font-semibold text-bgray-900 dark:text-white">
           {previouschips}
         </p>
       </td>
-      <td className="px-6 py-5 xl:px-0">
+      <td className="w-[155px] px-6 py-5 xl:px-0">
         <p className="text-base font-medium text-bgray-900 dark:text-white">
         ₹{currentchips}
         </p>
       </td>
-      <td className="px-6 py-5 xl:px-0">
+      <td className="w-[155px] px-6 py-5 xl:px-0">
         <p className="text-base font-medium text-bgray-900 dark:text-white">
           {previousWinner}
         </p>
       </td>
-      <td className="px-6 py-5 xl:px-0">
+      <td className="w-[155px] px-6 py-5 xl:px-0">
         <p className="text-base font-medium text-bgray-900 dark:text-white">
           {currentWinner}
         </p>

@@ -9,7 +9,8 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
-
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
 
 
 function userInfo() {
@@ -85,7 +86,7 @@ function userInfo() {
   const SaveChange = async () => {
     console.log("amount ", amount)
 
-    let res = await AddMoney({ money: amount, type: "Deposit", userId: Botinfo.UserId })
+    let res = await AddMoney({ money: amount, type: "Deposit", userId: Botinfo.UserId,adminname:cookies.get('name'),adminid:cookies.get('LoginUserId') })
 
     if (res.status == "ok") {
 
@@ -103,7 +104,7 @@ function userInfo() {
   const SaveChangeDeduct = async () => {
     console.log("amount ", amount)
 
-    let res = await DeductMoney({ money: amount, type: "Deduct", userId: Botinfo.UserId })
+    let res = await DeductMoney({ money: amount, type: "Deduct", userId: Botinfo.UserId,adminname:cookies.get('name'),adminid:cookies.get('LoginUserId') })
     
     if (res.status == "ok") {
 

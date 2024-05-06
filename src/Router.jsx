@@ -55,6 +55,8 @@ import AgentAdd from './pages/agentadd'
 
 
 import Commission from './pages/commission'
+import GamebetInfo from './pages/playingtabledata'
+
 
 
 
@@ -65,6 +67,10 @@ const router = createBrowserRouter([
     path: "/",
     Component: Layout,
     children: [
+      {
+        path: "/gamebetInfo",
+        element: <GamebetInfo />,
+      },
       {
         path: "/dashboard",
         element: <Dashboard />,

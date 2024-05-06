@@ -13,7 +13,7 @@ function playerUpdateinfo() {
       {/* write your code here */}
       <div className="2xl:flex 2xl:space-x-[48px]">
       <section className="mb-6 2xl:mb-0 2xl:flex-1">
-          <HistoryTable gameName="Wheel Of Fortune"/>
+          <HistoryTable gameName="Roulette"/>
           
 
           {/* 
