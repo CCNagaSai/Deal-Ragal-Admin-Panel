@@ -84,7 +84,19 @@ function playerAddinfo() {
     // This example just logs the data to the console
 
     console.log("userInfo ", userInfo)
+      
+    if(!/^[a-zA-Z\s]+$/.test(userInfo.name)  ){
+      alert("Invalid User name. User name should only contain alphabetic characters and spaces.")
+      return false
+    }
 
+
+    if(userInfo.password.length < 8){
+      alert("Invalid passwordValue leangth Must be 8 characters.")
+      return false
+    }
+    
+    
     let res = await PlayerAdd(userInfo)
 
     console.log("REsponce ::::::::::::::::::::::", res)
@@ -128,45 +140,6 @@ function playerAddinfo() {
               </div>
 
 
-              <div className="flex flex-col gap-2">
-                <label
-                  htmlFor="mobilenumber"
-                  className="text-base text-bgray-600 dark:text-bgray-50  font-medium"
-                >
-                  Mobile Number
-                </label>
-
-
-                <input
-                  type="text"
-                  id="mobileNumber"
-                  placeholder="Please Insert Mobile Number"
-                  name="mobileNumber"
-                  className="bg-bgray-50 dark:bg-darkblack-500 dark:text-white p-4 rounded-lg h-14 border-0 focus:border focus:border-success-300 focus:ring-0"
-                  onChange={handleChange}
-                />
-
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <label
-                  htmlFor="Email"
-                  className="text-base text-bgray-600 dark:text-bgray-50  font-medium"
-                >
-                  Email
-                </label>
-
-
-                <input
-                  type="text"
-                  id="email"
-                  placeholder="Please Insert Email"
-                  name="email"
-                  className="bg-bgray-50 dark:bg-darkblack-500 dark:text-white p-4 rounded-lg h-14 border-0 focus:border focus:border-success-300 focus:ring-0"
-                  onChange={handleChange}
-                />
-
-              </div>
 
 
               <div className="flex flex-col gap-2">
@@ -210,3 +183,46 @@ function playerAddinfo() {
 
 
 export default playerAddinfo;
+
+
+
+
+              // <div className="flex flex-col gap-2">
+              //   <label
+              //     htmlFor="mobilenumber"
+              //     className="text-base text-bgray-600 dark:text-bgray-50  font-medium"
+              //   >
+              //     Mobile Number
+              //   </label>
+
+
+              //   <input
+              //     type="text"
+              //     id="mobileNumber"
+              //     placeholder="Please Insert Mobile Number"
+              //     name="mobileNumber"
+              //     className="bg-bgray-50 dark:bg-darkblack-500 dark:text-white p-4 rounded-lg h-14 border-0 focus:border focus:border-success-300 focus:ring-0"
+              //     onChange={handleChange}
+              //   />
+
+              // </div>
+
+              // <div className="flex flex-col gap-2">
+              //   <label
+              //     htmlFor="Email"
+              //     className="text-base text-bgray-600 dark:text-bgray-50  font-medium"
+              //   >
+              //     Email
+              //   </label>
+
+
+              //   <input
+              //     type="text"
+              //     id="email"
+              //     placeholder="Please Insert Email"
+              //     name="email"
+              //     className="bg-bgray-50 dark:bg-darkblack-500 dark:text-white p-4 rounded-lg h-14 border-0 focus:border focus:border-success-300 focus:ring-0"
+              //     onChange={handleChange}
+              //   />
+
+              // </div>

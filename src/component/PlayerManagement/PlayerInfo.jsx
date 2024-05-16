@@ -7,15 +7,22 @@ import edit from "../../assets/images/edit.png";
 import trash from "../../assets/images/trash.png";
 
 
-function PlayerInfo({ UserId, UserName, MobileNo, MainWallet, RegistrationDate, LastLogin,  status, profileUrl,email,uniqueId }) {
+function PlayerInfo({ UserId, UserName, name, MainWallet, RegistrationDate, LastLogin,  status, profileUrl,email,uniqueId }) {
 
   const navigate = useNavigate();
 
   const context = useContext(offerContext)
   const { PlayerDelete } = context
   
-  const navigateToContacts = (UserId, UserName, MobileNo,  MainWallet,  RegistrationDate, LastLogin, status, profileUrl,email,uniqueId) => {
-    navigate('/playeredit', { state:{ UserId, UserName, MobileNo, MainWallet,  RegistrationDate, LastLogin, status, profileUrl,email,uniqueId } });
+
+  const DeleteUser = async (userid) => {
+    console.log("delete ::::::::::::::")
+    await PlayerDelete(userid)
+    window.location.reload();
+  }
+
+  const navigateToContacts = (UserId, UserName, name,  MainWallet,  RegistrationDate, LastLogin, status, profileUrl,email,uniqueId) => {
+    navigate('/playeredit', { state:{ UserId, UserName, name, MainWallet,  RegistrationDate, LastLogin, status, profileUrl,email,uniqueId } });
   }
 
   return (
@@ -30,7 +37,7 @@ function PlayerInfo({ UserId, UserName, MobileNo, MainWallet, RegistrationDate, 
       </td>
       <td className="px-6 py-5 xl:px-0">
         <p className="text-base font-medium text-bgray-900 dark:text-white">
-          {MobileNo}
+          {name}
         </p>
       </td>
       
@@ -66,7 +73,7 @@ function PlayerInfo({ UserId, UserName, MobileNo, MainWallet, RegistrationDate, 
             "padding": "5px 10px",
             "cursor": "pointer",
             "border-radius": "4px"
-          }} onClick={() => navigateToContacts( UserId, UserName, MobileNo, MainWallet, RegistrationDate, LastLogin, status, profileUrl ,email,uniqueId)} >
+          }} onClick={() => navigateToContacts( UserId, UserName, name, MainWallet, RegistrationDate, LastLogin, status, profileUrl ,email,uniqueId)} >
           <img style={{"width": "30px","height": "30px","margin": "30px"}} src={edit} />
           </button>
 
@@ -78,7 +85,7 @@ function PlayerInfo({ UserId, UserName, MobileNo, MainWallet, RegistrationDate, 
             "padding": "5px 10px",
             "cursor": "pointer",
             "border-radius": "4px"
-          }} onClick={() => PlayerDelete(UserId)} >
+          }} onClick={() => DeleteUser(UserId)} >
           <img style={{"width": "30px","height": "30px","margin": "30px"}} src={trash} />
           </button>
         </div>

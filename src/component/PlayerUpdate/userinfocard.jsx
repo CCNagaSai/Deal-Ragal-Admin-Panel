@@ -23,7 +23,7 @@ function userInfo() {
   console.log("Player Info  ", Botinfo)
 
   const context = useContext(offerContext)
-  const { AddMoney, DeductMoney, host } = context
+  const { AddMoney, DeductMoney, host,blockandunblock } = context
 
  
 
@@ -36,13 +36,13 @@ function userInfo() {
   let [userInfo, SetuserInfo] = useState({
     userId: Botinfo.UserId,
     UserName: Botinfo.UserName,
+    name: Botinfo.name,
     profileUrl: Botinfo.profileUrl,
     status: Botinfo.status,
-    MobileNo: Botinfo.MobileNo,
+    MobileNo: Botinfo.MobileNo != undefined ? Botinfo.MobileNo:"-",
     MainWallet: Botinfo.MainWallet,
     RegistrationDate: Botinfo.RegistrationDate,
     LastLogin: Botinfo.LastLogin,
-    Status: Botinfo.status,
     email: Botinfo.email,
     uniqueId: Botinfo.uniqueId,
 
@@ -55,13 +55,13 @@ function userInfo() {
       SetuserInfo({
         userId: Botinfo.UserId,
         UserName: Botinfo.UserName,
+        name: Botinfo.name,
         profileUrl: Botinfo.img,
-        status: Botinfo.status,
-        MobileNo: Botinfo.MobileNo,
+        MobileNo: Botinfo.MobileNo != undefined ? Botinfo.MobileNo:"-",
         MainWallet: Botinfo.MainWallet,
         RegistrationDate: Botinfo.RegistrationDate,
         LastLogin: Botinfo.LastLogin,
-        Status: Botinfo.status,
+        status: Botinfo.status,
         email: Botinfo.email,
         uniqueId: Botinfo.uniqueId,
       })
@@ -100,9 +100,24 @@ function userInfo() {
   }
 
 
+  const SaveChangeBlockandUnblock = async (isblockstatus) => {
+    console.log("isblockstatus ", isblockstatus)
+
+    let res = await blockandunblock({ userId: Botinfo.UserId, isblock: isblockstatus })
+
+    if (res.status == "ok") {
+
+      alert("Successfully Update...!!")
+    } else {
+      alert("Error Please enter")
+    }
+    navigateToContacts()
+    window.location.reload();
+
+  }
 
   const SaveChangeDeduct = async () => {
-    console.log("amount ", amount)
+
 
     let res = await DeductMoney({ money: amount, type: "Deduct", userId: Botinfo.UserId,adminname:cookies.get('name'),adminid:cookies.get('LoginUserId') })
     
@@ -145,7 +160,7 @@ function userInfo() {
 
           <div className="flex h-[50px] w-full flex-col justify-between rounded-lg border border-bgray-200 p-4 focus-within:border-success-300 dark:border-darkblack-400">
             <p className="text-sm font-medium text-bgray-600 dark:text-bgray-50">
-              Player Name :- {userInfo.UserName}
+              Player Id :- {userInfo.UserName}
             </p>
           </div>
           <div className="flex h-[50px] w-full flex-col justify-between rounded-lg border border-bgray-200 p-4 focus-within:border-success-300 dark:border-darkblack-400">
@@ -162,13 +177,13 @@ function userInfo() {
 
           <div className="flex h-[50px] w-full flex-col justify-between rounded-lg border border-bgray-200 p-4 focus-within:border-success-300 dark:border-darkblack-400">
             <p className="text-sm font-medium text-bgray-600 dark:text-bgray-50">
-              Mobile Number :- {userInfo.MobileNo}
+              Name :- { userInfo.name}
             </p>
           </div>
 
           <div className="flex h-[50px] w-full flex-col justify-between rounded-lg border border-bgray-200 p-4 focus-within:border-success-300 dark:border-darkblack-400">
             <p className="text-sm font-medium text-bgray-600 dark:text-bgray-50">
-              Status :- {userInfo.Status}
+              Status :- {userInfo.status}
             </p>
           </div>
 
@@ -224,7 +239,13 @@ function userInfo() {
           className="mt-7 bg-red-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm">Deduct Money</button>
         <br></br>
 
-        
+        {userInfo.status == "Active"? <button aria-label="none" onClick={(e) => SaveChangeBlockandUnblock(false)}
+        className="mt-7 bg-success-300 dark:bg-success-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm">Block</button>
+        :
+        <button aria-label="none" onClick={(e) => SaveChangeBlockandUnblock(true)}
+          className="mt-7 bg-red-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm">UnBlock</button>}
+
+  
 
          
         </div>

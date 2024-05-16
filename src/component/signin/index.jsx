@@ -6,7 +6,7 @@ import PasswordResetModal from "../modal/PasswordResetModal";
 import { useState } from "react";
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
-const host = "http://93.127.194.87:9999";//"http://192.168.0.203:9999"//
+const host = "http://93.127.194.87:9999"; // "http://192.168.0.203:9999"//
 
 
 function LeftSide() {
@@ -120,7 +120,7 @@ function LeftSide() {
       <div className="max-w-[450px] m-auto pt-24 pb-16">
         <header className="text-center mb-8">
           <h2 className="text-bgray-900 dark:text-white text-4xl font-semibold font-poppins mb-2">
-            Sign in to Deal-Ragal.
+            Sign in to Deal-Regal.
           </h2>
           <p className="font-urbanis text-base font-medium text-bgray-600 dark:text-bgray-50">
           </p>
@@ -235,13 +235,15 @@ function LeftSide() {
             </label>
           </div>
           <div>
-            <a
-              onClick={() => setModalOpen(true)}
-              data-target="#multi-step-modal"
-              className="modal-open text-success-300 font-semibold text-base underline"
-            >
-              Forgot Password?
-            </a>
+            {
+            //   <a
+            //   onClick={() => setModalOpen(true)}
+            //   data-target="#multi-step-modal"
+            //   className="modal-open text-success-300 font-semibold text-base underline"
+            // >
+            //   Forgot Password?
+            // </a>
+            }
           </div>
         </div>
         <a
@@ -252,7 +254,7 @@ function LeftSide() {
           Sign In
         </a>
         <p className="text-bgray-600 dark:text-white text-center text-sm mt-6">
-          @ 2023 Deal-Ragal. All Right Reserved.
+          @ 2023 Deal-Regal. All Right Reserved.
         </p>
       </div>
     </div>
