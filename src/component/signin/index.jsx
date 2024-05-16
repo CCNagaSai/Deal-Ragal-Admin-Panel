@@ -1,12 +1,12 @@
-import logoColor from "../../assets/images/logo/logo-color.svg";
-import logoWhite from "../../assets/images/logo/logo-white.svg";
+import logoColor from "../../assets/images/logo/logo-color.png";
+import logoWhite from "../../assets/images/logo/logo-white.png";
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import PasswordResetModal from "../modal/PasswordResetModal";
 import { useState } from "react";
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
-const host = "http://93.127.194.87:9999"; // "http://192.168.0.203:9999"//
+const host =  "http://93.127.194.87:9999"; //"http://192.168.0.203:9999"//
 
 
 function LeftSide() {

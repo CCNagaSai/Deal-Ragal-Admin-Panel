@@ -1,8 +1,8 @@
 import signupImg from "../../assets/images/illustration/signup.svg";
 import RightSide from "../../component/signin/RightSide";
 import SignUpForm from "../../component/forms/SignUpForm";
-import logoColor from "../../assets/images/logo/logo-color.svg";
-import logoWhite from "../../assets/images/logo/logo-white.svg";
+import logoColor from "../../assets/images/logo/logo-color.png";
+import logoWhite from "../../assets/images/logo/logo-white.png";
 import { Link } from "react-router-dom";
 
 function SignUp() {

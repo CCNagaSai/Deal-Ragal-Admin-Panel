@@ -5,7 +5,7 @@ import react from "@vitejs/plugin-react";
 // Add PWA configuration
 const pwaConfig = {
   registerType: "autoUpdate",
-  includeAssets: ["logo-color.svg"],
+  includeAssets: ["logo-color.png"],
   workbox: {
     globPatterns: ["**/*.{js,css,html,png,jpg,gif,svg}"], // Include your asset types
     navigateFallback: "/", // The fallback for client-side routing

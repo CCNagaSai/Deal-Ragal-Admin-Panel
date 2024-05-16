@@ -1,7 +1,7 @@
 import ProtoTypes from "prop-types";
 import bg from "../../assets/images/bg/upgrade-bg.png";
-import logo from "../../assets/images/logo/logo-color.svg";
-import logoW from "../../assets/images/logo/logo-white.svg";
+import logo from "../../assets/images/logo/logo-color.png";
+import logoW from "../../assets/images/logo/logo-white.png";
 import profileImg from "../../assets/images/avatar/profile-xs.png";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";

@@ -1,6 +1,6 @@
 import ProtoTypes from "prop-types";
-import logoColor from "../../assets/images/logo/logo-color.svg";
-import logoWhite from "../../assets/images/logo/logo-white.svg";
+import logoColor from "../../assets/images/logo/logo-color.png";
+import logoWhite from "../../assets/images/logo/logo-white.png";
 import { Link } from "react-router-dom";
 
 export const CrossBtn = ({ close }) => {

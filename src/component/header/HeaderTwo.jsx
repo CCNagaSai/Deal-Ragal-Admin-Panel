@@ -1,6 +1,6 @@
 import ProtoTypes from "prop-types";
-import logo from "../../assets/images/logo/logo-color.svg";
-import logoW from "../../assets/images/logo/logo-white.svg";
+import logo from "../../assets/images/logo/logo-color.png";
+import logoW from "../../assets/images/logo/logo-white.png";
 import profile from "../../assets/images/avatar/profile-52x52.png";
 import { useState } from "react";
 import { Link } from "react-router-dom";
