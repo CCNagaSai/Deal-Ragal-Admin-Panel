@@ -91,8 +91,8 @@ function playerAddinfo() {
     }
 
 
-    if(userInfo.password.length < 8){
-      alert("Invalid passwordValue leangth Must be 8 characters.")
+    if(userInfo.password.length < 4){
+      alert("Invalid passwordValue leangth Must be 4 characters.")
       return false
     }
     

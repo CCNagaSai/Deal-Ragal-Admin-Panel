@@ -2,7 +2,7 @@ import GreenBtn from "../button/AddMony";
 
 import { useNavigate, useLocation } from 'react-router-dom';
 
-import React, { useState, useContext, useEffect,useRef } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import offerContext from '../../context/offerContext';
 
 import Modal from 'react-bootstrap/Modal';
@@ -23,9 +23,9 @@ function userInfo() {
   console.log("Player Info  ", Botinfo)
 
   const context = useContext(offerContext)
-  const { AddMoney, DeductMoney, host,blockandunblock } = context
+  const { AddMoney, DeductMoney,UpdatePassword, host, blockandunblock } = context
 
- 
+
 
   const navigate = useNavigate();
   const navigateToContacts = () => {
@@ -39,7 +39,7 @@ function userInfo() {
     name: Botinfo.name,
     profileUrl: Botinfo.profileUrl,
     status: Botinfo.status,
-    MobileNo: Botinfo.MobileNo != undefined ? Botinfo.MobileNo:"-",
+    MobileNo: Botinfo.MobileNo != undefined ? Botinfo.MobileNo : "-",
     MainWallet: Botinfo.MainWallet,
     RegistrationDate: Botinfo.RegistrationDate,
     LastLogin: Botinfo.LastLogin,
@@ -57,7 +57,7 @@ function userInfo() {
         UserName: Botinfo.UserName,
         name: Botinfo.name,
         profileUrl: Botinfo.img,
-        MobileNo: Botinfo.MobileNo != undefined ? Botinfo.MobileNo:"-",
+        MobileNo: Botinfo.MobileNo != undefined ? Botinfo.MobileNo : "-",
         MainWallet: Botinfo.MainWallet,
         RegistrationDate: Botinfo.RegistrationDate,
         LastLogin: Botinfo.LastLogin,
@@ -74,6 +74,20 @@ function userInfo() {
   }, []);
 
   const [amount, setAmount] = useState(0);
+  const [password, setPassword] = useState(0);
+
+
+  
+
+  const handlePassword = async (event) => {
+    const { name, value } = event.target;
+    await setPassword(value)
+
+    console.log("password", password)
+
+  }
+
+
 
   const handleAmount = async (event) => {
     const { name, value } = event.target;
@@ -83,10 +97,32 @@ function userInfo() {
 
   }
 
+  const SaveUpdatePasswordChange = async () => {
+    console.log("password ", password)
+
+    if(password.length < 4){
+      alert("Invalid passwordValue leangth Must be 4 characters.")
+      return false
+    }
+    
+
+    let res = await UpdatePassword({  userId: Botinfo.UserId, password: password})
+
+    if (res.status == "ok") {
+
+      alert("Successfully Added...!!")
+    } else {
+      alert("Error Please enter")
+    }
+
+    setAmount(0)
+
+  }
+
   const SaveChange = async () => {
     console.log("amount ", amount)
 
-    let res = await AddMoney({ money: amount, type: "Deposit", userId: Botinfo.UserId,adminname:cookies.get('name'),adminid:cookies.get('LoginUserId') })
+    let res = await AddMoney({ money: amount, type: "Deposit", userId: Botinfo.UserId, adminname: cookies.get('name'), adminid: cookies.get('LoginUserId') })
 
     if (res.status == "ok") {
 
@@ -119,8 +155,8 @@ function userInfo() {
   const SaveChangeDeduct = async () => {
 
 
-    let res = await DeductMoney({ money: amount, type: "Deduct", userId: Botinfo.UserId,adminname:cookies.get('name'),adminid:cookies.get('LoginUserId') })
-    
+    let res = await DeductMoney({ money: amount, type: "Deduct", userId: Botinfo.UserId, adminname: cookies.get('name'), adminid: cookies.get('LoginUserId') })
+
     if (res.status == "ok") {
 
       alert("Successfully Deduct...!!")
@@ -131,11 +167,11 @@ function userInfo() {
     setAmount(0)
 
   }
-  
- 
 
 
-  
+
+
+
   return (
     <>
       <div className="mb-6 w-full rounded-lg bg-white px-[42px] py-5 dark:border dark:border-darkblack-400 dark:bg-darkblack-600 lg:mb-0 lg:w-1/2 2xl:mb-6 2xl:w-full">
@@ -177,7 +213,7 @@ function userInfo() {
 
           <div className="flex h-[50px] w-full flex-col justify-between rounded-lg border border-bgray-200 p-4 focus-within:border-success-300 dark:border-darkblack-400">
             <p className="text-sm font-medium text-bgray-600 dark:text-bgray-50">
-              Name :- { userInfo.name}
+              Name :- {userInfo.name}
             </p>
           </div>
 
@@ -193,6 +229,29 @@ function userInfo() {
             </p>
           </div>
 
+
+          <div className="flex h-[98px] w-full flex-col justify-between rounded-lg border border-bgray-200 p-4 focus-within:border-success-300 dark:border-darkblack-400">
+          <p className="text-sm font-medium text-bgray-600 dark:text-bgray-50">
+            Update Password
+          </p>
+          <div className="flex h-[35px] w-full items-center justify-between">
+            <span className="text-2xl font-bold text-bgray-900 dark:text-white">
+              
+            </span>
+            <label className="w-full">
+              <input
+                type="text" onChange={handlePassword}
+                className="w-full border-none p-0 text-2xl font-bold text-bgray-900 focus:outline-none focus:ring-0 dark:border-darkblack-400 dark:bg-darkblack-600 dark:text-white"
+              />
+            </label>
+          </div>
+        </div>
+
+
+        <button aria-label="none" onClick={SaveUpdatePasswordChange}
+          className="mt-7 bg-success-300 dark:bg-success-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm">Update Password</button>
+
+
           
 
           <div className="flex h-[98px] w-full flex-col justify-between rounded-lg border border-bgray-200 p-4 focus-within:border-success-300 dark:border-darkblack-400">
@@ -201,7 +260,7 @@ function userInfo() {
             </p>
             <div className="flex h-[35px] w-full items-center justify-between">
               <span className="text-2xl font-bold text-bgray-900 dark:text-white">
-              ₹
+                ₹
               </span>
               <label className="w-full">
                 <input
@@ -224,7 +283,7 @@ function userInfo() {
             </p>
             <div className="flex h-[35px] w-full items-center justify-between">
               <span className="text-2xl font-bold text-bgray-900 dark:text-white">
-              ₹
+                ₹
               </span>
               <label className="w-full">
                 <input
@@ -232,22 +291,22 @@ function userInfo() {
                   className="w-full border-none p-0 text-2xl font-bold text-bgray-900 focus:outline-none focus:ring-0 dark:border-darkblack-400 dark:bg-darkblack-600 dark:text-white"
                 />
               </label>
-             </div>
+            </div>
           </div>
 
           <button aria-label="none" onClick={SaveChangeDeduct}
-          className="mt-7 bg-red-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm">Deduct Money</button>
-        <br></br>
+            className="mt-7 bg-red-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm">Deduct Money</button>
+          <br></br>
 
-        {userInfo.status == "Active"? <button aria-label="none" onClick={(e) => SaveChangeBlockandUnblock(false)}
-        className="mt-7 bg-success-300 dark:bg-success-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm">Block</button>
-        :
-        <button aria-label="none" onClick={(e) => SaveChangeBlockandUnblock(true)}
-          className="mt-7 bg-red-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm">UnBlock</button>}
+          {userInfo.status == "Active" ? <button aria-label="none" onClick={(e) => SaveChangeBlockandUnblock(false)}
+            className="mt-7 bg-success-300 dark:bg-success-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm">Block</button>
+            :
+            <button aria-label="none" onClick={(e) => SaveChangeBlockandUnblock(true)}
+              className="mt-7 bg-red-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm">UnBlock</button>}
 
-  
 
-         
+
+
         </div>
       </div>
     </>

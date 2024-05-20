@@ -62,6 +62,26 @@ function agentAdd() {
     // You can handle the form submission here
     // This example just logs the data to the console
 
+    if(!/^[a-zA-Z\s]+$/.test(userInfo.name)  ){
+      alert("Invalid User name. User name should only contain alphabetic characters and spaces.")
+      return false
+    }
+
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userInfo.email)){
+      alert("Invalid email format.")
+      return false
+    }
+
+    if(userInfo.mobileno == "" || userInfo.mobileno.length != 10 || /^[1-5]\d{9}$|^6\d{9}$/.test(userInfo.mobileno)){
+      alert("Invalid mobile number. Mobile number should start with 1 and be exactly 10 digits long.")
+      return false
+    }
+
+    if(userInfo.password.length < 4){
+      alert("Invalid password Value leangth Must be 4 characters.")
+      return false
+    }
+    
     console.log("userInfo ", userInfo)
 
     let res = await AgentAdd(userInfo)
@@ -71,7 +91,7 @@ function agentAdd() {
     if (res.status != undefined && res.status == 200) {
       navigateToContacts()
     } else {
-      alert("Error Please enter")
+      alert("Invalid Value,Please Add Proper Data")
     }
     console.log(userInfo);
   };

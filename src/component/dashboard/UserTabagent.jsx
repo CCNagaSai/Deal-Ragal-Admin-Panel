@@ -2,6 +2,7 @@ import ProtoTypes from "prop-types";
 import users from "../../data/user";
 import offerContext from '../../context/offerContext'
 import React,{useContext,useEffect,useState,useRef} from 'react';
+import CustomerInfo from "./UserInfoagent";
 
 function UserTab({ }) {
 

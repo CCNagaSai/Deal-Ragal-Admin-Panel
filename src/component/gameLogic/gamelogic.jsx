@@ -7,7 +7,9 @@ function gameLogic(gameName) {
   const [robotlogic, setRobotlogic] = useState({
     gamename: gameName.gameName,
     selectedMode: "",
-    fixnumberwon: -1
+    greenfixnumberwon: -1,
+    bluefixnumberwon: -1,
+
   });
 
   const handleModeChange = (event) => {
@@ -41,7 +43,9 @@ function gameLogic(gameName) {
       setRobotlogic({
         gamename: gameName.gameName,
         selectedMode: robotlogicdata.selectedMode,
-        fixnumberwon: robotlogicdata.fixnumberwon
+        greenfixnumberwon: robotlogicdata.greenfixnumberwon,
+        bluefixnumberwon: robotlogicdata.bluefixnumberwon
+
       })
 
 
@@ -134,15 +138,15 @@ function gameLogic(gameName) {
             <div className="flex items-center space-x-[17px]">
               <div className="icon">
                 <span>
-                  <p className="text-1xl font-bold leading-[48px] text-bgray-900 dark:text-white">Fix Number Won</p>
+                  <p className="text-1xl font-bold leading-[48px] text-bgray-900 dark:text-white">Blue Fix Number Won</p>
                 </span>
               </div>
               <span className="text-lg font-semibold text-bgray-900 dark:text-white">
                 <input
                   type="text"
-                  id="fixnumberwon"
-                  name="fixnumberwon"
-                  placeholder={robotlogic.fixnumberwon}
+                  id="bluefixnumberwon"
+                  name="bluefixnumberwon"
+                  placeholder={robotlogic.bluefixnumberwon}
                   className="bg-bgray-500 dark:bg-darkblack-500 dark:text-white p-4 rounded-lg h-14 border-0 focus:border focus:border-success-300 focus:ring-0"
 
                   onChange={handleModeChange}
@@ -152,6 +156,29 @@ function gameLogic(gameName) {
           </div>
         </div>
         <div className="rounded-lg  p-5 ">
+        </div>
+
+        <div className="rounded-lg bg-white p-5 dark:bg-darkblack-600">
+          <div className="mb-5 flex items-center justify-between">
+            <div className="flex items-center space-x-[17px]">
+              <div className="icon">
+                <span>
+                  <p className="text-1xl font-bold leading-[48px] text-bgray-900 dark:text-white">Green Fix Number Won</p>
+                </span>
+              </div>
+              <span className="text-lg font-semibold text-bgray-900 dark:text-white">
+                <input
+                  type="text"
+                  id="greenfixnumberwon"
+                  name="greenfixnumberwon"
+                  placeholder={robotlogic.greenfixnumberwon}
+                  className="bg-bgray-500 dark:bg-darkblack-500 dark:text-white p-4 rounded-lg h-14 border-0 focus:border focus:border-success-300 focus:ring-0"
+
+                  onChange={handleModeChange}
+                />
+              </span>
+            </div>
+          </div>
         </div>
 
         <div className="rounded-lg  p-5">

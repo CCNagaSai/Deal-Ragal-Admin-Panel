@@ -21,11 +21,6 @@ function Sidebar({ handleActive }) {
   const [roulette, setRoulette] = useState(false);
 
 
-
-  
-
-  
-
   const [payoutlist, setPayoutlist] = useState(false);
 
   const gamelistfunction = (flags) => {

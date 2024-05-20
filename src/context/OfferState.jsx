@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
-const host = "http://93.127.194.87:9999"; //"http://192.168.0.203:9999"//
+const host = "http://192.168.0.203:9999"//"http://93.127.194.87:9999"; //
 //const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTQ5Y2NlM2JhNDA4YTJlMjg3ZjJlYzUiLCJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQHNpc3VnYW16LmNvbSIsInBhc3N3b3JkIjoiJDJiJDEwJHhZZzVMUlNRRWxiNENOZnVocjdncmUyUjNMOUQ5eDhaWmc0c0QxSW9uY1N6ZWFTSHgzMTIuIiwiY3JlYXRlZEF0IjoiMjAyMy0xMS0wN1QwNTozNjozNS42NjBaIiwibW9kaWZpZWRBdCI6IjIwMjMtMTEtMDdUMDU6MzY6MzUuNjYwWiIsImlhdCI6MTY5OTMzNTQxMywiZXhwIjoxNjk5OTQwMjEzfQ.NrLsWSnyD09P3h30rsng_R3bygn3TsKl8nXyD7qom4c";
 
 const OfferState = (props) => {
@@ -322,7 +322,7 @@ const OfferState = (props) => {
                         'token':  cookies.get('token')
                     },
                     body: JSON.stringify(data)
-                }).then(d => d)
+                }).then(d => d.json())
 
                 const json = response
                 console.log("data api from :latatestUser :::...", json)
@@ -853,6 +853,35 @@ const OfferState = (props) => {
                 return []
             } else {
                 return await json.myRaferralsData
+            }
+
+        } catch (e) {
+            console.log("e :", e)
+        }
+    }
+
+    const UpdatePassword = async (data) => {
+        try {
+            console.log("PlayerList :::::::", `${host}/admin/user/UpdatePassword`, data)
+            const response = await fetch(`${host}/admin/user/UpdatePassword`, {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'token': cookies.get('token')
+                },
+                body: JSON.stringify(data)
+            }).then(data => data.json())
+
+            const json = response
+            console.log("data api from :UpdatePassword :::...", json)
+
+            if (json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")) {
+                LogoutClick()
+
+                return {}
+            } else {
+                return await json
             }
 
         } catch (e) {
@@ -2543,7 +2572,7 @@ const OfferState = (props) => {
             SendPushnotification,
             BannerList, BannerAdd, DeleteBanner, UploadBanner,
             BotList, BotAdd, BotDelete, BotData, UploadProfile, BotUpdate,
-            AddMoney, DeductMoney,getprintdataapi, LogoutClick,
+            AddMoney,UpdatePassword, DeductMoney,getprintdataapi, LogoutClick,
             DepositeList, DepositeAccptedList, DepositeRejectedList, DepositeAdd, UploadScreenshort, DepositeDelete, DepositeData, DepositeUpdate,
             PayoutList, PayoutAccptedList, PayoutRejectedList, PayoutUpdate, UploadScreenshortPayout,
             AgentList,AgentAdd,AgentDelete,AgentData,AgentUpdate,
