@@ -2,7 +2,7 @@ import totalEarn from "../../assets/images/icons/total-earn.svg";
 import memberImg from "../../assets/images/avatar/members-2.png";
 
 import offerContext from '../../context/offerContext'
-import React,{useContext,useEffect,useState,useRef} from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import TotalWidgetCard from "./TotalWidgetCard";
 
 function Dashboard() {
@@ -18,33 +18,60 @@ function Dashboard() {
   let [todayDeposit, settodayDeposit] = useState('');
   let [totalGamePay, setTotalgamePay] = useState('');
 
-  useEffect( () => {
+  let [todayWithdraw, settodayWithdraw] = useState('');
+  let [totalWithdraw, settotalWithdraw] = useState('');
+
+
+  let [toDayGamePay, settoDayGamePay] = useState('');
+  let [todayProfit, settodayProfit] = useState('');
+
+
+  useEffect(() => {
     const submitdata = async () => {
-     
+
       apiData = await dashboardData("Admin")
+
+      if (apiData.totalUser != undefined)
+        settotalUser(apiData.totalUser)
+
+      if (apiData.totalAgent != undefined)
+        settotalAgent(apiData.totalAgent)
+
+      if (apiData.totalDeposit != undefined)
+        settotalDeposit(apiData.totalDeposit)
+
+      if (apiData.todayDeposit != undefined)
+        settodayDeposit(apiData.todayDeposit)
+
+      if (apiData.totalGamePay != undefined)
+        setTotalgamePay(apiData.totalGamePay)
+
+
+      if (apiData.todayWithdraw != undefined)
+        settodayWithdraw(apiData.todayWithdraw)
+
+
+
+      if (apiData.totalWithdraw != undefined)
+        settotalWithdraw(apiData.totalWithdraw)
+
+
+
       
-      if(apiData.totalUser != undefined)
-      settotalUser(apiData.totalUser)
+      if (apiData.toDayGamePay != undefined)
+        settoDayGamePay(apiData.toDayGamePay)
 
-      if(apiData.totalAgent != undefined)
-      settotalAgent(apiData.totalAgent) 
-
-      if(apiData.totalDeposit != undefined)
-      settotalDeposit(apiData.totalDeposit)
-
-      if(apiData.todayDeposit != undefined)
-      settodayDeposit(apiData.todayDeposit)
-
-      if(apiData.totalGamePay != undefined)
-      setTotalgamePay(apiData.totalGamePay)
 
       
+      if (apiData.todayProfit != undefined)
+        settodayProfit(apiData.todayProfit)
 
-  }
 
-  submitdata()
-  },[]);
-  
+    }
+
+    submitdata()
+  }, []);
+
   return (
     <div className="mb-[24px] w-full">
       <div className="grid grid-cols-1 gap-[24px] lg:grid-cols-3">
@@ -68,7 +95,7 @@ function Dashboard() {
           logo=""
           link="/agentmanagement"
         />
-      
+
         <TotalWidgetCard
           totalEarnImg={totalEarn}
           memberImg={memberImg}
@@ -89,6 +116,29 @@ function Dashboard() {
           logo="₹"
           link="/depositList"
         />
+
+        <TotalWidgetCard
+          totalEarnImg={totalEarn}
+          memberImg={memberImg}
+          title="Total widhdraw"
+          amount={totalWithdraw}
+          groth="+ 3.5%"
+          id="totalSpending"
+          logo="₹"
+          link="/depositList"
+        />
+        <TotalWidgetCard
+          totalEarnImg={totalEarn}
+          memberImg={memberImg}
+          title="Today widhdraw"
+          amount={todayWithdraw}
+          groth="+ 3.5%"
+          id="totalGoal"
+          logo="₹"
+          link="/depositList"
+        />
+
+
         <TotalWidgetCard
           totalEarnImg={totalEarn}
           memberImg={memberImg}
@@ -99,6 +149,30 @@ function Dashboard() {
           logo=""
           link="/gamename=balckandwhite"
         />
+
+        <TotalWidgetCard
+          totalEarnImg={totalEarn}
+          memberImg={memberImg}
+          title="Today Games Played"
+          amount={toDayGamePay}
+          groth="+ 3.5%"
+          id="totalGoal"
+          logo=""
+          link="/gamename=balckandwhite"
+        />
+
+        <TotalWidgetCard
+        totalEarnImg={totalEarn}
+        memberImg={memberImg}
+        title="ToDay Profit Loss"
+        amount={todayProfit}
+        groth="+ 3.5%"
+        id="totalGoal"
+        logo="₹"
+        link="/gamename=balckandwhite"
+      />
+
+
       </div>
     </div>
   );
