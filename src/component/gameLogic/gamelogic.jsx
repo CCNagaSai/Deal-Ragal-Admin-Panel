@@ -9,7 +9,8 @@ function gameLogic(gameName) {
     selectedMode: "",
     greenfixnumberwon: -1,
     bluefixnumberwon: -1,
-    PERCENTAGE: -1
+    PERCENTAGE: -1,
+    DAY: -1
   });
 
   const handleModeChange = (event) => {
@@ -45,7 +46,8 @@ function gameLogic(gameName) {
         selectedMode: robotlogicdata.selectedMode,
         greenfixnumberwon: robotlogicdata.greenfixnumberwon,
         bluefixnumberwon: robotlogicdata.bluefixnumberwon,
-        PERCENTAGE: robotlogicdata.PERCENTAGE
+        PERCENTAGE: robotlogicdata.PERCENTAGE,
+        DAY: robotlogicdata.DAY
       })
 
 
@@ -156,27 +158,53 @@ function gameLogic(gameName) {
           </div>
         </div>
         <div className="rounded-lg bg-white p-5 dark:bg-darkblack-600">
-        <div className="mb-5 flex items-center justify-between">
-          <div className="flex items-center space-x-[17px]">
-            <div className="icon">
-              <span>
-                <p className="text-1xl font-bold leading-[48px] text-bgray-900 dark:text-white">Percentage</p>
-              </span>
-            </div>
-            <span className="text-lg font-semibold text-bgray-900 dark:text-white">
-              <input
-                type="text"
-                id="PERCENTAGE"
-                name="PERCENTAGE"
-                placeholder={robotlogic.PERCENTAGE}
-                className="bg-bgray-500 dark:bg-darkblack-500 dark:text-white p-4 rounded-lg h-14 border-0 focus:border focus:border-success-300 focus:ring-0"
+          <div className="mb-5 flex items-center justify-between">
+            <div className="flex items-center space-x-[17px]">
+              <div className="icon">
+                <span>
+                  <p className="text-1xl font-bold leading-[48px] text-bgray-900 dark:text-white">Percentage</p>
+                </span>
+              </div>
+              <span className="text-lg font-semibold text-bgray-900 dark:text-white">
+                <input
+                  type="text"
+                  id="PERCENTAGE"
+                  name="PERCENTAGE"
+                  placeholder={robotlogic.PERCENTAGE}
+                  className="bg-bgray-500 dark:bg-darkblack-500 dark:text-white p-4 rounded-lg h-14 border-0 focus:border focus:border-success-300 focus:ring-0"
 
-                onChange={handleModeChange}
-              />
-            </span>
+                  onChange={handleModeChange}
+                />
+              </span>
+             
+            </div>
           </div>
         </div>
-      </div>
+
+
+        <div className="rounded-lg bg-white p-5 dark:bg-darkblack-600">
+          <div className="mb-5 flex items-center justify-between">
+            <div className="flex items-center space-x-[17px]">
+             
+              <div className="icon">
+                <span>
+                  <p className="text-1xl font-bold leading-[48px] text-bgray-900 dark:text-white">Day</p>
+                </span>
+              </div>
+              <span className="text-lg font-semibold text-bgray-900 dark:text-white">
+                <input
+                  type="text"
+                  id="DAY"
+                  name="DAY"
+                  placeholder={robotlogic.DAY}
+                  className="bg-bgray-500 dark:bg-darkblack-500 dark:text-white p-4 rounded-lg h-14 border-0 focus:border focus:border-success-300 focus:ring-0"
+
+                  onChange={handleModeChange}
+                />
+              </span>
+            </div>
+          </div>
+        </div>
 
         <div className="rounded-lg bg-white p-5 dark:bg-darkblack-600">
           <div className="mb-5 flex items-center justify-between">
@@ -201,7 +229,7 @@ function gameLogic(gameName) {
           </div>
         </div>
 
-      
+
 
         <div className="rounded-lg  p-5">
 
