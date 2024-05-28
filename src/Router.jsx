@@ -58,6 +58,7 @@ import Commission from './pages/commission'
 import GamebetInfo from './pages/playingtabledata'
 
 
+import BetHistoryinfo from './pages/BetHistory'
 
 
 import Chnagepwd from './pages/Chnagepwd'
@@ -67,6 +68,12 @@ const router = createBrowserRouter([
     path: "/",
     Component: Layout,
     children: [
+      
+      
+      {
+        path: "/betHistory",
+        element: <BetHistoryinfo />,
+      },
       {
         path: "/gamebetInfo",
         element: <GamebetInfo />,

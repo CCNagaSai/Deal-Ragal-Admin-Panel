@@ -1,0 +1,152 @@
+/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .container {
+    margin-top: 50px;
+  }
+  
+  h1 {
+    margin-bottom: 20px;
+  }
+  
+  .game-area {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  
+  .roulette-section {
+    margin-right: 50px;
+  }
+  
+  .roulette-wheel {
+    margin: 20px auto;
+    width: 200px;
+    height: 200px;
+    border: 10px solid black;
+    border-radius: 50%;
+    position: relative;
+  }
+  
+  .wheel {
+    width: 100%;
+    height: 100%;
+    background: conic-gradient(
+      red 0deg 30deg,
+      black 30deg 60deg,
+      red 60deg 90deg,
+      black 90deg 120deg,
+      red 120deg 150deg,
+      black 150deg 180deg,
+      red 180deg 210deg,
+      black 210deg 240deg,
+      red 240deg 270deg,
+      black 270deg 300deg,
+      red 300deg 330deg,
+      black 330deg 360deg
+    );
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: transform 4s ease-out;
+  }
+  
+  button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+  
+  #result {
+    margin-top: 20px;
+    font-size: 20px;
+  }
+  
+  .table-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .roulette-table {
+    border-collapse: collapse;
+  }
+  
+  .roulette-table td {
+    width: 70px;
+    height: 70px;
+    text-align: center;
+    vertical-align: middle;
+    border: 2px solid #000;
+    cursor: pointer;
+  }
+  
+  .zero {
+    background-color: green;
+    color: white;
+  }
+
+  .Chipsbet{
+    background-color: rgb(13, 50, 216);
+    border-radius: 100px;
+  }
+
+  .red {
+    background-color: red;
+    color: white;
+  }
+  
+  .black {
+    background-color: black;
+    color: white;
+  }
+  
+  .odd{
+    background-color: white;
+  }
+
+  .even{
+    background-color: white;
+  }
+
+  .low{
+    background-color: white;
+  }
+
+  .high{
+    background-color: white;
+  }
+
+  .first-dozen{
+    background-color: white;
+  }
+
+  .second-dozen{
+    background-color: white;
+  }
+
+  .third-dozen{
+    background-color: white;
+  }
+  
+  .first-column{
+    background-color: white;
+  }
+
+  .second-column{
+    background-color: white;
+  }
+
+  .third-column{
+    background-color: white;
+  }
+  
+
+
+  
