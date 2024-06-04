@@ -23,7 +23,7 @@ function userInfo() {
   console.log("Player Info  ", Botinfo)
 
   const context = useContext(offerContext)
-  const { AddMoney, DeductMoney,UpdatePassword, host, blockandunblock } = context
+  const { AddMoney, DeductMoney, UpdatePassword, host, blockandunblock } = context
 
 
 
@@ -77,7 +77,7 @@ function userInfo() {
   const [password, setPassword] = useState(0);
 
 
-  
+
 
   const handlePassword = async (event) => {
     const { name, value } = event.target;
@@ -100,13 +100,13 @@ function userInfo() {
   const SaveUpdatePasswordChange = async () => {
     console.log("password ", password)
 
-    if(password.length < 4){
+    if (password.length < 4) {
       alert("Invalid passwordValue leangth Must be 4 characters.")
       return false
     }
-    
 
-    let res = await UpdatePassword({  userId: Botinfo.UserId, password: password})
+
+    let res = await UpdatePassword({ userId: Botinfo.UserId, password: password })
 
     if (res.status == "ok") {
 
@@ -124,9 +124,9 @@ function userInfo() {
 
     let res = await AddMoney({ money: amount, type: "Deposit", userId: Botinfo.UserId, adminname: cookies.get('name'), adminid: cookies.get('LoginUserId') })
 
-    if (res.status == "ok") {
+    if (res.msg != undefined) {
 
-      alert("Successfully Added...!!")
+      alert(res.msg)
     } else {
       alert("Error Please enter")
     }
@@ -157,9 +157,9 @@ function userInfo() {
 
     let res = await DeductMoney({ money: amount, type: "Deduct", userId: Botinfo.UserId, adminname: cookies.get('name'), adminid: cookies.get('LoginUserId') })
 
-    if (res.status == "ok") {
+    if (res.msg != undefined) {
 
-      alert("Successfully Deduct...!!")
+      alert(res.msg)
     } else {
       alert("Error Please enter")
     }
@@ -231,28 +231,28 @@ function userInfo() {
 
 
           <div className="flex h-[98px] w-full flex-col justify-between rounded-lg border border-bgray-200 p-4 focus-within:border-success-300 dark:border-darkblack-400">
-          <p className="text-sm font-medium text-bgray-600 dark:text-bgray-50">
-            Update Password
-          </p>
-          <div className="flex h-[35px] w-full items-center justify-between">
-            <span className="text-2xl font-bold text-bgray-900 dark:text-white">
-              
-            </span>
-            <label className="w-full">
-              <input
-                type="text" onChange={handlePassword}
-                className="w-full border-none p-0 text-2xl font-bold text-bgray-900 focus:outline-none focus:ring-0 dark:border-darkblack-400 dark:bg-darkblack-600 dark:text-white"
-              />
-            </label>
+            <p className="text-sm font-medium text-bgray-600 dark:text-bgray-50">
+              Update Password
+            </p>
+            <div className="flex h-[35px] w-full items-center justify-between">
+              <span className="text-2xl font-bold text-bgray-900 dark:text-white">
+
+              </span>
+              <label className="w-full">
+                <input
+                  type="text" onChange={handlePassword}
+                  className="w-full border-none p-0 text-2xl font-bold text-bgray-900 focus:outline-none focus:ring-0 dark:border-darkblack-400 dark:bg-darkblack-600 dark:text-white"
+                />
+              </label>
+            </div>
           </div>
-        </div>
 
 
-        <button aria-label="none" onClick={SaveUpdatePasswordChange}
-          className="mt-7 bg-success-300 dark:bg-success-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm">Update Password</button>
+          <button aria-label="none" onClick={SaveUpdatePasswordChange}
+            className="mt-7 bg-success-300 dark:bg-success-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm">Update Password</button>
 
 
-          
+
 
           <div className="flex h-[98px] w-full flex-col justify-between rounded-lg border border-bgray-200 p-4 focus-within:border-success-300 dark:border-darkblack-400">
             <p className="text-sm font-medium text-bgray-600 dark:text-bgray-50">

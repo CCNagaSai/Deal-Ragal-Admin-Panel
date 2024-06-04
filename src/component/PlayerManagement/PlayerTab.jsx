@@ -37,12 +37,18 @@ function PlayerTab({ }) {
 
   useEffect(() => {
     const submitdata = async () => {
+      console.log("AgentInfo", AgentInfo)
+      console.log("cookies.get('logintype') ", cookies.get('logintype'))
+      console.log("cookies.get('LoginUserId') ",cookies.get('LoginUserId'))
+      
+      
+
       if (AgentInfo != undefined && AgentInfo.UserId != undefined) {
-        setUserData(await PlayerList(AgentInfo.UserId))
+        setUserData(await PlayerList(AgentInfo.UserId,cookies.get('logintype')))
       } else if (cookies.get('logintype') == "Admin") {
-        setUserData(await PlayerList(cookies.get('logintype')))
+        setUserData(await PlayerList("id",cookies.get('logintype')))
       } else {
-        setUserData(await PlayerList(cookies.get('LoginUserId')))
+        setUserData(await PlayerList(cookies.get('LoginUserId'),cookies.get('logintype')))
       }
 
 
@@ -164,8 +170,8 @@ function PlayerTab({ }) {
           <button aria-label="none"
             className="bg-success-300 dark:bg-success-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm" onClick={resetDate}>Reset</button>
 
-          <button aria-label="none"
-            className="bg-success-300 dark:bg-success-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm" onClick={() => navigateToUserRegister()} >Add User</button>
+           { cookies.get('name') == "Super Admin" || cookies.get('name') == "Shop" ? <button aria-label="none"
+            className="bg-success-300 dark:bg-success-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm" onClick={() => navigateToUserRegister()} >Add User</button> : ""}
 
         </div>
       </div>
@@ -225,14 +231,16 @@ function PlayerTab({ }) {
 
                 </div>
               </td>
-              <td className="w-[165px] px-6 py-5 xl:px-0">
+
+              {cookies.get('name') == "Super Admin" || cookies.get('name') == "Shop" ? <td className="w-[165px] px-6 py-5 xl:px-0">
                 <div className="flex w-full items-center space-x-2.5">
                   <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
                     Action
                   </span>
 
                 </div>
-              </td>
+              </td> : ""}
+
             </tr>
             {usersOnCurrentPage?.map((user, index) =>
               pageSize

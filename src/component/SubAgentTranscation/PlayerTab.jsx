@@ -3,13 +3,15 @@ import ProtoTypes from "prop-types";
 import CustomerInfo from "./PlayerInfo";
 import users from "../../data/user";
 import offerContext from '../../context/offerContext';
-import { useNavigate, useLocation } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import ReactHTMLTableToExcel from 'react-html-table-to-excel';
+import { useNavigate, useLocation } from 'react-router-dom';
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
 
-function PlayerTab({ UserId, gameName }) {
 
+function PlayerTab({ }) {
   //-------------------------------------------------------------------------------------------------------
   const [active, setActive] = useState(false);
   const [pageSize, setPageSize] = useState(5);
@@ -23,92 +25,56 @@ function PlayerTab({ UserId, gameName }) {
     setActive(!active)
   }
   //------------------------------------------------------------------------------------------------------------
-  const location = useLocation();
-  const Botinfo = location.state;
-  //console.log(" Botinfo.UserId ", Botinfo)
-  let [gameHistoryData, setGameHistoryData] = useState([]);
+
+
+  let [userData, setUserData] = useState([]);
+
 
   const context = useContext(offerContext)
-  const { GetSpinnerHistoryData,GetSoratHistoryData,GetandarbaharHistoryData,GetOneToTwelveHistoryData,GetRouletteHistoryData} = context
+  const { SubAgentTranscationData } = context
+
+  const location = useLocation();
+  //console.log("location ", location.state)
+  const AgentInfo = location.state;
+
 
 
   useEffect(() => {
     const submitdata = async () => {
-      setGameHistoryData([])
-      // <HistoryTable gameName="AviatorGame"/>
-      // <HistoryTable gameName="BlackandWhite"/>
-      // <HistoryTable gameName="Withdrawal"/>
-      // <HistoryTable gameName="Deposit"/>
-      // <HistoryTable gameName="reffrel"/>
-
-      // <HistoryTable gameName="Wheel Of Fortune"/>
-      // <HistoryTable gameName="Andar Bahar"/>
-      // <HistoryTable gameName="SORAT"/>
-      // <HistoryTable gameName="One To Twelve"/>
 
       
-      console.log("gameName ",gameName)
-      if (gameName == "Wheel Of Fortune") {
-       
-        setGameHistoryData(await GetSpinnerHistoryData( Botinfo.UserId))
+      if (cookies.get('logintype') == "Admin") {
+        
+        setUserData(await SubAgentTranscationData("id", cookies.get('logintype')))
 
-        console.log("gameHistoryData ",gameHistoryData)
+      } else {
+        
+        setUserData(await SubAgentTranscationData(cookies.get('LoginUserId'), cookies.get('logintype')))
 
-      } 
-      else if (gameName == "Andar Bahar") {
-
-        setGameHistoryData(await GetandarbaharHistoryData( Botinfo.UserId))
-      }else if (gameName == "SORAT") {
-
-        setGameHistoryData(await GetSoratHistoryData( Botinfo.UserId))
-      }else if (gameName == "One To Twelve") {
-
-        setGameHistoryData(await GetOneToTwelveHistoryData( Botinfo.UserId))
-      }else if (gameName == "Roulette") {
-
-        setGameHistoryData(await GetRouletteHistoryData( Botinfo.UserId))
       }
-      // else if(gameName == "Withdrawal"){
-
-      //   SetcompleteWithdrawal(await GetCompleteWithdrawalData())
-      // }else if(gameName == "Deposit"){
-
-      //   SetcompleteDeposite(await GetCompleteDespositeData())
-      // }else if(gameName == "reffrel"){
-
-      //   SetmyReferral(await GetMyReferralData())
-      // }
-
-      // SetrouletteHistory(await GetRouletteHistoryData(userID) )
-      // SetcompleteWithdrawal(await GetCompleteWithdrawalData(userID) )
-      // SetcompleteDeposite(await GetCompleteDespositeData(userID) )
-      // SetregisterReferralBonus(await GetRegisterReferralBonusData(userID))
-      // SetmyReferral(await GetMyReferralData(userID) )
 
 
+      
     }
     submitdata()
-  }, [gameName]);
+  }, []);
 
   //--------------------------- Paggeation and No Of Pages ------------------------------------
   // Filter the user data based on date range and search term
-  let filteredUsers = []
-  if(gameHistoryData && gameHistoryData.length > 0){
-    filteredUsers = gameHistoryData.filter((user) => {
-      console.log("User :::::::::::::::::::::::::::::::::::::::::::::",user)
-      const registrationDate = new Date(user.DateTime);
-      const from = fromDate ? new Date(fromDate) : null;
-      const to = toDate ? new Date(toDate) : null;
+  const filteredUsers = userData.filter((user) => {
+    console.log("dddd")
+    const registrationDate = new Date(user.dateOfdeposit);
+    const from = fromDate ? new Date(fromDate) : null;
+    const to = toDate ? new Date(toDate) : null;
 
-      return (
-        (!from || registrationDate >= from) &&
-        (!to || registrationDate <= to) &&
-        (searchTerm === '' ||
-          user.Name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          user.PhoneNumber.includes(searchTerm))
-      );
-    });
-  }
+    return (
+      (!from || registrationDate >= from) &&
+      (!to || registrationDate <= to) &&
+      (searchTerm === '' ||
+        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.mobileno.includes(searchTerm))
+    );
+  });
 
   // Calculate the index range for the current page
   const startIndex = (currentPage - 1) * pageSize;
@@ -130,6 +96,8 @@ function PlayerTab({ UserId, gameName }) {
     setToDate("")
   }
 
+
+  
   const [backgroundColor, setBackgroundColor] = useState('');
 
   const generatePDF = async () => {
@@ -157,6 +125,7 @@ function PlayerTab({ UserId, gameName }) {
 
 
   };
+
 
   //-----------------------------------------------------------------------------------------------
 
@@ -241,16 +210,15 @@ function PlayerTab({ UserId, gameName }) {
               </button> 
         </div>
       </div>
-
       <div className="table-content w-full overflow-x-auto">
         <table style={{ "backgroundColor": backgroundColor }} id="tableId" className="w-full">
           <tbody>
             <tr className="border-b border-bgray-300 dark:border-darkblack-400">
 
-              <td className="w-[185px] px-6 py-5 xl:px-0">
+              <td className="w-[165px] px-6 py-5 xl:px-0">
                 <div className="flex w-full items-center space-x-2.5">
                   <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                    Date Time
+                    SubAgent Name
                   </span>
                   <span>
                     <svg
@@ -292,10 +260,10 @@ function PlayerTab({ UserId, gameName }) {
                   </span>
                 </div>
               </td>
-              <td className="w-[155px] px-6 py-5 xl:px-0">
+              <td className="w-[165px] px-6 py-5 xl:px-0">
                 <div className="flex w-full items-center space-x-2.5">
                   <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                    TypeOfAction
+                   Date and Time 
                   </span>
                   <span>
                     <svg
@@ -337,101 +305,191 @@ function PlayerTab({ UserId, gameName }) {
                   </span>
                 </div>
               </td>
-           
-              <td className="w-[155px] px-6 py-5 xl:px-0">
+              <td className="w-[165px] px-6 py-5 xl:px-0">
                 <div className="flex w-full items-center space-x-2.5">
                   <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                  previouschips
-                  </span>
-                  <span>
-                    <svg
-                      width="14"
-                      height="15"
-                      viewBox="0 0 14 15"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M10.332 1.31567V13.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M5.66602 11.3157L3.66602 13.3157L1.66602 11.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M3.66602 13.3157V1.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M12.332 3.31567L10.332 1.31567L8.33203 3.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </span>
-                </div>
-              </td>
-              <td className="w-[155px] px-6 py-5 xl:px-0">
-              <div className="flex items-center space-x-2.5">
-                <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
                   Amount
-                </span>
-                <span>
-                  <svg
-                    width="14"
-                    height="15"
-                    viewBox="0 0 14 15"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M10.332 1.31567V13.3157"
-                      stroke="#718096"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M5.66602 11.3157L3.66602 13.3157L1.66602 11.3157"
-                      stroke="#718096"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M3.66602 13.3157V1.31567"
-                      stroke="#718096"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M12.332 3.31567L10.332 1.31567L8.33203 3.31567"
-                      stroke="#718096"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
-              </div>
-            </td>
-              <td className="w-[155px] px-6 py-5 xl:px-0">
+                  </span>
+                  <span>
+                    <svg
+                      width="14"
+                      height="15"
+                      viewBox="0 0 14 15"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M10.332 1.31567V13.3157"
+                        stroke="#718096"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M5.66602 11.3157L3.66602 13.3157L1.66602 11.3157"
+                        stroke="#718096"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M3.66602 13.3157V1.31567"
+                        stroke="#718096"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M12.332 3.31567L10.332 1.31567L8.33203 3.31567"
+                        stroke="#718096"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </div>
+              </td>
+              <td className="w-[165px] px-6 py-5 xl:px-0">
+                <div className="flex items-center space-x-2.5">
+                  <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
+                  Previous chips
+                  </span>
+                  <span>
+                    <svg
+                      width="14"
+                      height="15"
+                      viewBox="0 0 14 15"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M10.332 1.31567V13.3157"
+                        stroke="#718096"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M5.66602 11.3157L3.66602 13.3157L1.66602 11.3157"
+                        stroke="#718096"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M3.66602 13.3157V1.31567"
+                        stroke="#718096"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M12.332 3.31567L10.332 1.31567L8.33203 3.31567"
+                        stroke="#718096"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </div>
+              </td>
+              <td className="w-[165px] px-6 py-5 xl:px-0">
                 <div className="flex w-full items-center space-x-2.5">
                   <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                  currentchips
+                  Current Chips
+                  </span>
+                  <span>
+                    <svg
+                      width="14"
+                      height="15"
+                      viewBox="0 0 14 15"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M10.332 1.31567V13.3157"
+                        stroke="#718096"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M5.66602 11.3157L3.66602 13.3157L1.66602 11.3157"
+                        stroke="#718096"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M3.66602 13.3157V1.31567"
+                        stroke="#718096"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M12.332 3.31567L10.332 1.31567L8.33203 3.31567"
+                        stroke="#718096"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </div>
+              </td>
+              <td className="w-[165px] px-6 py-5 xl:px-0">
+                <div className="flex w-full items-center space-x-2.5">
+                  <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
+                  Txn Type
+                  </span>
+                  <span>
+                    <svg
+                      width="14"
+                      height="15"
+                      viewBox="0 0 14 15"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M10.332 1.31567V13.3157"
+                        stroke="#718096"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M5.66602 11.3157L3.66602 13.3157L1.66602 11.3157"
+                        stroke="#718096"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M3.66602 13.3157V1.31567"
+                        stroke="#718096"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M12.332 3.31567L10.332 1.31567L8.33203 3.31567"
+                        stroke="#718096"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </div>
+              </td>
+             
+              <td className="w-[165px] px-6 py-5 xl:px-0">
+                <div className="flex w-full items-center space-x-2.5">
+                  <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
+                    Agent Name
                   </span>
                   <span>
                     <svg
@@ -474,31 +532,86 @@ function PlayerTab({ UserId, gameName }) {
                 </div>
               </td>
               
-              
+              <td className="w-[165px] px-6 py-5 xl:px-0">
+                <div className="flex w-full items-center space-x-2.5">
+                  <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
+                    From | To 
+                    Name
+                  </span>
+                  <span>
+                    <svg
+                      width="14"
+                      height="15"
+                      viewBox="0 0 14 15"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M10.332 1.31567V13.3157"
+                        stroke="#718096"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M5.66602 11.3157L3.66602 13.3157L1.66602 11.3157"
+                        stroke="#718096"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M3.66602 13.3157V1.31567"
+                        stroke="#718096"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M12.332 3.31567L10.332 1.31567L8.33203 3.31567"
+                        stroke="#718096"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </div>
+              </td>
+             
             </tr>
-            {usersOnCurrentPage?.map((user, index) =>
+            {filteredUsers?.map((user, index) =>
               pageSize
                 ? index + 1 <= pageSize && (
                   <CustomerInfo
                     key={user._id}
-                    datetime={user.DateandTime}
-                    trnxTypeTxt={user.trnxTypeTxt}
+                    name={user.name}
+                    UserId={user._id}
+                    DateandTime={user.DateandTime}
                     trnxAmount={user.trnxAmount}
-                    previouschips={user.oppChips}
-                    currentchips={user.chips}
-                   
-
-                  />
+                    oppChips={user.oppChips}
+                    chips={user.chips}
+                    trnxTypeTxt={user.trnxTypeTxt}
+                    agentname={user.adminname}
+                    adminid={user.adminid}
+                    username={user.username}
+                    userid={user.userid}
+                     />
                 )
                 : index < 3 && (
                   <CustomerInfo
                     key={user._id}
-                    datetime={user.DateandTime}
-                    trnxTypeTxt={user.trnxTypeTxt}
+                    name={user.name}
+                    UserId={user._id}
+                    DateandTime={user.DateandTime}
                     trnxAmount={user.trnxAmount}
-                    previouschips={user.oppChips}
-                    currentchips={user.chips}
-                   
+                    oppChips={user.oppChips}
+                    chips={user.chips}
+                    trnxTypeTxt={user.trnxTypeTxt}
+                    agentname={user.adminname}
+                    adminid={user.adminid}
+                    username={user.username}
+                    userid={user.userid}
                   />
                 )
             )}

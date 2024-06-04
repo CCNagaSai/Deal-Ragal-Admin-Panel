@@ -18,31 +18,23 @@ function PlayerInfo({ datetime,trnxTypeTxt,trnxAmount,previouschips,currentchips
           {trnxTypeTxt}
         </p>
       </td>
-      <td className="w-[155px] px-6 py-5 xl:px-0">
-        <p className="text-base font-medium text-bgray-900 dark:text-white">
-          {trnxAmount}
-        </p>
-      </td>
+     
       <td className="w-[155px] px-6 py-5 xl:px-0">
         <p className="text-base font-semibold text-bgray-900 dark:text-white">
           {previouschips}
         </p>
       </td>
       <td className="w-[155px] px-6 py-5 xl:px-0">
+      <p className="text-base font-medium text-bgray-900 dark:text-white">
+        {trnxAmount}
+      </p>
+    </td>
+      <td className="w-[155px] px-6 py-5 xl:px-0">
         <p className="text-base font-medium text-bgray-900 dark:text-white">
         ₹{currentchips}
         </p>
       </td>
-      <td className="w-[155px] px-6 py-5 xl:px-0">
-        <p className="text-base font-medium text-bgray-900 dark:text-white">
-          {previousWinner}
-        </p>
-      </td>
-      <td className="w-[155px] px-6 py-5 xl:px-0">
-        <p className="text-base font-medium text-bgray-900 dark:text-white">
-          {currentWinner}
-        </p>
-      </td>
+      
       
     </tr>
   );

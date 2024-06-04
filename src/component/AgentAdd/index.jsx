@@ -21,12 +21,10 @@ function agentAdd() {
   };
 
   let [userInfo, SetuserInfo] = useState({
-    email: "",
     name: "",
     mobileno: "",
     password: "",
     location: "",
-    area: "",
     status: ""
   })
 
@@ -38,10 +36,7 @@ function agentAdd() {
       ...userInfo,
       [name]: value,
     });
-
-
     console.log("handleChange ::::::::::::::::::::::", userInfo)
-
   };
 
 
@@ -63,22 +58,12 @@ function agentAdd() {
     // This example just logs the data to the console
 
     if(!/^[a-zA-Z\s]+$/.test(userInfo.name)  ){
-      alert("Invalid User name. User name should only contain alphabetic characters and spaces.")
+      alert("Invalid Agent name. Agent name should only contain alphabetic characters and spaces.")
       return false
     }
 
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userInfo.email)){
-      alert("Invalid email format.")
-      return false
-    }
-
-    if(userInfo.mobileno == "" || userInfo.mobileno.length != 10 || /^[1-5]\d{9}$|^6\d{9}$/.test(userInfo.mobileno)){
-      alert("Invalid mobile number. Mobile number should start with 1 and be exactly 10 digits long.")
-      return false
-    }
-
-    if(userInfo.password.length < 4){
-      alert("Invalid password Value leangth Must be 4 characters.")
+    if(userInfo.password.length < 8){
+      alert("Invalid password Value leangth Must be 8 characters.")
       return false
     }
     
@@ -88,10 +73,12 @@ function agentAdd() {
 
     console.log("REsponce ::::::::::::::::::::::", res)
 
-    if (res.status != undefined && res.status == 200) {
+    if (res.status == "ok") {
       navigateToContacts()
+    } else if(res.msg != undefined) {
+      alert(res.msg)
     } else {
-      alert("Invalid Value,Please Add Proper Data")
+      alert("Error Please enter")
     }
     console.log(userInfo);
   };
@@ -129,44 +116,6 @@ function agentAdd() {
                   htmlFor="robotname"
                   className="text-base text-bgray-600 dark:text-bgray-50  font-medium"
                 >
-                Email
-                </label>
-                <input
-                  type="text"
-                  id="email"
-                  placeholder={userInfo.email}
-                  name="email"
-                  className="bg-bgray-50 dark:bg-darkblack-500 dark:text-white p-4 rounded-lg h-14 border-0 focus:border focus:border-success-300 focus:ring-0"
-                  onChange={handleChange}
-                />
-
-              </div>
-
-
-              <div className="flex flex-col gap-2">
-                <label
-                  htmlFor="robotname"
-                  className="text-base text-bgray-600 dark:text-bgray-50  font-medium"
-                >
-                Mobile Number
-                </label>
-                <input
-                  type="text"
-                  id="mobileno"
-                  placeholder={userInfo.mobileno}
-                  name="mobileno"
-                  className="bg-bgray-50 dark:bg-darkblack-500 dark:text-white p-4 rounded-lg h-14 border-0 focus:border focus:border-success-300 focus:ring-0"
-                  onChange={handleChange}
-                />
-
-              </div>
-
-
-              <div className="flex flex-col gap-2">
-                <label
-                  htmlFor="robotname"
-                  className="text-base text-bgray-600 dark:text-bgray-50  font-medium"
-                >
                 Password
                 </label>
                 <input
@@ -198,26 +147,6 @@ function agentAdd() {
                 />
 
               </div>
-
-
-              <div className="flex flex-col gap-2">
-                <label
-                  htmlFor="robotname"
-                  className="text-base text-bgray-600 dark:text-bgray-50  font-medium"
-                >
-                Area
-                </label>
-                <input
-                  type="text"
-                  id="area"
-                  placeholder={userInfo.area}
-                  name="area"
-                  className="bg-bgray-50 dark:bg-darkblack-500 dark:text-white p-4 rounded-lg h-14 border-0 focus:border focus:border-success-300 focus:ring-0"
-                  onChange={handleChange}
-                />
-
-              </div>
-              
               
               <div className="flex flex-col gap-2">
 

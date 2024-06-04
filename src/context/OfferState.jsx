@@ -27,8 +27,8 @@ const OfferState = (props) => {
     }
 
     const dashboardData = async (id) => {
-        try {   
-            console.log("DAshboard ::::::::::::::::::::::",id)
+        try {
+            console.log("DAshboard ::::::::::::::::::::::", id)
             const response = await fetch(`${host}/admin/dashboard?Id=` + id, {
                 method: 'GET',
                 headers: {
@@ -57,7 +57,7 @@ const OfferState = (props) => {
         try {
 
             console.log("${host}/admin/latatestUser", `${host}/admin/dashboard/latatestUser`)
-            console.log("latatestUser ::::::::::::::::::::",uid)
+            console.log("latatestUser ::::::::::::::::::::", uid)
 
             const response = await fetch(`${host}/admin/dashboard/latatestUser?Id=` + uid, {
                 method: 'GET',
@@ -92,7 +92,7 @@ const OfferState = (props) => {
         try {
 
             console.log("${host}/admin/latatestShop", `${host}/admin/dashboard/latatestShop`)
-            console.log("latatestShop ::::::::::::::::::::",uid)
+            console.log("latatestShop ::::::::::::::::::::", uid)
 
             const response = await fetch(`${host}/admin/dashboard/latatestShop?Id=` + uid, {
                 method: 'GET',
@@ -157,14 +157,14 @@ const OfferState = (props) => {
             console.log("e :", e)
         }
     }
-    
+
 
     // ========= User Details =================
 
-    const PlayerList = async (uid) => {
+    const PlayerList = async (uid,type) => {
         try {
             console.log("PlayerList :::::::", `${host}/admin/user/UserList`)
-            const response = await fetch(`${host}/admin/user/UserList?Id=` + uid, {
+            const response = await fetch(`${host}/admin/user/UserList?Id=` + uid +`&type=`+type, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
@@ -280,314 +280,491 @@ const OfferState = (props) => {
     //==========================================================================
     //=============================== Agent ====================================
 
-        const AgentList = async () => {
-            try {
-                console.log("AgentList :::::::", `${host}/admin/agent/AgentList`)
-                const response = await fetch(`${host}/admin/agent/AgentList`, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        'token':  cookies.get('token')
-                    }
-                }).then(data => data.json())
-
-                const json = response
-                console.log("data api from :latatestagent :::...", json)
-
-
-                if (json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")) {
-                    setToken("")
-                    cookies.set('token', "");
-
-                    return []
-                } else {
-                    return await json.agentList
+    const AgentList = async () => {
+        try {
+            console.log("AgentList :::::::", `${host}/admin/agent/AgentList`)
+            const response = await fetch(`${host}/admin/agent/AgentList`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'token': cookies.get('token')
                 }
+            }).then(data => data.json())
+
+            const json = response
+            console.log("data api from :latatestagent :::...", json)
 
 
-            } catch (e) {
-                console.log("e :", e)
+            if (json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")) {
+                setToken("")
+                cookies.set('token', "");
+
+                return []
+            } else {
+                return await json.agentList
             }
+
+
+        } catch (e) {
+            console.log("e :", e)
         }
+    }
 
-        const AgentAdd = async (data) => {
-            try {
-                console.log("PlayerList :::::::", host)
-                const response = await fetch(`${host}/admin/agent/AddAgent`, {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        'token':  cookies.get('token')
-                    },
-                    body: JSON.stringify(data)
-                }).then(d => d.json())
+    const AgentAdd = async (data) => {
+        try {
+            console.log("PlayerList :::::::", host)
+            const response = await fetch(`${host}/admin/agent/AddAgent`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'token': cookies.get('token')
+                },
+                body: JSON.stringify(data)
+            }).then(d => d.json())
 
-                const json = response
-                console.log("data api from :latatestUser :::...", json)
+            const json = response
+            console.log("data api from :latatestUser :::...", json)
 
-                if (json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")) {
-                    setToken("")
-                    cookies.set('token', "");
+            if (json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")) {
+                setToken("")
+                cookies.set('token', "");
 
-                    return {}
-                } else {
-                    return await json
+                return {}
+            } else {
+                return await json
+            }
+
+        } catch (e) {
+            console.log("e :", e)
+        }
+    }
+
+    const AgentDelete = async (userId) => {
+        try {
+            console.log("PlayerList :::::::", host)
+            const response = await fetch(`${host}/admin/agent/Deleteagent/` + userId, {
+                method: 'delete',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'token': cookies.get('token')
                 }
+            }).then(d => d)
 
-            } catch (e) {
-                console.log("e :", e)
+            const json = response
+            console.log("data api from :latatestUser :::...", json)
+
+            if (json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")) {
+                setToken("")
+                cookies.set('token', "");
+
+                return {}
+            } else {
+                return await json
             }
+
+
+        } catch (e) {
+            console.log("e :", e)
         }
+    }
 
-        const AgentDelete = async (userId) => {
-            try {
-                console.log("PlayerList :::::::", host)
-                const response = await fetch(`${host}/admin/agent/Deleteagent/` + userId, {
-                    method: 'delete',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        'token':  cookies.get('token')
-                    }
-                }).then(d => d)
-
-                const json = response
-                console.log("data api from :latatestUser :::...", json)
-
-                if (json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")) {
-                    setToken("")
-                    cookies.set('token', "");
-
-                    return {}
-                } else {
-                    return await json
+    const AgentData = async (userId) => {
+        try {
+            console.log("PlayerList :::::::", `${host}/admin/agent/AgentData`)
+            const response = await fetch(`${host}/admin/agent/AgentData?userId=` + userId, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'token': cookies.get('token')
                 }
+            }).then(data => data.json())
+
+            const json = response
+            console.log("data api from :latatestUser :::...", json)
 
 
-            } catch (e) {
-                console.log("e :", e)
+            if (json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")) {
+                setToken("")
+                cookies.set('token', "");
+
+                return {}
+            } else {
+                return await json.userInfo
             }
+
+        } catch (e) {
+            console.log("e :", e)
         }
+    }
 
-        const AgentData = async (userId) => {
-            try {
-                console.log("PlayerList :::::::", `${host}/admin/agent/AgentData`)
-                const response = await fetch(`${host}/admin/agent/AgentData?userId=` + userId, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        'token':  cookies.get('token')
-                    }
-                }).then(data => data.json())
+    const AgentUpdate = async (data) => {
+        try {
+            console.log("PlayerList :::::::", host)
+            console.log("BotUpdate :::::::", data)
 
-                const json = response
-                console.log("data api from :latatestUser :::...", json)
+            const response = await fetch(`${host}/admin/agent/AgentUpdate`, {
+                method: 'put',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'token': cookies.get('token')
+                },
+                body: JSON.stringify(data)
+            }).then(d => d.json())
 
+            const json = response
+            console.log("data api from :latatestUser :::...", json)
 
-                if (json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")) {
-                    setToken("")
-                    cookies.set('token', "");
+            if (json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")) {
+                setToken("")
+                cookies.set('token', "");
 
-                    return {}
-                } else {
-                    return await json.userInfo
-                }
-
-            } catch (e) {
-                console.log("e :", e)
+                return {}
+            } else {
+                return json
             }
+
+        } catch (e) {
+            console.log("e :", e)
         }
+    }
 
-        const AgentUpdate = async (data) => {
-            try {
-                console.log("PlayerList :::::::", host)
-                console.log("BotUpdate :::::::", data)
 
-                const response = await fetch(`${host}/admin/agent/AgentUpdate`, {
-                    method: 'put',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        'token':  cookies.get('token')
-                    },
-                    body: JSON.stringify(data)
-                }).then(d => d.json())
+    const agentAddMoney = async (data) => {
+        try {
+            console.log("PlayerList :::::::", `${host}/admin/agent/agentAddMoney`, data)
+            const response = await fetch(`${host}/admin/agent/agentAddMoney`, {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'token': cookies.get('token')
+                },
+                body: JSON.stringify(data)
+            }).then(data => data.json())
 
-                const json = response
-                console.log("data api from :latatestUser :::...", json)
+            const json = response
+            console.log("data api from :agentAddMoney :::...", json)
 
-                if (json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")) {
-                    setToken("")
-                    cookies.set('token', "");
+            if (json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")) {
+                LogoutClick()
 
-                    return {}
-                } else {
-                    return json
-                }
-
-            } catch (e) {
-                console.log("e :", e)
+                return {}
+            } else {
+                return await json
             }
+
+        } catch (e) {
+            console.log("e :", e)
         }
+    }
+
+
+    const agentDeductMoney = async (data) => {
+        try {
+            console.log("PlayerList :::::::", `${host}/admin/agent/agentDeductMoney`, data)
+            const response = await fetch(`${host}/admin/agent/agentDeductMoney`, {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'token': cookies.get('token')
+                },
+                body: JSON.stringify(data)
+            }).then(data => data.json())
+
+            const json = response
+            console.log("data api from :agentDeductMoney :::...", json)
+
+            if (json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")) {
+                LogoutClick()
+
+                return {}
+            } else {
+                return await json
+            }
+
+        } catch (e) {
+            console.log("e :", e)
+        }
+    }
 
     //===========================================================================
     //=============================== Shop ======================================
 
-        const ShopList = async (uid) => {
-            try{
-                console.log("ShopList :::::::",`${host}/admin/shop/ShopList`)
-                const response = await fetch(`${host}/admin/shop/ShopList?agentId=` + uid, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        'token': cookies.get('token')
-                    }
-                }).then(data => data.json())
-
-                const json =  response
-                console.log("data api from :latatestshop :::...", json)
-                
-
-                if(json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")){
-                    setToken("")
-                    cookies.set('token', "");
-
-                    return []
-                }else{
-                    return await json.shopList
+    const ShopList = async (uid) => {
+        try {
+            console.log("ShopList :::::::", `${host}/admin/shop/ShopList`)
+            const response = await fetch(`${host}/admin/shop/ShopList?agentId=` + uid, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'token': cookies.get('token')
                 }
+            }).then(data => data.json())
+
+            const json = response
+            console.log("data api from :latatestshop :::...", json)
 
 
-            }catch(e){
-                console.log("e :" ,e)
+            if (json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")) {
+                setToken("")
+                cookies.set('token', "");
+
+                return []
+            } else {
+                return await json.shopList
             }
-        } 
 
-        const ShopAdd = async (data) => {
-            try{
-                console.log("PlayerList :::::::",host)
-                const response = await fetch(`${host}/admin/shop/AddShop`, {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        'token': cookies.get('token')
-                    },
-                    body:JSON.stringify(data)
-                }).then(d => d)
 
-                const json =  response
-                console.log("data api from :latatestUser :::...", json)
+        } catch (e) {
+            console.log("e :", e)
+        }
+    }
 
-                if(json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")){
-                    setToken("")
-                    cookies.set('token', "");
+    const ShopAdd = async (data) => {
+        try {
+            console.log("PlayerList :::::::", host)
+            const response = await fetch(`${host}/admin/shop/AddShop`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'token': cookies.get('token')
+                },
+                body: JSON.stringify(data)
+            }).then(d => d.json())
 
-                    return {}
-                }else{
-                    return await json
+            const json = response
+            console.log("data api from :latatestUser :::...", json)
+
+            if (json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")) {
+                setToken("")
+                cookies.set('token', "");
+
+                return {}
+            } else {
+                return await json
+            }
+
+        } catch (e) {
+            console.log("e :", e)
+        }
+    }
+
+    const ShopDelete = async (userId) => {
+        try {
+            console.log("PlayerList :::::::", host)
+            const response = await fetch(`${host}/admin/shop/Deleteshop/` + userId, {
+                method: 'delete',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'token': cookies.get('token')
                 }
+            }).then(d => d)
 
-            }catch(e){
-                console.log("e :" ,e)
+            const json = response
+            console.log("data api from :latatestUser :::...", json)
+
+            if (json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")) {
+                setToken("")
+                cookies.set('token', "");
+
+                return {}
+            } else {
+                return await json
             }
-        } 
 
-        const ShopDelete = async (userId) => {
-            try{
-                console.log("PlayerList :::::::",host)
-                const response = await fetch(`${host}/admin/shop/Deleteshop/`+userId, {
-                    method: 'delete',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        'token': cookies.get('token')
-                    }
-                }).then(d => d)
 
-                const json =  response
-                console.log("data api from :latatestUser :::...", json)
+        } catch (e) {
+            console.log("e :", e)
+        }
+    }
 
-                if(json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")){
-                    setToken("")
-                    cookies.set('token', "");
-
-                    return {}
-                }else{
-                    return await json
+    const ShopData = async (userId) => {
+        try {
+            console.log("PlayerList :::::::", `${host}/admin/shop/ShopData`)
+            const response = await fetch(`${host}/admin/shop/ShopData?userId=` + userId, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'token': cookies.get('token')
                 }
-                
+            }).then(data => data.json())
 
-            }catch(e){
-                console.log("e :" ,e)
+            const json = response
+            console.log("data api from :latatestUser :::...", json)
+
+
+            if (json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")) {
+                setToken("")
+                cookies.set('token', "");
+
+                return {}
+            } else {
+                return await json.userInfo
             }
-        } 
 
-        const ShopData = async (userId) => {
-            try{
-                console.log("PlayerList :::::::",`${host}/admin/shop/ShopData`)
-                const response = await fetch(`${host}/admin/shop/ShopData?userId=`+userId, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        'token': cookies.get('token')
-                    }
-                }).then(data => data.json())
+        } catch (e) {
+            console.log("e :", e)
+        }
+    }
 
-                const json =  response
-                console.log("data api from :latatestUser :::...", json)
-                
+    const ShopUpdate = async (data) => {
+        try {
+            console.log("PlayerList :::::::", host)
+            console.log("BotUpdate :::::::", data)
 
-                if(json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")){
-                    setToken("")
-                    cookies.set('token', "");
+            const response = await fetch(`${host}/admin/shop/ShopUpdate`, {
+                method: 'put',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'token': cookies.get('token')
+                },
+                body: JSON.stringify(data)
+            }).then(d => d.json())
 
-                    return {}
-                }else{
-                    return await json.userInfo
+            const json = response
+            console.log("data api from :latatestUser :::...", json)
+
+            if (json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")) {
+                setToken("")
+                cookies.set('token', "");
+
+                return {}
+            } else {
+                return json
+            }
+
+        } catch (e) {
+            console.log("e :", e)
+        }
+    }
+
+    const shopAddMoney = async (data) => {
+        try {
+            console.log("PlayerList :::::::", `${host}/admin/shop/shopAddMoney`, data)
+            const response = await fetch(`${host}/admin/shop/shopAddMoney`, {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'token': cookies.get('token')
+                },
+                body: JSON.stringify(data)
+            }).then(data => data.json())
+
+            const json = response
+            console.log("data api from :shopAddMoney :::...", json)
+
+            if (json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")) {
+                LogoutClick()
+
+                return {}
+            } else {
+                return await json
+            }
+
+        } catch (e) {
+            console.log("e :", e)
+        }
+    }
+
+    
+    const shopDeductMoney = async (data) => {
+        try {
+            console.log("PlayerList :::::::", `${host}/admin/shop/shopDeductMoney`, data)
+            const response = await fetch(`${host}/admin/shop/shopDeductMoney`, {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'token': cookies.get('token')
+                },
+                body: JSON.stringify(data)
+            }).then(data => data.json())
+
+            const json = response
+            console.log("data api from :shopDeductMoney :::...", json)
+
+            if (json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")) {
+                LogoutClick()
+
+                return {}
+            } else {
+                return await json
+            }
+
+        } catch (e) {
+            console.log("e :", e)
+        }
+    }
+
+
+    const SubAgentTranscationData = async (id,type) => {
+        try {
+            console.log("PlayerList :::::::", `${host}/admin/usertransction/SubAgentTranscationData`)
+            const response = await fetch(`${host}/admin/usertransction/SubAgentTranscationData?Id=` + id +`&type=`+type, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'token': cookies.get('token')
                 }
+            }).then(data => data.json())
 
-            }catch(e){
-                console.log("e :" ,e)
+            const json = response
+            console.log("data api from :latatestUser :::...", json)
+
+            if (json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")) {
+                LogoutClick()
+
+                return []
+            } else {
+                return json.DepositeList
             }
-        } 
 
-        const ShopUpdate = async (data) => {
-            try{
-                console.log("PlayerList :::::::",host)
-                console.log("BotUpdate :::::::",data)
+        } catch (e) {
+            console.log("e :", e)
+        }
+    }
 
-                const response = await fetch(`${host}/admin/shop/ShopUpdate`, {
-                    method: 'put',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        'token': cookies.get('token')
-                    },
-                    body:JSON.stringify(data)
-                }).then(d => d.json())
 
-                const json =  response
-                console.log("data api from :latatestUser :::...", json)
-            
-                if(json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")){
-                    setToken("")
-                    cookies.set('token', "");
-
-                    return {}
-                }else{
-                    return json
+    const AgentTranscationData = async (id,type) => {
+        try {
+            console.log("PlayerList :::::::", `${host}/admin/usertransction/AgentTranscationData`)
+            const response = await fetch(`${host}/admin/usertransction/AgentTranscationData?Id=` + id +`&type=`+type, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'token': cookies.get('token')
                 }
+            }).then(data => data.json())
 
-            }catch(e){
-                console.log("e :" ,e)
+            const json = response
+            console.log("data api from :latatestUser :::...", json)
+
+            if (json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")) {
+                LogoutClick()
+
+                return []
+            } else {
+                return json.DepositeList
             }
-        } 
+
+        } catch (e) {
+            console.log("e :", e)
+        }
+    }
 
     //============================================================================
 
@@ -747,7 +924,7 @@ const OfferState = (props) => {
             console.log("e :", e)
         }
     }
-   
+
     //=================================================================================
 
     const GetCompleteWithdrawalData = async (userId) => {
@@ -1010,7 +1187,7 @@ const OfferState = (props) => {
     //======================
     // game History 
 
-    const  SoratGameHistory= async () => {
+    const SoratGameHistory = async () => {
         try {
             console.log("PlayerList :::::::", `${host}/admin/userhistory/SoratGameHistory`)
             const response = await fetch(`${host}/admin/userhistory/SoratGameHistory`, {
@@ -1038,7 +1215,7 @@ const OfferState = (props) => {
         }
     }
 
-    const  SpinGameHistory= async () => {
+    const SpinGameHistory = async () => {
         try {
             console.log("PlayerList :::::::", `${host}/admin/userhistory/SpinGameHistory`)
             const response = await fetch(`${host}/admin/userhistory/SpinGameHistory`, {
@@ -1240,7 +1417,7 @@ const OfferState = (props) => {
         }
     }
 
-    
+
 
     const GetGameBetInfo = async () => {
         try {
@@ -2561,8 +2738,8 @@ const OfferState = (props) => {
     return (
         <offerContext.Provider value={{
             host,
-            adminname, adminEmail, dashboardData, latatestUser,latatestShop,latatestAgent ,PlayerList, PlayerData,
-            PlayerAdd, PlayerDelete, GameLogicSet,GetGameBetInfo, GetGameLogic, GetCompleteWithdrawalData,
+            adminname, adminEmail, dashboardData, latatestUser, latatestShop, latatestAgent, PlayerList, PlayerData,
+            PlayerAdd, PlayerDelete, GameLogicSet, GetGameBetInfo, GetGameLogic, GetCompleteWithdrawalData,
             GetCompleteDespositeData, GetRegisterReferralBonusData, GetMyReferralData,
             SocailURLsList, SocailURLsAdd, DeleteSocailURLs,
             CoinsList, CoinPackeAdd, DeleteCoinpack,
@@ -2572,14 +2749,16 @@ const OfferState = (props) => {
             SendPushnotification,
             BannerList, BannerAdd, DeleteBanner, UploadBanner,
             BotList, BotAdd, BotDelete, BotData, UploadProfile, BotUpdate,
-            AddMoney,UpdatePassword, DeductMoney,getprintdataapi, LogoutClick,
+            AddMoney, UpdatePassword, DeductMoney, getprintdataapi, LogoutClick,
             DepositeList, DepositeAccptedList, DepositeRejectedList, DepositeAdd, UploadScreenshort, DepositeDelete, DepositeData, DepositeUpdate,
             PayoutList, PayoutAccptedList, PayoutRejectedList, PayoutUpdate, UploadScreenshortPayout,
-            AgentList,AgentAdd,AgentDelete,AgentData,AgentUpdate,
-            ShopList,ShopAdd,ShopDelete,ShopData,ShopUpdate,
-            SoratGameHistory,SpinGameHistory,AndarBaharGameHistory,WheelofFortuneGameHistory,BaraKaDumGameHistory,RouletteGameHistory,
-            GetGameCom,GameComSet,GetRouletteHistoryData,
-            GetSpinnerHistoryData,GetSoratHistoryData,GetandarbaharHistoryData,GetOneToTwelveHistoryData,Chnageidpwd,blockandunblock 
+            AgentList, AgentAdd, AgentDelete, AgentData, AgentUpdate,
+            ShopList, ShopAdd, ShopDelete, ShopData, ShopUpdate,
+            SoratGameHistory, SpinGameHistory, AndarBaharGameHistory, WheelofFortuneGameHistory, BaraKaDumGameHistory, RouletteGameHistory,
+            GetGameCom, GameComSet, GetRouletteHistoryData,
+            GetSpinnerHistoryData, GetSoratHistoryData, GetandarbaharHistoryData, GetOneToTwelveHistoryData, Chnageidpwd, blockandunblock,
+            agentAddMoney, agentDeductMoney, shopAddMoney, shopDeductMoney,
+            SubAgentTranscationData,AgentTranscationData
         }}>
             {props.children}
         </offerContext.Provider>)

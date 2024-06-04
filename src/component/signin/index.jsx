@@ -75,8 +75,8 @@ function LeftSide() {
       console.log("formData.logintype ",formData.logintype)
 
       cookies.set('token', resData.data.token);
-      cookies.set('name', resData.data.name);
-      cookies.set('email', resData.data.email);
+      cookies.set('name', resData.data.type_name);
+      cookies.set('email', resData.data.name);
       cookies.set('logintype', formData.logintype);
       cookies.set('LoginUserId', resData.data._id);
 
@@ -215,6 +215,23 @@ function LeftSide() {
               Agent
             </label>
           </div>
+          <div className="flex items-center space-x-3">
+          <input
+            type="checkbox"
+            className="w-5 h-5 dark:bg-darkblack-500 focus:ring-transparent rounded-full border border-bgray-300 focus:accent-success-300 text-success-300"
+            name="logintype"
+            id="logintype"
+            value="Shop"
+            checked={formData.logintype === "Shop"}
+            onChange={OnChange}
+          />
+          <label
+            htmlFor="Shop"
+            className="text-bgray-900 dark:text-white text-base font-semibold"
+          >
+          Sub Agent
+          </label>
+        </div>
           
 
 

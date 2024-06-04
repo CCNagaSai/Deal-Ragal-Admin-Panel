@@ -93,7 +93,7 @@ function UserTab({ }) {
             <td className="inline-block w-[250px] px-6 py-5 lg:w-auto xl:px-0">
               <div className="flex w-full items-center space-x-2.5">
                 <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                  Shop Name
+                  Sub Agent Name
                 </span>
                 <span>
                   <svg

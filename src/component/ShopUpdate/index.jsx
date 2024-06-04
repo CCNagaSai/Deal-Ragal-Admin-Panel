@@ -4,34 +4,30 @@ import React, { useState, useContext, useEffect } from 'react';
 import offerContext from '../../context/offerContext';
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
-
-function agentUpdate() {
+function shopUpdate() {
 
   const location = useLocation();
   //console.log("location ", location.state)
   const Botinfo = location.state;
 
   const context = useContext(offerContext)
-  const { AgentUpdate, host ,agentAddMoney, agentDeductMoney} = context
-
-  console.log("Botinfo :::::::::::::::::", Botinfo)
+  const { ShopUpdate, host,shopAddMoney, shopDeductMoney } = context
 
   const [amount, setAmount] = useState(0);
+
+  console.log("Botinfo :::::::::::::::::", Botinfo)
 
   const navigate = useNavigate();
   const navigateToContacts = () => {
     // 👇️ navigate to /contacts 
-    navigate('/agentmanagement');
+    navigate('/shopmanagement');
   };
 
   let [userInfo, SetuserInfo] = useState({
     userId: Botinfo.UserId,
-    email: "",
     name: "",
-    mobileno: "",
     password: "",
     location: "",
-    area: "",
     status: ""
   })
 
@@ -44,7 +40,6 @@ function agentUpdate() {
         password: Botinfo.password,
         location: Botinfo.location,
         status: Botinfo.status
-
       })
 
     }
@@ -83,22 +78,25 @@ function agentUpdate() {
 
     console.log("userInfo ", userInfo)
 
-    if(!/^[a-zA-Z\s]+$/.test(userInfo.name)  ){
-      alert("Invalid Agent name. Agent name should only contain alphabetic characters and spaces.")
+    if (!/^[a-zA-Z\s]+$/.test(userInfo.name)) {
+      alert("Invalid Sub Agent Name. Sub Agent Name should only contain alphabetic characters and spaces.")
       return false
     }
 
-    if(userInfo.password.length < 8){
-      alert("Invalid password Value leangth Must be 8 characters.")
+
+    if (userInfo.password.length < 8) {
+      alert("Invalid passwordValue leangth Must be 8 characters.")
       return false
     }
-    
-    let res = await AgentUpdate(userInfo)
+
+    let res = await ShopUpdate(userInfo)
 
     console.log("REsponce ::::::::::::::::::::::", res)
 
-    if (res.status == "ok") {
+    if (res.status != undefined && res.status == 200) {
       navigateToContacts()
+    } else if (res.msg != undefined) {
+      alert(res.msg)
     } else {
       alert("Error Please enter")
     }
@@ -117,7 +115,7 @@ function agentUpdate() {
   const SaveChange = async () => {
     console.log("amount ", amount)
 
-    let res = await agentAddMoney({ money: amount, type: "Deposit", userId: Botinfo.UserId, adminname: cookies.get('name'), adminid: cookies.get('LoginUserId') })
+    let res = await shopAddMoney({ money: amount, type: "Deposit", userId: Botinfo.UserId, adminname: cookies.get('name'), adminid: cookies.get('LoginUserId') })
 
     if (res.msg != undefined) {
 
@@ -130,13 +128,11 @@ function agentUpdate() {
     setAmount(0)
 
   }
-
-
 
   const SaveChangeDeduct = async () => {
 
 
-    let res = await agentDeductMoney({ money: amount, type: "Deduct", userId: Botinfo.UserId, adminname: cookies.get('name'), adminid: cookies.get('LoginUserId') })
+    let res = await shopDeductMoney({ money: amount, type: "Deduct", userId: Botinfo.UserId, adminname: cookies.get('name'), adminid: cookies.get('LoginUserId') })
 
     if (res.msg != undefined) {
 
@@ -149,12 +145,13 @@ function agentUpdate() {
     setAmount(0)
 
   }
+
 
   return (
     <div className="w-full rounded-lg bg-white px-[24px] py-[20px] dark:bg-darkblack-600">
       <div className="flex flex-col space-y-5">
         <h3 className="text-2xl font-bold pb-5 text-bgray-900 dark:text-white dark:border-darkblack-400 border-b border-bgray-200">
-          Agent Updation
+          Sub Agent Updation
         </h3>
         <div className="mt-8">
           <form action="">
@@ -164,7 +161,7 @@ function agentUpdate() {
                   htmlFor="robotname"
                   className="text-base text-bgray-600 dark:text-bgray-50  font-medium"
                 >
-                  Agent Name
+                  Sub Agent Name
                 </label>
                 <input
                   type="text"
@@ -194,7 +191,6 @@ function agentUpdate() {
                 />
 
               </div>
-
 
               <div className="flex flex-col gap-2">
                 <label
@@ -246,7 +242,6 @@ function agentUpdate() {
                   Inactive
                 </label>
               </div>
-
 
             </div>
 
@@ -315,4 +310,4 @@ function agentUpdate() {
 }
 
 
-export default agentUpdate;
+export default shopUpdate;

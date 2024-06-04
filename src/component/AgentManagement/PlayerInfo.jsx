@@ -9,11 +9,11 @@ import edit from "../../assets/images/edit.png";
 import trash from "../../assets/images/trash.png";
 
 
-function PlayerInfo({ UserId, UserName, MobileNo, location, area, createdAt, lastLoginDate,  status,email,uniqueId,password }) {
+function PlayerInfo({ UserId, UserName,chips, location, createdAt, lastLoginDate,  status,uniqueId,password }) {
 
   const navigate = useNavigate();
-  const navigateToContacts = (UserId, UserName, MobileNo, location, area, createdAt, lastLoginDate,  status,email,uniqueId,password) => {
-    navigate('/agentedit', { state:{ UserId, UserName, MobileNo, location, area, createdAt, lastLoginDate,  status,email,uniqueId,password } });
+  const navigateToContacts = (UserId, UserName,chips, location, createdAt, lastLoginDate,  status,uniqueId,password) => {
+    navigate('/agentedit', { state:{ UserId, UserName,chips, location, createdAt, lastLoginDate,  status,uniqueId,password } });
   }
 
 
@@ -42,17 +42,12 @@ function PlayerInfo({ UserId, UserName, MobileNo, location, area, createdAt, las
       </td>
       <td className="px-6 py-5 xl:px-0">
         <p className="text-base font-medium text-bgray-900 dark:text-white">
-          {MobileNo}
+          {chips}
         </p>
       </td>
       <td className="px-6 py-5 xl:px-0">
         <p className="text-base font-medium text-bgray-900 dark:text-white">
           {location}
-        </p>
-      </td>
-      <td className="px-6 py-5 xl:px-0">
-        <p className="text-base font-medium text-bgray-900 dark:text-white">
-          {area}
         </p>
       </td>
       <td className="w-[165px] px-6 py-5 xl:px-0">
@@ -82,7 +77,7 @@ function PlayerInfo({ UserId, UserName, MobileNo, location, area, createdAt, las
             "padding": "5px 10px",
             "cursor": "pointer",
             "border-radius": "4px"
-          }} onClick={() => navigateToContacts( UserId, UserName, MobileNo, location, area, createdAt, lastLoginDate,  status,email,uniqueId,password)} >
+          }} onClick={() => navigateToContacts( UserId, UserName,chips, location, createdAt, lastLoginDate,  status,uniqueId,password)} >
           <img style={{"width": "30px","height": "30px","margin": "30px"}} src={edit} />
           </button>
 

@@ -48,10 +48,16 @@ import Playeredit from './pages/PlayerUpdate'
 import CoinManagement from './pages/CoinManagement'
 
 import AgentDashboard from "./pages/agentdashboard";
+import ShopDashboard from "./pages/shopdashboard";
 
 import AgentManagement from "./pages/agentManagement";
 import Agentdit from './pages/AgentUpdate'
 import AgentAdd from './pages/agentadd'
+
+
+import ShopManagement from "./pages/ShopManagment";
+import ShopAdd from './pages/shopadd'
+import Shopdit from './pages/ShopUpdate'
 
 
 import Commission from './pages/commission'
@@ -62,14 +68,24 @@ import BetHistoryinfo from './pages/BetHistory'
 
 
 import Chnagepwd from './pages/Chnagepwd'
+import SubAgentTranscation from './pages/SubAgentTranscation'
+import AgentTranscation from './pages/AgentTranscation'
+
+
 
 const router = createBrowserRouter([
   {
     path: "/",
     Component: Layout,
     children: [
-      
-      
+      {
+        path: "/AgentTranscation",
+        element: <AgentTranscation />,
+      },
+      {
+        path: "/SubAgentTranscation",
+        element: <SubAgentTranscation />,
+      },
       {
         path: "/betHistory",
         element: <BetHistoryinfo />,
@@ -86,7 +102,10 @@ const router = createBrowserRouter([
         path: "/agentdashboard",
         element: <AgentDashboard />,
       },
-      
+      {
+        path: "/shopdashboard",
+        element: <ShopDashboard />,
+      },
       {
         path: "/home-3",
         element: <Statistics />,
@@ -131,6 +150,18 @@ const router = createBrowserRouter([
       {
         path: "/agentadd",
         element: <AgentAdd />,
+      },
+      {
+        path: "/shopedit",
+        element: <Shopdit />,
+      },
+      {
+        path: "/shopadd",
+        element: <ShopAdd />,
+      },
+      {
+        path: "/shopmanagement",
+        element: <ShopManagement />,
       },
       {
         path: "/commission",
