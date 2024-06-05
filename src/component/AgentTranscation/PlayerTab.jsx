@@ -63,7 +63,7 @@ function PlayerTab({ }) {
   // Filter the user data based on date range and search term
   const filteredUsers = userData.filter((user) => {
     console.log("dddd")
-    const registrationDate = new Date(user.dateOfdeposit);
+    const registrationDate = new Date(user.DateandTime);
     const from = fromDate ? new Date(fromDate) : null;
     const to = toDate ? new Date(toDate) : null;
 
@@ -71,8 +71,7 @@ function PlayerTab({ }) {
       (!from || registrationDate >= from) &&
       (!to || registrationDate <= to) &&
       (searchTerm === '' ||
-        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.mobileno.includes(searchTerm))
+        user.name.toLowerCase().includes(searchTerm.toLowerCase()))
     );
   });
 
