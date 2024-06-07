@@ -27,6 +27,12 @@ function Layout({ bg, overlay, children }) {
     var url = window.location.href.split("5176")
     console.log("URL ",url)
 
+    
+    // if(url[1] == "/signinadmin"){
+    //   window.location.href = "http://192.168.0.203:5175/signinadmin"//'http://dealregal.com:5175/signin'; //
+    //   return false
+    // }
+
     if(url[1] != "/signin"){
       window.location.href =    'http://dealregal.com:5175/signin';//"http://192.168.0.203:5175/signin" //
       

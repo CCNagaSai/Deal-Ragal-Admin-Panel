@@ -6,10 +6,10 @@ import PasswordResetModal from "../modal/PasswordResetModal";
 import { useState } from "react";
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
-const host =   "http://93.127.194.87:9999"; //"http://192.168.0.203:9999" //
+const host = "http://93.127.194.87:9999"; //"http://192.168.0.203:9999" //
 
 
-function LeftSide() {
+function SigninAdmin() {
   const navigate = useNavigate();
 
   console.log("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGLOOGGGGGGGGGGGGGGGGGGGGGGGGr ")
@@ -18,22 +18,25 @@ function LeftSide() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalData, setModalData] = useState("");
 
+  const [pin, setPin] = useState("");
+
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    logintype: ''
+    logintype: 'Admin'
   });
 
   const navigateToContacts = () => {
-    
-    if(formData.logintype == "Shop"){
-    navigate('/shopdashboard');
 
-    }else if(formData.logintype == "Agent"){
-    navigate('/agentdashboard');
+    if (formData.logintype == "Shop") {
+      navigate('/shopdashboard');
 
-    }else{
-    navigate('/dashboard');
+    } else if (formData.logintype == "Agent") {
+      navigate('/agentdashboard');
+
+    } else {
+      navigate('/dashboard');
 
     }
 
@@ -44,6 +47,10 @@ function LeftSide() {
       ...formData,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const handleChangepin = async (e) => {
+    await setPin(e.target.value)
   };
 
   const LoginData = async (data) => {
@@ -72,17 +79,16 @@ function LeftSide() {
 
     if (resData.status) {
 
-      console.log("formData.logintype ",formData.logintype)
 
       cookies.set('token', resData.data.token);
       cookies.set('name', resData.data.type_name);
       cookies.set('email', resData.data.name);
-      cookies.set('logintype', formData.logintype);
+      cookies.set('logintype', "Admin");
       cookies.set('LoginUserId', resData.data._id);
 
-      
 
-      
+
+
       navigateToContacts()
 
     } else {
@@ -92,16 +98,38 @@ function LeftSide() {
 
   const OnChange = async (event) => {
     let { name, value } = event.target;
-    console.log("name ",name)
-    console.log("name ",value)
+    console.log("name ", name)
+    console.log("name ", value)
 
     await setFormData({
-        ...formData,
-        [name]: value,
+      ...formData,
+      [name]: value,
     });
 
-    console.log("handleChange ::::::::::::::::::::::",formData)
-};
+    console.log("handleChange ::::::::::::::::::::::", formData)
+  };
+
+  const sendforgotemail = async (event) => {
+    
+    try {
+      event.preventDefault();
+      console.log("PlayerList :::::::", host)
+      
+      const response = await fetch(`${host}/admin/sendforgotemail`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({pin:pin})
+      }).then(d => d.json())
+      console.log("data api from :latatestUser :::...", response)
+      alert(JSON.stringify(response.data))
+      return response
+    } catch (e) {
+      console.log("e :", e)
+    }
+  }
 
   return (
     <div className="lg:w-1/2 px-5 xl:pl-12 pt-10">
@@ -120,7 +148,7 @@ function LeftSide() {
       <div className="max-w-[450px] m-auto pt-24 pb-16">
         <header className="text-center mb-8">
           <h2 className="text-bgray-900 dark:text-white text-4xl font-semibold font-poppins mb-2">
-            Sign in to Deal-Regal.
+            Sign in to Deal-Regal Admin.
           </h2>
           <p className="font-urbanis text-base font-medium text-bgray-600 dark:text-bgray-50">
           </p>
@@ -180,70 +208,41 @@ function LeftSide() {
             </svg>
           </button>
         </div>
-        <div className="flex justify-between mb-7">
-         
-          <div className="flex items-center space-x-3">
-            <input
-              type="checkbox"
-              className="w-5 h-5 dark:bg-darkblack-500 focus:ring-transparent rounded-full border border-bgray-300 focus:accent-success-300 text-success-300"
-              name="logintype"
-              id="logintype"
-              value="Agent"
-              checked={formData.logintype === "Agent"}
-              onChange={OnChange}
-            />
-            <label
-              htmlFor="Agent"
-              className="text-bgray-900 dark:text-white text-base font-semibold"
-            >
-              Agent
-            </label>
-          </div>
-          <div className="flex items-center space-x-3">
-          <input
-            type="checkbox"
-            className="w-5 h-5 dark:bg-darkblack-500 focus:ring-transparent rounded-full border border-bgray-300 focus:accent-success-300 text-success-300"
-            name="logintype"
-            id="logintype"
-            value="Shop"
-            checked={formData.logintype === "Shop"}
-            onChange={OnChange}
-          />
-          <label
-            htmlFor="Shop"
-            className="text-bgray-900 dark:text-white text-base font-semibold"
-          >
-          Sub Agent
-          </label>
-        </div>
-          
 
-
-        </div>
         <div className="flex justify-between mb-7">
           <div className="flex items-center space-x-3">
-            <input
-              type="checkbox"
-              className="w-5 h-5 dark:bg-darkblack-500 focus:ring-transparent rounded-full border border-bgray-300 focus:accent-success-300 text-success-300"
-              name="remember"
-              id="remember"
-            />
+
             <label
               htmlFor="remember"
               className="text-bgray-900 dark:text-white text-base font-semibold"
+            ></label>
+
+            <input
+              type="text"
+              id="pin"
+              name="pin"
+              onChange={handleChangepin}
+              className="text-bgray-800 text-base border border-bgray-300 dark:border-darkblack-400 dark:bg-darkblack-500 dark:text-white h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-bgray-500 placeholder:text-base"
+              placeholder="Enter Pin"
+            />
+
+            <a
+              href="index.html"
+              className="py-3.5 flex items-center justify-center text-white font-bold bg-success-300 hover:bg-success-400 transition-all rounded-lg w-full"
+              onClick={sendforgotemail}
             >
-              Remember me
-            </label>
+              Forgot UserName Password
+            </a>
           </div>
           <div>
             {
-            //   <a
-            //   onClick={() => setModalOpen(true)}
-            //   data-target="#multi-step-modal"
-            //   className="modal-open text-success-300 font-semibold text-base underline"
-            // >
-            //   Forgot Password?
-            // </a>
+              //   <a
+              //   onClick={() => setModalOpen(true)}
+              //   data-target="#multi-step-modal"
+              //   className="modal-open text-success-300 font-semibold text-base underline"
+              // >
+              //   Forgot Password?
+              // </a>
             }
           </div>
         </div>
@@ -262,7 +261,7 @@ function LeftSide() {
   );
 }
 
-export default LeftSide;
+export default SigninAdmin;
 
 
 // <div className="flex items-center space-x-3">

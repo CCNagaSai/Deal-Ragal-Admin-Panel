@@ -32,7 +32,10 @@ function App() {
     var url = window.location.href.split("5175")
     console.log("URL ",url)
 
-    if(url[1] != "/signin"){
+    
+    // console.log("url[1] :::::::::::", url[1])
+    
+    if(url[1] != "/signInadmin" && url[1] != "/signin"){
       window.location.href = 'http://dealregal.com:5175/signin'; //"http://192.168.0.203:5175/signin"//
       return false
     }

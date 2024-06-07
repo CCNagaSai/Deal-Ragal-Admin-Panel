@@ -13,6 +13,7 @@ import History from "./pages/history";
 import Support from "./pages/supportTicket";
 import Settings from "./pages/settings";
 import SignIn from "./pages/signin";
+import SignInAdmin from "./pages/signinadmin";
 import SignUp from "./pages/signup";
 import ComingSoon from "./pages/commingSoon";
 import Error from "./pages/error";
@@ -124,10 +125,13 @@ const router = createBrowserRouter([
       },
     ],
   },
-
   {
     path: "/signin",
     element: <SignIn />,
+  },
+  {
+    path: "/signinadmin",
+    element: <SignInAdmin />,
   },
   {
     path: "/signup",

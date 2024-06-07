@@ -24,6 +24,8 @@ function Dashboard() {
 
   let [toDayGamePay, settoDayGamePay] = useState('');
   let [todayProfit, settodayProfit] = useState('');
+  let [totalProfit, settotalProfit] = useState('');
+
 
 
   useEffect(() => {
@@ -66,6 +68,9 @@ function Dashboard() {
       if (apiData.todayProfit != undefined)
         settodayProfit(apiData.todayProfit)
 
+
+      if (apiData.totalProfit != undefined)
+        settotalProfit(apiData.totalProfit)
 
     }
 
@@ -172,6 +177,16 @@ function Dashboard() {
         link="/gamename=balckandwhite"
       />
 
+      <TotalWidgetCard
+      totalEarnImg={totalEarn}
+      memberImg={memberImg}
+      title="Total Profit Loss"
+      amount={totalProfit}
+      groth="+ 3.5%"
+      id="totalGoal"
+      logo="₹"
+      link="/gamename=balckandwhite"
+    />
 
       </div>
     </div>

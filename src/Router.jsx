@@ -13,6 +13,8 @@ import History from "./pages/history";
 import Support from "./pages/supportTicket";
 import Settings from "./pages/settings";
 import SignIn from "./pages/signin";
+import SignInAdmin from "./pages/signinadmin";
+
 import SignUp from "./pages/signup";
 import ComingSoon from "./pages/commingSoon";
 import Error from "./pages/error";
@@ -70,6 +72,8 @@ import BetHistoryinfo from './pages/BetHistory'
 import Chnagepwd from './pages/Chnagepwd'
 import SubAgentTranscation from './pages/SubAgentTranscation'
 import AgentTranscation from './pages/AgentTranscation'
+import AdminTranscation from './pages/AdminTranscation'
+
 
 
 
@@ -78,6 +82,10 @@ const router = createBrowserRouter([
     path: "/",
     Component: Layout,
     children: [
+      {
+        path: "/AdminTranscation",
+        element: <AdminTranscation />,
+      },
       {
         path: "/AgentTranscation",
         element: <AgentTranscation />,
@@ -267,6 +275,10 @@ const router = createBrowserRouter([
   {
     path: "/signIn",
     element: <SignIn />,
+  },
+  {
+    path: "/signInadmin",
+    element: <SignInAdmin />,
   },
   {
     path: "/signup",
