@@ -74,6 +74,7 @@ import SubAgentTranscation from './pages/SubAgentTranscation'
 import AgentTranscation from './pages/AgentTranscation'
 import AdminTranscation from './pages/AdminTranscation'
 
+import TableTranscation from './pages/tableManagment'
 
 
 
@@ -82,6 +83,10 @@ const router = createBrowserRouter([
     path: "/",
     Component: Layout,
     children: [
+      {
+        path: "/TableTranscation",
+        element: <TableTranscation />,
+      },
       {
         path: "/AdminTranscation",
         element: <AdminTranscation />,

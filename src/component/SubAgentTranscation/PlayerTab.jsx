@@ -43,7 +43,12 @@ function PlayerTab({ }) {
     const submitdata = async () => {
 
       
-      if (cookies.get('logintype') == "Admin") {
+      if (AgentInfo != undefined && AgentInfo != null && AgentInfo.UserId != undefined) {
+
+        setUserData(await SubAgentTranscationData(AgentInfo.UserId,"Shop"))
+
+
+      }else if (cookies.get('logintype') == "Admin") {
         
         setUserData(await SubAgentTranscationData("id", cookies.get('logintype')))
 
@@ -259,7 +264,7 @@ function PlayerTab({ }) {
                   </span>
                 </div>
               </td>
-              <td className="w-[165px] px-6 py-5 xl:px-0">
+              <td className="w-[185px] px-6 py-5 xl:px-0">
                 <div className="flex w-full items-center space-x-2.5">
                   <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
                    Date and Time 
@@ -586,7 +591,7 @@ function PlayerTab({ }) {
                     key={user._id}
                     name={user.name}
                     UserId={user._id}
-                    DateandTime={user.DateandTime}
+                    DateandTime={user.createdAt}
                     trnxAmount={user.trnxAmount}
                     oppChips={user.oppChips}
                     chips={user.chips}
@@ -602,7 +607,7 @@ function PlayerTab({ }) {
                     key={user._id}
                     name={user.name}
                     UserId={user._id}
-                    DateandTime={user.DateandTime}
+                    DateandTime={user.createdAt}
                     trnxAmount={user.trnxAmount}
                     oppChips={user.oppChips}
                     chips={user.chips}

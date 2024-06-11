@@ -157,6 +157,68 @@ const OfferState = (props) => {
             console.log("e :", e)
         }
     }
+    //============== Table ======================
+
+    
+    const TableList = async (uid,type) => {
+        try {
+            console.log("TableList :::::::", `${host}/admin/games/TableList`)
+            const response = await fetch(`${host}/admin/games/TableList`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'token': cookies.get('token')
+                }
+            }).then(data => data.json())
+
+            const json = response
+            console.log("data api from :latatestUser :::...", json)
+
+
+            if (json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")) {
+                LogoutClick()
+
+                return []
+            } else {
+                return await json.tabInfo
+            }
+
+
+        } catch (e) {
+            console.log("e :", e)
+        }
+    }
+
+
+    const TableDelete = async (userId) => {
+        try {
+            console.log("PlayerList :::::::", host)
+            const response = await fetch(`${host}/admin/games/DeleteTable/` + userId, {
+                method: 'delete',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'token': cookies.get('token')
+                }
+            }).then(d => d)
+
+            const json = response
+            console.log("data api from :latatestUser :::...", json)
+
+            if (json.message != undefined && (json.message == "jwt expired" || json.message == "Unauthorized access")) {
+                LogoutClick()
+
+                return {}
+            } else {
+                return await json
+            }
+
+
+        } catch (e) {
+            console.log("e :", e)
+        }
+    }
 
 
     // ========= User Details =================
@@ -1183,6 +1245,7 @@ const OfferState = (props) => {
             console.log("e :", e)
         }
     }
+
     const getprintdataapi = async (userId) => {
         try {
             console.log("PlayerList :::::::", `${host}/admin/user/UserInfoPrint`)
@@ -1445,8 +1508,6 @@ const OfferState = (props) => {
             console.log("e :", e)
         }
     }
-
-
 
     const GetGameBetInfo = async () => {
         try {
@@ -2787,7 +2848,7 @@ const OfferState = (props) => {
             GetGameCom, GameComSet, GetRouletteHistoryData,
             GetSpinnerHistoryData, GetSoratHistoryData, GetandarbaharHistoryData, GetOneToTwelveHistoryData, Chnageidpwd, blockandunblock,
             agentAddMoney, agentDeductMoney, shopAddMoney, shopDeductMoney,
-            SubAgentTranscationData,AgentTranscationData,AdminTranscationData
+            SubAgentTranscationData,AgentTranscationData,AdminTranscationData,TableList,TableDelete
         }}>
             {props.children}
         </offerContext.Provider>)

@@ -491,7 +491,7 @@ function PlayerTab({ }) {
                     key={user._id}
                     name={user.name}
                     UserId={user._id}
-                    DateandTime={user.DateandTime}
+                    DateandTime={user.createdAt}
                     trnxAmount={user.trnxAmount}
                     
                     trnxTypeTxt={user.trnxTypeTxt}
@@ -506,7 +506,7 @@ function PlayerTab({ }) {
                     key={user._id}
                     name={user.name}
                     UserId={user._id}
-                    DateandTime={user.DateandTime}
+                    DateandTime={user.createdAt}
                     trnxAmount={user.trnxAmount}
                     
                     trnxTypeTxt={user.trnxTypeTxt}

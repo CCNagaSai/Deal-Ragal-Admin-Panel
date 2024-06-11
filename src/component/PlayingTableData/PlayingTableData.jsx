@@ -6,7 +6,7 @@ import CustomerInfo from "./TotalWidgetCard";
 function PlayingTableData(gameName) {
 
   const [tableinfo, setTableinfo] = useState([]);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(100);
 
   const context = useContext(offerContext)
 
@@ -173,7 +173,7 @@ function PlayingTableData(gameName) {
                   key={user._id}
                   id={user._id}
                   type={user.type}
-                  bet={user.bet}
+                  bet={user.bet.toFixed(2)}
                   number={user.number}
                 />
               )
@@ -182,7 +182,7 @@ function PlayingTableData(gameName) {
                   key={user._id}
                   id={user._id}
                   type={user.type}
-                  bet={user.bet}
+                  bet={user.bet.toFixed(2)}
                   number={user.number}
                 />
               )

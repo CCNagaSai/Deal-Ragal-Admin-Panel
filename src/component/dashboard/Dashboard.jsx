@@ -109,7 +109,6 @@ function Dashboard() {
           groth="+ 3.5%"
           id="totalSpending"
           logo="₹"
-          link="/depositList"
         />
         <TotalWidgetCard
           totalEarnImg={totalEarn}
@@ -119,7 +118,6 @@ function Dashboard() {
           groth="+ 3.5%"
           id="totalGoal"
           logo="₹"
-          link="/depositList"
         />
 
         <TotalWidgetCard
@@ -130,7 +128,6 @@ function Dashboard() {
           groth="+ 3.5%"
           id="totalSpending"
           logo="₹"
-          link="/depositList"
         />
         <TotalWidgetCard
           totalEarnImg={totalEarn}
@@ -140,7 +137,6 @@ function Dashboard() {
           groth="+ 3.5%"
           id="totalGoal"
           logo="₹"
-          link="/depositList"
         />
 
 
@@ -152,7 +148,6 @@ function Dashboard() {
           groth="+ 3.5%"
           id="totalGoal"
           logo=""
-          link="/gamename=balckandwhite"
         />
 
         <TotalWidgetCard
@@ -163,7 +158,6 @@ function Dashboard() {
           groth="+ 3.5%"
           id="totalGoal"
           logo=""
-          link="/gamename=balckandwhite"
         />
 
         <TotalWidgetCard
@@ -174,7 +168,6 @@ function Dashboard() {
         groth="+ 3.5%"
         id="totalGoal"
         logo="₹"
-        link="/gamename=balckandwhite"
       />
 
       <TotalWidgetCard
@@ -185,7 +178,6 @@ function Dashboard() {
       groth="+ 3.5%"
       id="totalGoal"
       logo="₹"
-      link="/gamename=balckandwhite"
     />
 
       </div>

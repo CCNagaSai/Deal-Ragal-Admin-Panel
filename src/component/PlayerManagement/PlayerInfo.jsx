@@ -26,6 +26,20 @@ function PlayerInfo({ UserId, UserName, name, MainWallet, RegistrationDate, Last
     navigate('/playeredit', { state:{ UserId, UserName, name, MainWallet,  RegistrationDate, LastLogin, status, profileUrl,email,uniqueId } });
   }
 
+  function formatDateTo12hr(dateTimeStr) {
+    const dateTime = new Date(dateTimeStr);
+    const formattedDate = dateTime.toLocaleString('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true // Set to true for 12-hour format
+    });
+    return formattedDate;
+  }
+
   return (
     <tr className="border-b border-bgray-300 dark:border-darkblack-400">
       
@@ -50,12 +64,12 @@ function PlayerInfo({ UserId, UserName, name, MainWallet, RegistrationDate, Last
       
       <td className="px-6 py-5 xl:px-0">
         <p className="text-base font-medium text-bgray-900 dark:text-white">
-          {RegistrationDate}
+          {formatDateTo12hr(RegistrationDate)}
         </p>
       </td>
       <td className="px-6 py-5 xl:px-0">
         <p className="text-base font-medium text-bgray-900 dark:text-white">
-          {LastLogin}
+          {formatDateTo12hr(LastLogin)}
         </p>
       </td>
       <td className="px-6 py-5 xl:px-0">

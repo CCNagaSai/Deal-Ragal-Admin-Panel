@@ -29,6 +29,20 @@ function PlayerInfo({ UserId, UserName,chips, location, createdAt, lastLoginDate
     navigate('/transaction', { state: { UserId } });
   }
 
+  function formatDateTo12hr(dateTimeStr) {
+    const dateTime = new Date(dateTimeStr);
+    const formattedDate = dateTime.toLocaleString('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true // Set to true for 12-hour format
+    });
+    return formattedDate;
+  }
+
   return (
     <tr className="border-b border-bgray-300 dark:border-darkblack-400">
 
@@ -51,12 +65,12 @@ function PlayerInfo({ UserId, UserName,chips, location, createdAt, lastLoginDate
       </td>
       <td className="w-[165px] px-6 py-5 xl:px-0">
         <p className="text-base font-semibold text-bgray-900 dark:text-white">
-          {createdAt}
+          {formatDateTo12hr(createdAt)}
         </p>
       </td>
       <td className="w-[165px] px-6 py-5 xl:px-0">
         <p className="text-base font-semibold text-bgray-900 dark:text-white">
-          {lastLoginDate}
+          {formatDateTo12hr(lastLoginDate)}
         </p>
       </td>
 

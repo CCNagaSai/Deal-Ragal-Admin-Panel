@@ -10,8 +10,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
-
-function PlayerTab({ }) {
+function PlayerTab({  }) {
   //-------------------------------------------------------------------------------------------------------
   const [active, setActive] = useState(false);
   const [pageSize, setPageSize] = useState(5);
@@ -26,7 +25,6 @@ function PlayerTab({ }) {
   }
   //------------------------------------------------------------------------------------------------------------
 
-
   let [userData, setUserData] = useState([]);
 
 
@@ -37,13 +35,17 @@ function PlayerTab({ }) {
   //console.log("location ", location.state)
   const AgentInfo = location.state;
 
-
+  console.log("AgentInfo ::::::::::::::::::::::",AgentInfo)
 
   useEffect(() => {
     const submitdata = async () => {
 
-      
-      if (cookies.get('logintype') == "Admin") {
+      if (AgentInfo != undefined && AgentInfo != null && AgentInfo.UserId != undefined) {
+
+        setUserData(await AgentTranscationData(AgentInfo.UserId,"Agent"))
+
+
+      }else if (cookies.get('logintype') == "Admin") {
         
         setUserData(await AgentTranscationData("id", cookies.get('logintype')))
 
@@ -586,7 +588,7 @@ function PlayerTab({ }) {
                     key={user._id}
                     name={user.name}
                     UserId={user._id}
-                    DateandTime={user.DateandTime}
+                    DateandTime={user.createdAt}
                     trnxAmount={user.trnxAmount}
                     oppChips={user.oppChips}
                     chips={user.chips}
@@ -602,7 +604,7 @@ function PlayerTab({ }) {
                     key={user._id}
                     name={user.name}
                     UserId={user._id}
-                    DateandTime={user.DateandTime}
+                    DateandTime={user.createdAt}
                     trnxAmount={user.trnxAmount}
                     oppChips={user.oppChips}
                     chips={user.chips}
