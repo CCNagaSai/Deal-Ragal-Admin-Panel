@@ -27,6 +27,13 @@ function Dashboard() {
   let [totalProfit, settotalProfit] = useState('');
 
 
+  let [totalPercentage, settotalPercentage] = useState('');
+
+  let [dayPercentage, setdayPercentage] = useState('');
+
+
+  
+
 
   useEffect(() => {
     const submitdata = async () => {
@@ -72,6 +79,12 @@ function Dashboard() {
       if (apiData.totalProfit != undefined)
         settotalProfit(apiData.totalProfit)
 
+      if (apiData.totalPercentage != undefined)
+        settotalPercentage(apiData.totalPercentage)
+      
+      if (apiData.ConfigdaywiseWinloss != undefined)
+        setdayPercentage(apiData.ConfigdaywiseWinloss)
+      
     }
 
     submitdata()
@@ -178,8 +191,30 @@ function Dashboard() {
       groth="+ 3.5%"
       id="totalGoal"
       logo="₹"
+        />
+        
+        
+      <TotalWidgetCard
+      totalEarnImg={totalEarn}
+      memberImg={memberImg}
+      title="Playing Win Loss Percentage One Day"
+      amount={totalPercentage}
+      groth="+ 3.5%"
+      id="totalGoal"
+      logo=""
     />
+        
 
+        <TotalWidgetCard
+        totalEarnImg={totalEarn}
+        memberImg={memberImg}
+        title="Playing Win Loss Percentage Config Day"
+        amount={dayPercentage}
+        groth="+ 3.5%"
+        id="totalGoal"
+        logo=""
+      />
+        
       </div>
     </div>
   );
