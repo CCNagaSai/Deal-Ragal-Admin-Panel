@@ -104,8 +104,11 @@ function PlayerTab({ UserId, gameName }) {
         (!from || registrationDate >= from) &&
         (!to || registrationDate <= to) &&
         (searchTerm === '' ||
-          user.Name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          user.PhoneNumber.includes(searchTerm))
+          user.userId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (user.trnxAmount != undefined && user.trnxAmount.toString().includes(searchTerm.toLowerCase())) ||
+          (user.chips != undefined && user.chips.toString().includes(searchTerm.toLowerCase())) ||
+          (user.oppChips != undefined && user.oppChips.toString().includes(searchTerm.toLowerCase()))
+        )
       );
     });
   }
@@ -481,7 +484,7 @@ function PlayerTab({ UserId, gameName }) {
                 ? index + 1 <= pageSize && (
                   <CustomerInfo
                     key={user._id}
-                    datetime={user.DateandTime}
+                    datetime={user.createdAt}
                     trnxTypeTxt={user.trnxTypeTxt}
                     trnxAmount={user.trnxAmount}
                     previouschips={user.oppChips}
@@ -493,7 +496,7 @@ function PlayerTab({ UserId, gameName }) {
                 : index < 3 && (
                   <CustomerInfo
                     key={user._id}
-                    datetime={user.DateandTime}
+                    datetime={user.createdAt}
                     trnxTypeTxt={user.trnxTypeTxt}
                     trnxAmount={user.trnxAmount}
                     previouschips={user.oppChips}
