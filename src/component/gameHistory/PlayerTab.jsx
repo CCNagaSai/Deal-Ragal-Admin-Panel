@@ -61,7 +61,7 @@ function PlayerTab({ gameName }) {
   // Filter the user data based on date range and search term
   const filteredUsers = gameHistoryData.filter((user) => {
 
-    const registrationDate = new Date(user.DateTime);
+    const registrationDate = new Date(user.createdAt);
     const from = fromDate ? new Date(fromDate) : null;
     const to = toDate ? new Date(toDate) : null;
 
@@ -69,8 +69,10 @@ function PlayerTab({ gameName }) {
       (!from || registrationDate >= from) &&
       (!to || registrationDate <= to) &&
       (searchTerm === '' ||
-        user.Name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.PhoneNumber.includes(searchTerm))
+        (user.userId.toLowerCase().includes(searchTerm.toLowerCase())) ||  
+        (user.won != undefined && user.won.toString().includes(searchTerm.toLowerCase())) ||
+        (user.play != undefined && user.play.toString().includes(searchTerm.toLowerCase()))
+      )
     );
   });
 

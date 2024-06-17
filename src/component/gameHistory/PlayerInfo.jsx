@@ -7,8 +7,8 @@ function PlayerInfo({ datetime, userId, ballposition, beforeplay, play, won, aft
   const navigate = useNavigate();
 
 
-  const navigateToContacts = (uaserbetdata) => {
-    navigate('/betHistory', { state:{uaserbetdata } });
+  const navigateToContacts = (datetime, userId, ballposition, beforeplay, play, won, afterplaypoint, referid) => {
+    navigate('/betHistory', { state:{datetime, userId, ballposition, beforeplay, play, won, afterplaypoint, referid } });
   }
   function formatDateTo12hr(dateTimeStr) {
     const dateTime = new Date(dateTimeStr);
@@ -74,7 +74,7 @@ function PlayerInfo({ datetime, userId, ballposition, beforeplay, play, won, aft
         "padding": "5px 10px",
         "cursor": "pointer",
         "border-radius": "4px"
-      }} onClick={() => navigateToContacts(referid)} >
+      }} onClick={() => navigateToContacts(formatDateTo12hr(datetime), userId, ballposition, beforeplay, play, won, afterplaypoint, referid)} >
       <img style={{"width": "30px","height": "30px","margin": "30px"}} src={edit} />
       </button>
 

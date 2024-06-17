@@ -21,7 +21,7 @@ function betHistoryinfo() {
       {/* write your code here */}
       <div className="2xl:flex 2xl:space-x-[48px]">
       <section className="mb-6 2xl:mb-0 2xl:flex-1">
-          <BetHistory data={data.uaserbetdata}/>
+          <BetHistory data={data}/>
         </section>
         
       </div>

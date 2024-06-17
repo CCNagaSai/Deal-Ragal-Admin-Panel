@@ -96,7 +96,7 @@ function PlayerTab({ UserId, gameName }) {
   if(gameHistoryData && gameHistoryData.length > 0){
     filteredUsers = gameHistoryData.filter((user) => {
       console.log("User :::::::::::::::::::::::::::::::::::::::::::::",user)
-      const registrationDate = new Date(user.DateTime);
+      const registrationDate = new Date(user.createdAt);
       const from = fromDate ? new Date(fromDate) : null;
       const to = toDate ? new Date(toDate) : null;
 
