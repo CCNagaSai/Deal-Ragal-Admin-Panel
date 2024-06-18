@@ -36,7 +36,7 @@ function App() {
     // console.log("url[1] :::::::::::", url[1])
     
     if(url[1].toLowerCase() != "/signInadmin".toLowerCase() && url[1] != "/signin"){
-      window.location.href = 'http://dealregal.com:5175/signin'; //"http://192.168.0.203:5175/signin"//
+      window.location.href ='http://dealregal.com:5175/signin'; // "http://192.168.0.203:5175/signin"//
       return false
     }
     //return (<Router><Login/></Router>)
