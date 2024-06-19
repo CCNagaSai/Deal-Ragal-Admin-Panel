@@ -2,13 +2,13 @@ import ProtoTypes from "prop-types";
 import { useNavigate } from 'react-router-dom';
 import offerContext from '../../context/offerContext';
 import edit from "../../assets/images/edit.png";
-function PlayerInfo({ datetime, userId, ballposition, beforeplay, play, won, afterplaypoint, referid }) {
+function PlayerInfo({ datetime, userId, ballposition, beforeplay, play, won, afterplaypoint, referid ,name}) {
 
   const navigate = useNavigate();
 
 
-  const navigateToContacts = (datetime, userId, ballposition, beforeplay, play, won, afterplaypoint, referid) => {
-    navigate('/betHistory', { state:{datetime, userId, ballposition, beforeplay, play, won, afterplaypoint, referid } });
+  const navigateToContacts = (datetime, userId, ballposition, beforeplay, play, won, afterplaypoint, referid,name) => {
+    navigate('/betHistory', { state:{datetime, userId, ballposition, beforeplay, play, won, afterplaypoint, referid,name } });
   }
   function formatDateTo12hr(dateTimeStr) {
     const dateTime = new Date(dateTimeStr);
@@ -37,7 +37,7 @@ function PlayerInfo({ datetime, userId, ballposition, beforeplay, play, won, aft
       </td>
       <td className="w-[250px] px-6 py-5 xl:px-0">
         <p className="text-base font-medium text-bgray-900 dark:text-white">
-          {userId}
+          {name}
         </p>
       </td>
       <td className="w-[165px] px-6 py-5 xl:px-0">
@@ -74,7 +74,7 @@ function PlayerInfo({ datetime, userId, ballposition, beforeplay, play, won, aft
         "padding": "5px 10px",
         "cursor": "pointer",
         "border-radius": "4px"
-      }} onClick={() => navigateToContacts(formatDateTo12hr(datetime), userId, ballposition, beforeplay, play, won, afterplaypoint, referid)} >
+      }} onClick={() => navigateToContacts(formatDateTo12hr(datetime), userId, ballposition, beforeplay, play, won, afterplaypoint, referid,name)} >
       <img style={{"width": "30px","height": "30px","margin": "30px"}} src={edit} />
       </button>
 

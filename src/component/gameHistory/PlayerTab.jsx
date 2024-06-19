@@ -230,88 +230,12 @@ function PlayerTab({ gameName }) {
                   <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
                     Date Time
                   </span>
-                  <span>
-                    <svg
-                      width="14"
-                      height="15"
-                      viewBox="0 0 14 15"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M10.332 1.31567V13.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M5.66602 11.3157L3.66602 13.3157L1.66602 11.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M3.66602 13.3157V1.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M12.332 3.31567L10.332 1.31567L8.33203 3.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </span>
                 </div>
               </td>
               <td className="w-[250px] px-6 py-5 xl:px-0" >
                 <div className="flex w-full items-center space-x-2.5">
                   <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                    User Id
-                  </span>
-                  <span>
-                    <svg
-                      width="14"
-                      height="15"
-                      viewBox="0 0 14 15"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M10.332 1.31567V13.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M5.66602 11.3157L3.66602 13.3157L1.66602 11.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M3.66602 13.3157V1.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M12.332 3.31567L10.332 1.31567L8.33203 3.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
+                    User Name
                   </span>
                 </div>
               </td>
@@ -320,88 +244,12 @@ function PlayerTab({ gameName }) {
                   <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
                     Boll Number
                   </span>
-                  <span>
-                    <svg
-                      width="14"
-                      height="15"
-                      viewBox="0 0 14 15"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M10.332 1.31567V13.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M5.66602 11.3157L3.66602 13.3157L1.66602 11.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M3.66602 13.3157V1.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M12.332 3.31567L10.332 1.31567L8.33203 3.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </span>
                 </div>
               </td>
               <td className="w-[165px] px-6 py-5 xl:px-0">
                 <div className="flex w-full items-center space-x-2.5">
                   <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
                     Before Play
-                  </span>
-                  <span>
-                    <svg
-                      width="14"
-                      height="15"
-                      viewBox="0 0 14 15"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M10.332 1.31567V13.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M5.66602 11.3157L3.66602 13.3157L1.66602 11.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M3.66602 13.3157V1.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M12.332 3.31567L10.332 1.31567L8.33203 3.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
                   </span>
                 </div>
               </td>
@@ -410,44 +258,6 @@ function PlayerTab({ gameName }) {
                 <div className="flex w-full items-center space-x-2.5">
                   <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
                     Play Bet
-                  </span>
-                  <span>
-                    <svg
-                      width="14"
-                      height="15"
-                      viewBox="0 0 14 15"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M10.332 1.31567V13.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M5.66602 11.3157L3.66602 13.3157L1.66602 11.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M3.66602 13.3157V1.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M12.332 3.31567L10.332 1.31567L8.33203 3.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
                   </span>
                 </div>
               </td>
@@ -501,88 +311,12 @@ function PlayerTab({ gameName }) {
                   <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
                     After Play Amount
                   </span>
-                  <span>
-                    <svg
-                      width="14"
-                      height="15"
-                      viewBox="0 0 14 15"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M10.332 1.31567V13.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M5.66602 11.3157L3.66602 13.3157L1.66602 11.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M3.66602 13.3157V1.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M12.332 3.31567L10.332 1.31567L8.33203 3.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </span>
                 </div>
               </td>
               <td className="w-[165px] px-6 py-5 xl:px-0">
               <div className="flex w-full items-center space-x-2.5">
                 <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
                   Refer ID
-                </span>
-                <span>
-                  <svg
-                    width="14"
-                    height="15"
-                    viewBox="0 0 14 15"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M10.332 1.31567V13.3157"
-                      stroke="#718096"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M5.66602 11.3157L3.66602 13.3157L1.66602 11.3157"
-                      stroke="#718096"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M3.66602 13.3157V1.31567"
-                      stroke="#718096"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M12.332 3.31567L10.332 1.31567L8.33203 3.31567"
-                      stroke="#718096"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
                 </span>
               </div>
             </td>
@@ -601,6 +335,8 @@ function PlayerTab({ gameName }) {
                     won={user.won}
                     afterplaypoint={user.afterplaypoint}
                     referid={user.betObjectData}
+                    name={user.username}
+                  
                   />
                 )
                 : index < 3 && (
@@ -614,6 +350,7 @@ function PlayerTab({ gameName }) {
                     won={user.won}
                     afterplaypoint={user.afterplaypoint}
                     referid={user.betObjectData}
+                    name={user.username}
                   />
                 )
             )}
