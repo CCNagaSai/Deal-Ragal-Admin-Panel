@@ -44,10 +44,10 @@ function HeaderTwo({ handleSidebar }) {
               </span>
             </button>
             <div>
-              <Link to="/dashboard">
+              
                 <img src={logo} className="block dark:hidden" alt="logo" />
                 <img src={logoW} className="hidden dark:block" alt="logo" />
-              </Link>
+             
             </div>
           </div>
           <div className="mr-2">

@@ -12,10 +12,10 @@ function SignUp() {
         {/* Left */}
         <div className="lg:w-1/2 px-5 xl:pl-12 pt-10">
           <header>
-            <Link to="/dashboard" className="">
+           
               <img src={logoColor} className="block dark:hidden" alt="Logo" />
               <img src={logoWhite} className="hidden dark:block" alt="Logo" />
-            </Link>
+            
           </header>
 
           <div className="max-w-[460px] m-auto pt-24 pb-16">
