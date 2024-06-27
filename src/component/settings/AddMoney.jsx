@@ -27,7 +27,7 @@ function AddMoney() {
             </p>
             <div className="w-full h-[35px] flex justify-between items-center">
               <span className="text-2xl text-bgray-900 dark:text-white font-bold">
-                $
+              ₹
               </span>
               <label className="w-full">
                 <input
