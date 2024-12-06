@@ -197,6 +197,41 @@ function PlayerTab({ }) {
 
                 </div>
               </td>
+              {/* ///////////////////////new fields start /////////////////////////*/}
+              <td className="w-[165px] px-6 py-5 xl:px-0" onClick={() => handleSort('totalPlayPoints')}>
+                <div className="flex w-full items-center space-x-2.5">
+                  <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
+                    Play Point⬆⬇
+                  </span>
+
+                </div>
+              </td>
+              <td className="w-[165px] px-6 py-5 xl:px-0" onClick={() => handleSort('totalWonPoints')}>
+                <div className="flex w-full items-center space-x-2.5">
+                  <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
+                    Won Point⬆⬇
+                  </span>
+
+                </div>
+              </td>
+              <td className="w-[165px] px-6 py-5 xl:px-0" onClick={() => handleSort('endPoints')}>
+                <div className="flex w-full items-center space-x-2.5">
+                  <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
+                    End Point⬆⬇
+                  </span>
+
+                </div>
+              </td>
+              <td className="w-[165px] px-6 py-5 xl:px-0" onClick={() => handleSort('margin')}>
+                <div className="flex w-full items-center space-x-2.5">
+                  <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
+                    Margin⬆⬇
+                  </span>
+
+                </div>
+              </td>
+              {/* ///////////////////////new fields end/////////////////////////*/}
+
 
               <td className="w-[165px] px-6 py-5 xl:px-0" onClick={() => handleSort('chips')}>
                 <div className="flex w-full items-center space-x-2.5">
@@ -250,6 +285,12 @@ function PlayerTab({ }) {
                     UserId={user._id}
                     UserName={user.username}
                     name={user.name}
+
+                    totalPlayPoints={user.totalPlayPoints}
+                    totalWonPoints={user.totalWonPoints}
+                    endPoints={user.endPoints}
+                    margin={user.margin}
+
                     MainWallet={user.chips}
                     RegistrationDate={user.createdAt}
                     LastLogin={user.lastLoginDate}
@@ -266,6 +307,12 @@ function PlayerTab({ }) {
                     UserId={user._id}
                     UserName={user.username}
                     name={user.name}
+                    
+                    totalPlayPoints={user.totalPlayPoints}
+                    totalWonPoints={user.totalWonPoints}
+                    endPoints={user.endPoints}
+                    margin={user.margin}
+
                     MainWallet={user.chips}
                     RegistrationDate={user.createdAt}
                     LastLogin={user.lastLoginDate}
