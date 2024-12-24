@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
-import offerContext from '../../context/offerContext';
+import offerContext from "../../context/offerContext";
 import Cookies from "universal-cookie";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const Topbar = () => {
   const Navigate = useNavigate();
@@ -17,8 +17,8 @@ const Topbar = () => {
   const buttonRef = useRef(null);
   const userName = cookies.get("email") || "Guest";
   const position = cookies.get("name") || "User";
-  const agentId = cookies.get("LoginUserId"); 
-  const token = cookies.get("token"); 
+  const agentId = cookies.get("LoginUserId");
+  const token = cookies.get("token");
 
   console.log("aaaa", agentId);
   const logout = async () => {
@@ -30,7 +30,7 @@ const Topbar = () => {
       cookies.remove("email", { path: "/" });
       cookies.remove("LoginUserId", { path: "/" });
       cookies.remove("token", { path: "/" });
-  
+
       // Log cookie values to verify they're cleared
       console.log("After removal:");
       console.log("logintype:", cookies.get("logintype"));
@@ -38,17 +38,16 @@ const Topbar = () => {
       console.log("email:", cookies.get("email"));
       console.log("LoginUserId:", cookies.get("LoginUserId"));
       console.log("token:", cookies.get("token"));
-  
+
       // Logout click logic (if any)
       await LogoutClick();
-  
+
       // Navigate to the signin page
       Navigate("/signin");
     } catch (error) {
       console.error("Error during logout:", error);
     }
   };
-  
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -133,7 +132,7 @@ const Topbar = () => {
         </div>
 
         <div className="flex flex-row items-center gap-2 lg:gap-4 mt-4">
-          <button 
+          <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs"
             onClick={() => setShowLogoutPopup(true)}
           >
@@ -148,15 +147,17 @@ const Topbar = () => {
       {showLogoutPopup && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg p-6 shadow-lg">
-            <p className="mb-4 text-lg font-semibold">Are you sure you want to logout?</p>
+            <p className="mb-4 text-lg font-semibold">
+              Are you sure you want to logout?
+            </p>
             <div className="flex justify-end gap-4">
-              <button 
+              <button
                 className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
                 onClick={logout}
               >
                 Logout
               </button>
-              <button 
+              <button
                 className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
                 onClick={() => setShowLogoutPopup(false)}
               >
@@ -174,7 +175,9 @@ const Topbar = () => {
         className="inline-flex items-center mt-4 p-2 w-10 h-10 justify-center z-50 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none"
       >
         <svg
-          className={`w-5 h-5 ${isMenuOpen ? "rotate-180" : "rotate-0"} transition-transform`}
+          className={`w-5 h-5 ${
+            isMenuOpen ? "rotate-180" : "rotate-0"
+          } transition-transform`}
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 17 14"
@@ -191,7 +194,9 @@ const Topbar = () => {
 
       <div
         ref={menuRef}
-        className={`lg:hidden ${isMenuOpen ? "block" : "hidden"} w-full z-40 flex flex-col items-center space-y-4 absolute right-4 mt-10 bg-gray-50 border rounded-lg p-4`}
+        className={`md:hidden ${
+          isMenuOpen ? "block" : "hidden"
+        } w-half z-40 flex flex-col items-center space-y-4 absolute top-4 right-4 mt-10 bg-gray-50 border rounded-lg p-4`}
       >
         <ul className="flex flex-col font-medium">
           <li>
@@ -214,7 +219,7 @@ const Topbar = () => {
           </li>
           <li>
             <div className="flex gap-2 items-center">
-              <button 
+              <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-xs"
                 onClick={() => setShowLogoutPopup(true)}
               >
