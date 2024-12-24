@@ -35,7 +35,7 @@ function App() {
     
     // console.log("url[1] :::::::::::", url[1])
     
-    if(url[1].toLowerCase() != "/signInadmin".toLowerCase() && url[1] != "/signin"){
+    if(url[1]?.toLowerCase() != "/signInadmin".toLowerCase() && url[1] != "/signin"){
       window.location.href = 'http://fairdealprime.com:5175/signin'; //"http://192.168.0.203:5175/signin"//
       return false 
     }
