@@ -1,6 +1,8 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Home from "./pages/home";
-import HomeTwo from "./pages/homeTwo";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  redirect,
+} from "react-router-dom";
 import Statistics from "./pages/statistics";
 import Analytics from "./pages/analytics";
 
@@ -49,7 +51,37 @@ import Playeredit from './pages/PlayerUpdate'
 
 import CoinManagement from './pages/CoinManagement'
 
-import AgentDashboard from "./pages/agentdashboard";
+// import AgentDashboard from "./pages/agentdashboard";
+import {
+  Agentdash,
+  AgentSearchUsers,
+  AgentSearchSubAgents,
+  AgentBalanceAdjustment,
+  AgentKickoffUsers,
+  AgentCreateUser,
+  AgentCreateSubagent,
+  AgentChangePassword,
+  AgentPointFile,
+  AgentInPoint,
+  AgentOutPoint,
+  AgentGameHistory,
+  AgentTurnOver,
+} from "./New_Dashboards/Agent/AgentTabs";
+
+import {
+  SubAgentdash,
+  SubAgentSearchUsers,
+  SubAgentBalanceAdjustment,
+  SubAgentKickoffUsers,
+  SubAgentCreateUser,
+  SubAgentChangePassword,
+  SubAgentPointFile,
+  SubAgentInPoint,
+  SubAgentOutPoint,
+  SubAgentGameHistory,
+  SubAgentTurnOver,
+} from "./New_Dashboards/SubAgent/SubAgentTabs";
+
 import ShopDashboard from "./pages/shopdashboard";
 
 import AgentManagement from "./pages/agentManagement";
@@ -74,14 +106,23 @@ import SubAgentTranscation from './pages/SubAgentTranscation'
 import AgentTranscation from './pages/AgentTranscation'
 import AdminTranscation from './pages/AdminTranscation'
 
-import TableTranscation from './pages/tableManagment'
+import TableTranscation from "./pages/tableManagment";
+import Cookies from "universal-cookie";
 
-
+const checkAuth = () => {
+  const cookies = new Cookies();
+  const tokendata = cookies.get("token");
+  if (!tokendata) {
+    throw redirect("/signin"); // Redirect to the login page if the token is missing
+  }
+  return null;
+};
 
 const router = createBrowserRouter([
   {
     path: "/",
     Component: Layout,
+    loader: checkAuth,
     children: [
       {
         path: "/TableTranscation",
@@ -111,14 +152,14 @@ const router = createBrowserRouter([
         path: "/dashboard",
         element: <Dashboard />,
       },
-      {
-        path: "/agentdashboard",
-        element: <AgentDashboard />,
-      },
-      {
-        path: "/shopdashboard",
-        element: <ShopDashboard />,
-      },
+      // {
+      //   path: "/agentdashboard",
+      //   element: <AgentDashboard />,
+      // },
+      // {
+      //   path: "/shopdashboard",
+      //   element: <ShopDashboard />,
+      // },
       {
         path: "/home-3",
         element: <Statistics />,
@@ -127,7 +168,7 @@ const router = createBrowserRouter([
         path: "/home-4",
         element: <Analytics />,
       },
-      
+
       {
         path: "/gamehistory",
         element: <GameHistory />,
@@ -277,6 +318,119 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path: "/",
+    loader: checkAuth,
+    children: [
+      // Agents routes
+      {
+        path: "/agentdashboard",
+        element: <Agentdash />,
+      },
+      {
+        path: "/agent/Turn-over",
+        element: <AgentTurnOver />,
+      },
+      {
+        path: "/agent/search-users",
+        element: <AgentSearchUsers />,
+      },
+      {
+        path: "/agent/search-sub-agents",
+        element: <AgentSearchSubAgents />,
+      },
+      {
+        path: "/agent/balance-adjustment",
+        element: <AgentBalanceAdjustment />,
+      },
+      {
+        path: "/agent/gamehistory",
+        element: <AgentGameHistory />,
+      },
+      {
+        path: "/agent/outpoint",
+        element: <AgentOutPoint />,
+      },
+      {
+        path: "/agent/inpoint",
+        element: <AgentInPoint />,
+      },
+
+      {
+        path: "/agent/pointfile",
+        element: <AgentPointFile />,
+      },
+
+      {
+        path: "/agent/change-password",
+        element: <AgentChangePassword />,
+      },
+      {
+        path: "/agent/create-user",
+        element: <AgentCreateUser />,
+      },
+      {
+        path: "/agent/create-sub-agent",
+        element: <AgentCreateSubagent />,
+      },
+      {
+        path: "/agent/kickoff-users",
+        element: <AgentKickoffUsers />,
+      },
+
+      // SubAgents routes
+
+      {
+        path: "/shopdashboard",
+        element: <SubAgentdash />,
+      },
+      {
+        path: "/sub-agent/kickoff-users",
+        element: <SubAgentKickoffUsers />,
+      },
+      {
+        path: "/sub-agent/create-user",
+        element: <SubAgentCreateUser />,
+      },
+      {
+        path: "/sub-agent/change-password",
+        element: <SubAgentChangePassword />,
+      },
+      {
+        path: "/sub-agent/pointfile",
+        element: <SubAgentPointFile />,
+      },
+      {
+        path: "/sub-agent/inpoint",
+        element: <SubAgentInPoint />,
+      },
+      {
+        path: "/sub-agent/outpoint",
+        element: <SubAgentOutPoint />,
+      },
+      {
+        path: "/sub-agent/gamehistory",
+        element: <SubAgentGameHistory />,
+      },
+      {
+        path: "/sub-agent/balance-adjustment",
+        element: <SubAgentBalanceAdjustment />,
+      },
+      {
+        path: "/sub-agent/search-users",
+        element: <SubAgentSearchUsers />,
+      },
+      {
+        path: "/sub-agent/Turn-over",
+        element: <SubAgentTurnOver />,
+      },
+      {
+        path: "/shopdashboard",
+        element: <SubAgentdash />,
+      },
+    ],
+  },
+
   {
     path: "/signIn",
     element: <SignIn />,

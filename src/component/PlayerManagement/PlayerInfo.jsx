@@ -8,7 +8,7 @@ import trash from "../../assets/images/trash.png";
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
-function PlayerInfo({ UserId, UserName, name, MainWallet, RegistrationDate, LastLogin,  status, profileUrl,email,uniqueId }) {
+function PlayerInfo({ UserId, UserName, name, totalPlayPoints, totalWonPoints, endPoints,  margin, MainWallet, RegistrationDate, LastLogin,  status, profileUrl,email,uniqueId }) {
 
   const navigate = useNavigate();
 
@@ -22,8 +22,8 @@ function PlayerInfo({ UserId, UserName, name, MainWallet, RegistrationDate, Last
     window.location.reload();
   }
 
-  const navigateToContacts = (UserId, UserName, name,  MainWallet,  RegistrationDate, LastLogin, status, profileUrl,email,uniqueId) => {
-    navigate('/playeredit', { state:{ UserId, UserName, name, MainWallet,  RegistrationDate, LastLogin, status, profileUrl,email,uniqueId } });
+  const navigateToContacts = (UserId, UserName, name,  totalPlayPoints, totalWonPoints, endPoints,  margin, MainWallet,  RegistrationDate, LastLogin, status, profileUrl,email,uniqueId) => {
+    navigate('/playeredit', { state:{ UserId, UserName, name, totalPlayPoints, totalWonPoints, endPoints,  margin, MainWallet,  RegistrationDate, LastLogin, status, profileUrl,email,uniqueId } });
   }
 
   function formatDateTo12hr(dateTimeStr) {
@@ -55,6 +55,27 @@ function PlayerInfo({ UserId, UserName, name, MainWallet, RegistrationDate, Last
           {name}
         </p>
       </td>
+
+      <td className="px-6 py-5 xl:px-0">
+        <p className="text-base font-medium text-bgray-900 dark:text-white">
+          {totalPlayPoints}
+        </p>
+      </td>
+      <td className="px-6 py-5 xl:px-0">
+        <p className="text-base font-medium text-bgray-900 dark:text-white">
+          {totalWonPoints}
+        </p>
+      </td>
+      <td className="px-6 py-5 xl:px-0">
+        <p className="text-base font-medium text-bgray-900 dark:text-white">
+          {endPoints}
+        </p>
+      </td>
+      <td className="px-6 py-5 xl:px-0">
+        <p className="text-base font-medium text-bgray-900 dark:text-white">
+          {margin}
+        </p>
+      </td>
       
       <td className="w-[165px] px-6 py-5 xl:px-0">
         <p className="text-base font-semibold text-bgray-900 dark:text-white">
@@ -78,7 +99,7 @@ function PlayerInfo({ UserId, UserName, name, MainWallet, RegistrationDate, Last
         </p>
       </td>
 
-      {cookies.get('name') == "Super Admin" || cookies.get('name') == "Shop" ? <td className="px-6 py-5 xl:px-0">
+      {cookies.get('name') == "Super Admin" || cookies.get('name') == "Agent" || cookies.get('name') == "Shop" ? <td className="px-6 py-5 xl:px-0">
         <div className="flex justify-center">
           <button styles={{
             "margin": "1px",
@@ -88,7 +109,7 @@ function PlayerInfo({ UserId, UserName, name, MainWallet, RegistrationDate, Last
             "padding": "5px 10px",
             "cursor": "pointer",
             "border-radius": "4px"
-          }} onClick={() => navigateToContacts(UserId, UserName, name, MainWallet, RegistrationDate, LastLogin, status, profileUrl, email, uniqueId)} >
+          }} onClick={() => navigateToContacts(UserId, UserName, name, totalPlayPoints, totalWonPoints, endPoints,  margin, MainWallet, RegistrationDate, LastLogin, status, profileUrl, email, uniqueId)} >
             <img style={{ "width": "30px", "height": "30px", "margin": "30px" }} src={edit} />
           </button>
 

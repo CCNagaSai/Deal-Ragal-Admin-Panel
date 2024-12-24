@@ -37,24 +37,60 @@ function PlayerTab({ }) {
 
   useEffect(() => {
     const submitdata = async () => {
-      console.log("AgentInfo", AgentInfo)
-      console.log("cookies.get('logintype') ", cookies.get('logintype'))
-      console.log("cookies.get('LoginUserId') ",cookies.get('LoginUserId'))
-      
-      
-
-      if (AgentInfo != undefined && AgentInfo.UserId != undefined) {
-        setUserData(await PlayerList(AgentInfo.UserId,cookies.get('logintype')))
-      } else if (cookies.get('logintype') == "Admin") {
-        setUserData(await PlayerList("id",cookies.get('logintype')))
-      } else {
-        setUserData(await PlayerList(cookies.get('LoginUserId'),cookies.get('logintype')))
+      console.log("AgentInfo", AgentInfo);
+      console.log("cookies.get('logintype') ", cookies.get('logintype'));
+      console.log("cookies.get('LoginUserId') ", cookies.get('LoginUserId'));
+  
+      try {
+        if (cookies.get('logintype') === 'Agent') {
+          // Use the provided API for agents
+          const agentId = cookies.get('LoginUserId'); // Get the Agent ID
+          const response = await fetch(`http://93.127.194.87:9999/admin/user/agent/UserList?Id=${agentId}&type=Agent`);
+          
+          if (!response.ok) {
+            throw new Error(`Error fetching agent data: ${response.statusText}`);
+          }
+          const agentData = await response.json();
+          console.log(agentData, "responseeeeeeeeeeeeeeeee")
+          setUserData(agentData.userList);
+        } else if (AgentInfo && AgentInfo.UserId) {
+          // Fetch data using PlayerList for a specific AgentInfo
+          setUserData(await PlayerList(AgentInfo.UserId, cookies.get('logintype')));
+        } else if (cookies.get('logintype') === "Admin") {
+          // Fetch data for Admins
+          setUserData(await PlayerList("id", cookies.get('logintype')));
+        } else {
+          // Fetch data for other user types
+          setUserData(await PlayerList(cookies.get('LoginUserId'), cookies.get('logintype')));
+        }
+      } catch (error) {
+        console.error('Error fetching player data:', error);
       }
-
-
-    }
-    submitdata()
+    };
+  
+    submitdata();
   }, []);
+
+  // useEffect(() => {
+  //   const submitdata = async () => {
+  //     console.log("AgentInfo", AgentInfo)
+  //     console.log("cookies.get('logintype') ", cookies.get('logintype'))
+  //     console.log("cookies.get('LoginUserId') ",cookies.get('LoginUserId'))
+      
+      
+
+  //     if (AgentInfo != undefined && AgentInfo.UserId != undefined) {
+  //       setUserData(await PlayerList(AgentInfo.UserId,cookies.get('logintype')))
+  //     } else if (cookies.get('logintype') == "Admin") {
+  //       setUserData(await PlayerList("id",cookies.get('logintype')))
+  //     } else {
+  //       setUserData(await PlayerList(cookies.get('LoginUserId'),cookies.get('logintype')))
+  //     }
+
+
+  //   }
+  //   submitdata()
+  // }, []);
 
   //--------------------------- Paggeation and No Of Pages ------------------------------------
   // Filter the user data based on date range and search term
@@ -197,6 +233,41 @@ function PlayerTab({ }) {
 
                 </div>
               </td>
+              {/* ///////////////////////new fields start /////////////////////////*/}
+              <td className="w-[165px] px-6 py-5 xl:px-0" onClick={() => handleSort('totalPlayPoints')}>
+                <div className="flex w-full items-center space-x-2.5">
+                  <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
+                    Play Point⬆⬇
+                  </span>
+
+                </div>
+              </td>
+              <td className="w-[165px] px-6 py-5 xl:px-0" onClick={() => handleSort('totalWonPoints')}>
+                <div className="flex w-full items-center space-x-2.5">
+                  <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
+                    Won Point⬆⬇
+                  </span>
+
+                </div>
+              </td>
+              <td className="w-[165px] px-6 py-5 xl:px-0" onClick={() => handleSort('endPoints')}>
+                <div className="flex w-full items-center space-x-2.5">
+                  <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
+                    End Point⬆⬇
+                  </span>
+
+                </div>
+              </td>
+              <td className="w-[165px] px-6 py-5 xl:px-0" onClick={() => handleSort('margin')}>
+                <div className="flex w-full items-center space-x-2.5">
+                  <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
+                    Margin⬆⬇
+                  </span>
+
+                </div>
+              </td>
+              {/* ///////////////////////new fields end/////////////////////////*/}
+
 
               <td className="w-[165px] px-6 py-5 xl:px-0" onClick={() => handleSort('chips')}>
                 <div className="flex w-full items-center space-x-2.5">
@@ -232,7 +303,7 @@ function PlayerTab({ }) {
                 </div>
               </td>
 
-              {cookies.get('name') == "Super Admin" || cookies.get('name') == "Shop" ? <td className="w-[165px] px-6 py-5 xl:px-0">
+              {cookies.get('name') == "Super Admin" || cookies.get('name') == "Agent" || cookies.get('name') == "Shop" ? <td className="w-[165px] px-6 py-5 xl:px-0">
                 <div className="flex w-full items-center space-x-2.5">
                   <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
                     Action
@@ -250,6 +321,12 @@ function PlayerTab({ }) {
                     UserId={user._id}
                     UserName={user.username}
                     name={user.name}
+
+                    totalPlayPoints={user.totalPlayPoints}
+                    totalWonPoints={user.totalWonPoints}
+                    endPoints={user.endPoints}
+                    margin={user.margin}
+
                     MainWallet={user.chips}
                     RegistrationDate={user.createdAt}
                     LastLogin={user.lastLoginDate}
@@ -266,6 +343,12 @@ function PlayerTab({ }) {
                     UserId={user._id}
                     UserName={user.username}
                     name={user.name}
+                    
+                    totalPlayPoints={user.totalPlayPoints}
+                    totalWonPoints={user.totalWonPoints}
+                    endPoints={user.endPoints}
+                    margin={user.margin}
+
                     MainWallet={user.chips}
                     RegistrationDate={user.createdAt}
                     LastLogin={user.lastLoginDate}
