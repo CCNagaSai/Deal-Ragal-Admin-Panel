@@ -190,7 +190,7 @@ const AgentBalanceAdjust = ({ prefilledType, prefilledUser }) => {
           />
         </div>
 
-        <div className="form-group">
+        {/* <div className="form-group">
           <label htmlFor="transaction-password">Transaction Password:</label>
           <input
             type="password"
@@ -199,9 +199,9 @@ const AgentBalanceAdjust = ({ prefilledType, prefilledUser }) => {
             value={transactionPassword}
             onChange={(e) => setTransactionPassword(e.target.value)}
           />
-        </div>
+        </div> */}
 
-        <div className="form-group">
+        {/* <div className="form-group">
           <label htmlFor="comments">Comments:</label>
           <textarea
             id="comments"
@@ -209,7 +209,7 @@ const AgentBalanceAdjust = ({ prefilledType, prefilledUser }) => {
             value={comments}
             onChange={(e) => setComments(e.target.value)}
           ></textarea>
-        </div>
+        </div> */}
 
         <div className="button-group">
           <button type="submit" className="btn btn-submit">

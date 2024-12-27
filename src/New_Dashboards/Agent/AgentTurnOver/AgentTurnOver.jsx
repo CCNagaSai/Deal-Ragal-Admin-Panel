@@ -14,6 +14,7 @@ const ATurnover = () => {
     handId: '',
     startDate: '',
     endDate: '',
+    userName: '',
   });
   const [dateRange, setDateRange] = useState('Select');
   const [columns, setColumns] = useState([]);
@@ -23,6 +24,8 @@ const ATurnover = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [backendData, setBackendData] = useState([]);
+  const [dropdownData, setDropdownData] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
 
 
   // References for cookies
@@ -65,7 +68,6 @@ const ATurnover = () => {
         if (!id || !type) {
           throw new Error("Missing id or type from cookies");
         }
-    
         const response = await fetch(
           `http://93.127.194.87:9999/admin/user/agent/UserList?Id=${id}&type=${type}`,
           {
@@ -104,8 +106,8 @@ const ATurnover = () => {
         console.log("Processed Data:", processedData);
     
         // Set the data for both tables
-        setFilteredData(processedData); // First table data
-        setBackendData(processedData);   // Second table data
+        setFilteredData(backendData); // First table data
+        setBackendData(userList);   // Second table data
         setShowTable(processedData.length > 0);
       } catch (err) {
         console.error("Error fetching user data:", err.message);
@@ -197,6 +199,13 @@ const ATurnover = () => {
     setIsSubmitted(true); // Mark the form as submitted
   };
 
+  useEffect(() => {
+    if (backendData.length > 0) {
+      setFilteredData(backendData); // Show all users initially
+    }
+  }, [backendData]);
+  
+
   const handleClear = () => {
     setFilters({
       gameName: '',
@@ -204,14 +213,43 @@ const ATurnover = () => {
       handId: '',
       startDate: '',
       endDate: '',
+      userName: '',
     });
     setDateRange('Select');
-    setFilteredData(mData); // Reset filters
-    setShowTable(false); // Hide the table when cleared
-    setIsSubmitted(false); // Reset form submission state
+    setFilteredData(backendData); // Reset filters to show all users
+    setDropdownData([]); // Clear the dropdown
+    setShowTable(backendData.length > 0); // Show table if there is data
+    setIsSubmitted(false);
   };
 
   const totalPlayPoints = filteredData.reduce((acc, entry) => acc + parseFloat(entry.playPoints || 0), 0);
+
+  console.log("backeendddd", backendData)
+  const handleUserSearch = (e) => {
+    const searchValue = e.target.value.toLowerCase();
+    setFilters({ ...filters, userName: searchValue });
+  
+    if (searchValue) {
+      const filteredDropdown = backendData.filter((user) =>
+        user.name && user.name.toLowerCase().includes(searchValue)
+      );
+      setFilteredData(filteredDropdown); // Update the filtered data for the table
+      setDropdownData(filteredDropdown);
+    } else {
+      setFilteredData(backendData); // Show all users if search is empty
+      setDropdownData([]); // Clear the dropdown
+    }
+  };
+  
+  
+  const handleUserSelect = (user) => {
+    setSelectedUser(user);
+    setFilters({ ...filters, userName: user.name });
+    setFilteredData([user]); // Show only the selected user in the table
+    setDropdownData([]); // Clear the dropdown
+  };
+  
+  
 
   return (
     <div className="bg-gray-50">
@@ -227,117 +265,52 @@ const ATurnover = () => {
             <form className="space-y-6">
               {/* First row: Game Type, Affiliate, and Date Range */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-6">
-              {/* Game Type Radio Buttons */}
-                <div className="filter-group w-[11]">
-                  <label className="block text-gray-700  font-medium">Game Type:</label>
-                  <div className="radio-group flex gap-3 items-center">
-                    {['All', 'PC', 'Mobile', 'iOS', 'Web'].map((type, idx) => (
-                      <label
-                        key={idx}
-                        className="flex items-center gap-2 w-20" // Restrict the width of the labels
-                      >
-                        <span className="text-sm truncate">{type}</span> {/* Truncate text if needed */}
-                        <input
-                          type="radio"
-                          name="gameType"
-                          value={type.toLowerCase()}
-                          checked={filters.gameType === type.toLowerCase()}
-                          onChange={(e) => setFilters({ ...filters, gameType: e.target.value })}
-                          className="w-4 h-4 appearance-none border border-blue-500 rounded-full checked:bg-blue-500 checked:border-blue-700 hover:border-blue-700 transition duration-300 cursor-pointer"
-                        />
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Affiliate Dropdown */}
-                <div className="filter-group">
-                  <label className="block text-gray-700 font-medium">Affiliate:</label>
-                  <select
-                    name="affiliate"
-                    value={filters.affiliate || ''}
-                    onChange={(e) => setFilters({ ...filters, affiliate: e.target.value })}
-                    className="w-full sm:w-auto md:w-1/2 p-2 sm:p-3 border border-gray-300 rounded-lg"
-                    >
-                    <option value="">Select Affiliate</option>
-                    <option value="affiliate1">Affiliate 1</option>
-                    <option value="affiliate2">Affiliate 2</option>
-                    {/* Add more affiliates as needed */}
-                  </select>
-                </div>
-
-                {/* Date Range Dropdown */}
-                <div className="filter-group">
-                  <label className="block text-gray-700 font-medium">Date Range:</label>
-                  <select
-                    value={dateRange}
-                    onChange={(e) => setDateRange(e.target.value)}
-                    className="w-full sm:w-auto md:w-1/2 p-2 sm:p-3 border border-gray-300 rounded-lg"
-                    >
-                    <option value="Select">Select</option>
-                    <option value="Today">Today</option>
-                    <option value="Yesterday">Yesterday</option>
-                    <option value="Last 7 Days">Last 7 Days</option>
-                    <option value="Last 30 Days">Last 30 Days</option>
-                    <option value="Custom">Custom</option>
-                  </select>
+                {/* User Search */}
+                <div className="relative mb-4">
+                  <label className="block text-gray-700 font-medium">Search User:</label>
+                  <input
+                    type="text"
+                    value={filters.userName}
+                    onChange={handleUserSearch}
+                    placeholder="Type to search by username..."
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                  />
+                  {dropdownData.length > 0 && (
+                    <ul className="absolute bg-white border border-gray-300 rounded-lg mt-1 w-full max-h-40 overflow-y-auto">
+                      {dropdownData.map((user, index) => (
+                        <li
+                          key={index}
+                          onClick={() => handleUserSelect(user)}
+                          className="px-4 py-2 cursor-pointer hover:bg-blue-100"
+                        >
+                          {user.name}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               </div>
-
-              {/* Second row: Start Date, End Date, and Report Password */}
-              <div className="grid grid-cols-1  sm:grid-cols-3 gap-1 sm:gap-6">
-              {/* Start Date */}
-                <div className="filter-group">
-                  <label className="block text-gray-700 font-medium">Start Date:</label>
-                  <input
-                    type="date"
-                    value={filters.startDate}
-                    onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
-                    className="w-full p-2 sm:p-3  border  border-gray-300 rounded-lg"
-                  />
-                </div>
-
-                {/* End Date */}
-                <div className="filter-group">
-                  <label className="block text-gray-700 font-medium">End Date:</label>
-                  <input
-                    type="date"
-                    value={filters.endDate}
-                    onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
-                    className="w-full p-2 sm:p-3  border  border-gray-300 rounded-lg"
-                  />
-                </div>
-
-                {/* Report Password */}
-                <div className="filter-group">
-                  <label className="block text-gray-700 font-medium">Report Password:</label>
-                  <input
-                    type="password"
-                    name="reportPassword"
-                    value={filters.reportPassword}
-                    onChange={(e) => setFilters({ ...filters, reportPassword: e.target.value })}
-                    className="w-full p-2 sm:p-3  border  border-gray-300 rounded-lg"
-                  />
-                </div>
-              </div>
-
               {/* Submit and Clear buttons */}
-              <div className="flex justify-center gap-4">
-                <button
-                  type="button"
-                  onClick={handleFilterChange}
-                  className="bg-blue-500 text-white p-2 sm:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm sm:text-base w-20 sm:w-auto"
+              {/* <div className="flex justify-center w-full">
+                <div className="flex gap-4">
+                  <button
+                    type="button"
+                    onClick={handleFilterChange}
+                    className="bg-blue-500 text-white p-2 sm:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm sm:text-base w-20 sm:w-auto"
+                    style={{ width: '100px' }}
                   >
-                  Submit
-                </button>
-                <button
-                  type="button"
-                  onClick={handleClear}
-                  className="bg-blue-500 text-white p-2 sm:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm sm:text-base w-20 sm:w-auto"
+                    Submit
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleClear}
+                    className="bg-blue-500 text-white p-2 sm:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm sm:text-base w-20 sm:w-auto"
+                    style={{ width: '100px' }}
                   >
-                  Clear
-                </button>
-              </div>
+                    Clear
+                  </button>
+                </div>
+              </div> */}
             </form>
           </div>
 
@@ -352,23 +325,44 @@ const ATurnover = () => {
             <div className="text-center text-blue-500">Loading...</div>
           ) : showTable ? (
             <div className="overflow-x-auto mt-2 sm:mt-3">
-              <div className="">
-                <FormTable
-                  data={filteredData}
-                  showPagination={false}
-                  columns={columns.table1}
-                  showTotals={false}
-                  totalPlayPoints={totalPlayPoints}
-                />
-              </div>
-              <div>
-                <FormTable
-                  data={backendData}
-                  showPagination={false}
-                  columns={columns.table2}
-                  showTotals={false}
-                  totalPlayPoints={totalPlayPoints}
-                />
+              <div className="overflow-x-auto mt-8">
+                <table className="table-auto border-collapse border border-gray-300 w-full text-sm sm:text-base">
+                  <thead>
+                    <tr className="bg-blue-200">
+                      <th className="border border-gray-300 px-4 py-2">ID</th>
+                      <th className="border border-gray-300 px-4 py-2"> User Name</th>
+                      <th className="border border-gray-300 px-4 py-2">Chips</th>
+                      <th className="border border-gray-300 px-4 py-2">Play Points</th>
+                      <th className="border border-gray-300 px-4 py-2">Won Points</th>
+                      <th className="border border-gray-300 px-4 py-2">End Points</th>
+                      <th className="border border-gray-300 px-4 py-2">Margin</th>
+                      <th className="border border-gray-300 px-4 py-2">Net</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredData.length > 0 ? (
+                      filteredData.map((item, index) => (
+                        <tr key={index} className="odd:bg-white even:bg-gray-100">
+                          <td className="border border-gray-300 px-4 py-2">{item.id}</td>
+                          <td className="border border-gray-300 px-4 py-2">{item.name}</td>
+                          <td className="border border-gray-300 px-4 py-2">{item.chips}</td>
+                          <td className="border border-gray-300 px-4 py-2">{item.totalPlayPoints}</td>
+                          <td className="border border-gray-300 px-4 py-2">{item.totalWonPoints}</td>
+                          <td className="border border-gray-300 px-4 py-2">{item.endPoints}</td>
+                          <td className="border border-gray-300 px-4 py-2">{item.margin}</td>
+                          {/* Calculate net as endPoints - margin */}
+                          <td className="border border-gray-300 px-4 py-2">{(item.endPoints || 0) - (item.margin || 0)}</td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="8" className="text-center text-gray-500 px-4 py-2">
+                          No data available
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
               </div>
             </div>
           ) : (

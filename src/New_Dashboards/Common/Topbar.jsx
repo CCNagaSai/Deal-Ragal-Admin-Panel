@@ -20,7 +20,6 @@ const Topbar = () => {
   const agentId = cookies.get("LoginUserId");
   const token = cookies.get("token");
 
-  console.log("aaaa", agentId);
   const logout = async () => {
     try {
       console.log("Clearing cookies...");
