@@ -152,7 +152,7 @@ const SubACreateUser = () => {
             required
           />
         </div>
-        <div className="form-group">
+        {/* <div className="form-group">
           <label>Mobile Number:</label>
           <input
             type="text"
@@ -163,8 +163,8 @@ const SubACreateUser = () => {
             onChange={handleChange}
             maxLength="10"
           />
-        </div>
-        <div className="form-group">
+        </div> */}
+        {/* <div className="form-group">
           <label>Agent Transaction Password:</label>
           <input
             type="password"
@@ -174,8 +174,8 @@ const SubACreateUser = () => {
             value={formData.transactionPassword}
             onChange={handleChange}
           />
-        </div>
-        <div className="form-group">
+        </div> */}
+        {/* <div className="form-group">
           <label>Eligible Games:</label>
           <div className="dropdown-container">
             <div className="dropdown-box" onClick={toggleDropdown}>
@@ -198,7 +198,7 @@ const SubACreateUser = () => {
               </div>
             )}
           </div>
-        </div>
+        </div> */}
         <div className="form-actions">
           <button type="submit" className="btn create">
             Create

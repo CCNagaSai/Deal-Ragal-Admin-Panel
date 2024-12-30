@@ -7,7 +7,7 @@ function Sidebar() {
   return (
     <div className="relative">
       {/* Sidebar for larger screens */}
-      <div className="hidden md:block md:w-52 bg-[#e6ebff] text-white h-[90vh] top-[10%] left-0 shadow-xl border-r-2 border-gray-200 rounded-lg font-sans">
+      <div className="hidden md:block md:w-52 bg-[#e6ebff] text-white top-[10%] left-0 shadow-xl border-r-2 border-gray-200 rounded-lg font-sans">
         <div className="text-lg font-bold uppercase text-white bg-blue-800 px-2 py-1 rounded-tr-lg">
           Main Menu
         </div>

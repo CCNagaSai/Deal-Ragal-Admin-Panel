@@ -1,13 +1,13 @@
 import React, { useState, useRef } from "react";
 
-function Sidebar() {
+function SubAgentSidebar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
   return (
     <div className="relative">
       {/* Sidebar for larger screens */}
-      <div className="hidden md:block md:w-52 bg-[#e6ebff] text-white h-[90vh] top-[10%] left-0 shadow-xl border-r-2 border-gray-200 rounded-lg font-sans">
+      <div className="hidden md:block md:w-60 bg-[#e6ebff] text-white top-[10%] left-0 shadow-xl border-r-2 border-gray-200 rounded-lg font-sans">
         <div className="text-lg font-bold uppercase text-white bg-blue-800 px-2 py-1 rounded-tr-lg">
           Main Menu
         </div>
@@ -37,7 +37,7 @@ function Sidebar() {
             </ul>
           </li>
           <li className="mb-1">
-            <strong className="text-lg text-blue-800 ml-2 cursor-default">Agent Management</strong>
+            <strong className="text-lg text-blue-800 ml-2 cursor-default">Sub Agent Management</strong>
             <ul className="list-none p-0 m-0 mt-1">
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
                 <a href="/sub-agent/create-user">Create User</a>
@@ -132,7 +132,7 @@ function Sidebar() {
             </ul>
           </li>
           <li className="mb-1">
-            <strong className="text-lg text-blue-800 ml-2 cursor-default">Agent Management</strong>
+            <strong className="text-lg text-blue-800 ml-2 cursor-default">Sub Agent Management</strong>
             <ul className="list-none p-0 m-0 mt-1">
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
                 <a href="/sub-agent/create-user">Create User</a>
@@ -168,4 +168,4 @@ function Sidebar() {
   );
 }
 
-export default Sidebar;
+export default SubAgentSidebar;
