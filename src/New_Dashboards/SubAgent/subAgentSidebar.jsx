@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 
-function Sidebar() {
+function SubAgentSidebar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -168,4 +168,4 @@ function Sidebar() {
   );
 }
 
-export default Sidebar;
+export default SubAgentSidebar;
