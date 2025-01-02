@@ -23,26 +23,21 @@ const Topbar = () => {
   const logout = async () => {
     try {
       console.log("Clearing cookies...");
-      // Remove cookies with explicit paths
-      cookies.remove("logintype");
-      cookies.remove("name");
-      cookies.remove("email");
-      cookies.remove("LoginUserId");
-      cookies.remove("token");
+      cookies.remove("logintype", { path: "/" });
+      cookies.remove("name", { path: "/" });
+      cookies.remove("email", { path: "/" });
+      cookies.remove("LoginUserId", { path: "/" });
+      cookies.remove("token", { path: "/" });
 
+      // Optional: Redirect to the login page or another route
+      window.location.href = "/signin";
       // Log cookie values to verify they're cleared
-      console.log("After removal:");
-      console.log("logintype:", cookies.get("logintype"));
-      console.log("name:", cookies.get("name"));
-      console.log("email:", cookies.get("email"));
-      console.log("LoginUserId:", cookies.get("LoginUserId"));
-      console.log("token:", cookies.get("token"));
 
       // Logout click logic (if any)
       // await LogoutClick();
 
       // Navigate to the signin page
-      Navigate("/signin");
+      // setTimeout(() => Navigate("/signin"), 1000);
     } catch (error) {
       console.error("Error during logout:", error);
     }

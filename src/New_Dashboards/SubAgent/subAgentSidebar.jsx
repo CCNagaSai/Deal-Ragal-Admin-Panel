@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import { Link } from "react-router-dom";
 
 function SubAgentSidebar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -18,7 +19,7 @@ function SubAgentSidebar() {
             </strong>
             <ul className="list-none p-0 m-0 mt-1">
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/shopdashboard">Sub Agent Dashboard</a>
+                <Link to="/shopdashboard">Sub Agent Dashboard</Link>
               </li>
             </ul>
           </li>
@@ -26,13 +27,13 @@ function SubAgentSidebar() {
             <strong className="text-lg text-blue-800 ml-2 cursor-default">User Management</strong>
             <ul className="list-none p-0 m-0 mt-1">
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/sub-agent/search-users">Search Users</a>
+                <Link to="/sub-agent/search-users">Search Users</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/sub-agent/balance-adjustment">Balance Adjustment</a>
+                <Link to="/sub-agent/balance-adjustment">Balance Adjustment</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/sub-agent/kickoff-users">Kickoff Users</a>
+                <Link to="/sub-agent/kickoff-users">Kickoff Users</Link>
               </li>
             </ul>
           </li>
@@ -40,10 +41,10 @@ function SubAgentSidebar() {
             <strong className="text-lg text-blue-800 ml-2 cursor-default">Sub Agent Management</strong>
             <ul className="list-none p-0 m-0 mt-1">
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/sub-agent/create-user">Create User</a>
+                <Link to="/sub-agent/create-user">Create User</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/sub-agent/change-password">Change Password</a>
+                <Link to="/sub-agent/change-password">Change Password</Link>
               </li>
             </ul>
           </li>
@@ -51,19 +52,19 @@ function SubAgentSidebar() {
             <strong className="text-lg text-blue-800 ml-2 cursor-default">Reports</strong>
             <ul className="list-none p-0 m-0 mt-1">
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/sub-agent/pointfile">Point File</a>
+                <Link to="/sub-agent/pointfile">Point File</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/sub-agent/inpoint">In Points</a>
+                <Link to="/sub-agent/inpoint">In Points</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/sub-agent/outpoint">Out Points</a>
+                <Link to="/sub-agent/outpoint">Out Points</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/sub-agent/gamehistory">Game History</a>
+                <Link to="/sub-agent/gamehistory">Game History</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/sub-agent/Turn-over">Turn Over</a>
+                <Link to="/sub-agent/Turn-over">Turn Over</Link>
               </li>
             </ul>
           </li>
@@ -113,7 +114,7 @@ function SubAgentSidebar() {
             </strong>
             <ul className="list-none p-0 m-0 mt-1">
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/shopdashboard">Dashboard</a>
+                <Link to="/shopdashboard">Dashboard</Link>
               </li>
             </ul>
           </li>
@@ -121,13 +122,13 @@ function SubAgentSidebar() {
             <strong className="text-lg text-blue-800 ml-2 cursor-default">User Management</strong>
             <ul className="list-none p-0 m-0 mt-1">
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/sub-agent/search-users">Search Users</a>
+                <Link to="/sub-agent/search-users">Search Users</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/sub-agent/balance-adjustment">Balance Adjustment</a>
+                <Link to="/sub-agent/balance-adjustment">Balance Adjustment</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/sub-agent/kickoff-users">Kickoff Users</a>
+                <Link to="/sub-agent/kickoff-users">Kickoff Users</Link>
               </li>
             </ul>
           </li>
@@ -135,10 +136,10 @@ function SubAgentSidebar() {
             <strong className="text-lg text-blue-800 ml-2 cursor-default">Sub Agent Management</strong>
             <ul className="list-none p-0 m-0 mt-1">
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/sub-agent/create-user">Create User</a>
+                <Link to="/sub-agent/create-user">Create User</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/sub-agent/change-password">Change Password</a>
+                <Link to="/sub-agent/change-password">Change Password</Link>
               </li>
             </ul>
           </li>
@@ -146,19 +147,19 @@ function SubAgentSidebar() {
             <strong className="text-lg text-blue-800 ml-2 cursor-default">Reports</strong>
             <ul className="list-none p-0 m-0 mt-1">
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/sub-agent/pointfile">Point File</a>
+                <Link to="/sub-agent/pointfile">Point File</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/sub-agent/inpoint">In Points</a>
+                <Link to="/sub-agent/inpoint">In Points</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/sub-agent/outpoint">Out Points</a>
+                <Link to="/sub-agent/outpoint">Out Points</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/sub-agent/gamehistory">Game History</a>
+                <Link to="/sub-agent/gamehistory">Game History</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/sub-agent/Turn-over">Turn Over</a>
+                <Link to="/sub-agent/Turn-over">Turn Over</Link>
               </li>
             </ul>
           </li>
