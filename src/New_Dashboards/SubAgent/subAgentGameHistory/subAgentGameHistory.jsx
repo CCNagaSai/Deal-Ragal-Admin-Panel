@@ -24,6 +24,8 @@ const SubAGameHistory = () => {
   const [showTable, setShowTable] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [noResults, setNoResults] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 10;
 
   const idRef = useRef(null);
   const typeRef = useRef(null);
@@ -194,7 +196,12 @@ const SubAGameHistory = () => {
           if (response.ok) {
             const data = await response.json();
             if (data && Array.isArray(data.gameHistoryData)) {
-              setBackendData(data.gameHistoryData);
+              const flattenedHistory = data.gameHistoryData.flatMap(
+                (entry) => entry.history || []
+              );
+              console.log("history", flattenedHistory)
+              setBackendData(flattenedHistory);
+              setFilteredData(flattenedHistory);
             } else {
               console.error("Expected an array from the backend API:", data);
             }
@@ -210,12 +217,37 @@ const SubAGameHistory = () => {
     }
   }, [token, id]);
   console.log("backendsdata", backendData)
-  const toggleRow = (rowId) => {
-    console.log("Toggling row", rowId);
-    setExpandedRow(expandedRow === rowId ? null : rowId);
-  };  
 
   console.log('Expanded Row:', expandedRow);
+
+  const paginateData = (data, currentPage, rowsPerPage) => {
+    // Filter data where play !== 0
+    const filteredData = data.filter(item => item.play !== 0);
+  
+    if (!filteredData || filteredData.length === 0) return [];
+    
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    return filteredData.slice(startIndex, endIndex);
+  };
+  
+  // Handle page change
+  const handlePageChange = (pageNumber) => {
+    const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
+  };
+  
+  // Disable next button when there's no data
+  const isNextDisabled = currentPage * rowsPerPage >= filteredData.length;
+  const isPrevDisabled = currentPage === 1;
+  
+
+
+  const toggleRow = (rowId) => {
+    setExpandedRow(expandedRow === rowId ? null : rowId);
+  };
 
   return (
     <div>
@@ -318,6 +350,7 @@ const SubAGameHistory = () => {
 
           {/* Conditionally render the table */}
           {showTable && (
+            <div>
             <div className="overflow-x-auto mt-8">
             <table className="table-auto border-collapse border border-gray-300 w-full text-sm sm:text-base">
               <thead>
@@ -325,25 +358,31 @@ const SubAGameHistory = () => {
                   {/* <th className="border border-gray-300 px-4 py-2">User ID</th> */}
                   <th className="border border-gray-300 px-4 py-2">Username</th>
                   <th className="border border-gray-300 px-4 py-2">Before Play Points</th>
-                  <th className="border border-gray-300 px-4 py-2">After Play Points</th>
                   <th className="border border-gray-300 px-4 py-2">Ball Position</th>
                   <th className="border border-gray-300 px-4 py-2">Play</th>
                   <th className="border border-gray-300 px-4 py-2">Won</th>
+                  <th className="border border-gray-300 px-4 py-2">After Play Points</th>
                   <th className="border border-gray-300 px-4 py-2">Created At</th>
                   <th className="border border-gray-300 px-4 py-2">View board</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredData.map((item, index) => (
+                {/* {filteredData.map((item, index) => ( */}
+                {paginateData(
+                  filteredData.filter((item) => item.play !== 0),
+                  currentPage,
+                  rowsPerPage
+                )
+                .map((item, index) => (
                   <React.Fragment key={item.uuid}>
                   <tr key={index} className="odd:bg-white even:bg-gray-100">
                     {/* <td className="border border-gray-300 px-4 py-2">{item.userId}</td> */}
                     <td className="border border-gray-300 px-4 py-2">{item.username}</td>
                     <td className="border border-gray-300 px-4 py-2">{item.beforeplaypoint}</td>
-                    <td className="border border-gray-300 px-4 py-2">{item.afterplaypoint}</td>
                     <td className="border border-gray-300 px-4 py-2">{item.ballposition}</td>
                     <td className="border border-gray-300 px-4 py-2">{item.play}</td>
                     <td className="border border-gray-300 px-4 py-2">{item.won}</td>
+                    <td className="border border-gray-300 px-4 py-2">{item.afterplaypoint}</td>
                     <td className="border border-gray-300 px-4 py-2">
                       {new Date(item.createdAt).toLocaleString("en-GB", {
                         day: "2-digit",
@@ -377,6 +416,24 @@ const SubAGameHistory = () => {
                 ))}
               </tbody>
             </table>
+          </div>
+          {/* Pagination controls */}
+          {/* Pagination controls */}
+          <div className="pagination">
+            <button
+              style={{ marginRight: '10px' }}
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={isPrevDisabled}
+            >
+              Previous
+            </button>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={isNextDisabled}
+            >
+              Next
+            </button>
+          </div>
           </div>
           )}
         </div>

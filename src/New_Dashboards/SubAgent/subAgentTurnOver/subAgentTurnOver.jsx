@@ -7,7 +7,7 @@ import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
 const SubATurnover = () => {
-  const [filteredData, setFilteredData] = useState(mData);
+  const [filteredData, setFilteredData] = useState([]);
   const [filters, setFilters] = useState({
     gameName: '',
     userId: '',
@@ -88,6 +88,16 @@ const SubATurnover = () => {
     
         const userList = result.userList || [];
         console.log("User List:", userList);
+
+        const initialFilteredData = userList.filter(
+          (entry) => parseFloat(entry.totalPlayPoints || 0) > 0
+        );
+
+        console.log("aaaaaaaaaaaaaaaaa", initialFilteredData)
+        
+        setBackendData(userList);
+        setFilteredData(initialFilteredData);
+        setShowTable(initialFilteredData.length > 0);
     
         // Mapping API response to match table structure
         const processedData = userList.map((user) => ({
@@ -102,13 +112,6 @@ const SubATurnover = () => {
           // userId: user.id || '',
           // handId: user.uniqueId || ''
         }));
-    
-        console.log("Processed Data:", processedData);
-    
-        // Set the data for both tables
-        setFilteredData(backendData); // First table data
-        setBackendData(userList);   // Second table data
-        setShowTable(processedData.length > 0);
       } catch (err) {
         console.error("Error fetching user data:", err.message);
         setError("Failed to load user data. Please try again.");
@@ -137,7 +140,9 @@ const SubATurnover = () => {
   }, [isMobile]);
 
   const handleFilterChange = () => {
-    let filtered = mData;
+    let filtered = backendData;
+
+    filtered = filtered.filter((entry) => parseFloat(entry.totalPlayPoints || 0) > 0);
 
     // Filter by selected date range
     if (dateRange !== 'Select') {
@@ -199,12 +204,6 @@ const SubATurnover = () => {
     setIsSubmitted(true); // Mark the form as submitted
   };
 
-  useEffect(() => {
-    if (backendData.length > 0) {
-      setFilteredData(backendData); // Show all users initially
-    }
-  }, [backendData]);
-  
 
   const handleClear = () => {
     setFilters({
@@ -216,13 +215,10 @@ const SubATurnover = () => {
       userName: '',
     });
     setDateRange('Select');
-    setFilteredData(backendData); // Reset filters to show all users
     setDropdownData([]); // Clear the dropdown
-    setShowTable(backendData.length > 0); // Show table if there is data
     setIsSubmitted(false);
   };
 
-  const totalPlayPoints = filteredData.reduce((acc, entry) => acc + parseFloat(entry.playPoints || 0), 0);
 
   console.log("backeendddd", backendData)
   const handleUserSearch = (e) => {
@@ -291,7 +287,7 @@ const SubATurnover = () => {
                 </div>
               </div>
               {/* Submit and Clear buttons */}
-              {/* <div className="flex justify-center w-full">
+              <div className="flex justify-center w-full">
                 <div className="flex gap-4">
                   <button
                     type="button"
@@ -310,15 +306,32 @@ const SubATurnover = () => {
                     Clear
                   </button>
                 </div>
-              </div> */}
+              </div>
             </form>
           </div>
 
           {/* Filtered Data Information */}
           {isSubmitted && (
             <div className="bg-[#e6ebff] p-4 flex flex-col sm:flex-row gap-2 sm:gap-6 mt-4 rounded-md m-2 text-sm sm:text-base">
-              <span className="block">Start Date: {filters.startDate || 'Not Selected'}</span>
-              <span className="block">End Date: {filters.endDate || 'Not Selected'}</span>
+              {/* <span className="block">Start Date: {filters.startDate || 'Not Selected'}</span>
+              <span className="block">End Date: {filters.endDate || 'Not Selected'}</span> */}
+              <div className="mt-4 grid grid-cols-1 sm:grid-cols-5 gap-4 sm:gap-6">
+                <span className="block">
+                  <strong>Total Play Points:</strong> {filteredData.reduce((sum, item) => sum + (parseFloat(item.totalPlayPoints) || 0), 0).toFixed(2)}
+                </span>
+                <span className="block">
+                  <strong>Total Won Points:</strong> {filteredData.reduce((sum, item) => sum + (parseFloat(item.totalWonPoints) || 0), 0).toFixed(2)}
+                </span>
+                <span className="block">
+                  <strong>Total End Points:</strong> {filteredData.reduce((sum, item) => sum + (parseFloat(item.endPoints) || 0), 0).toFixed(2)}
+                </span>
+                <span className="block">
+                  <strong>Total Margin:</strong> {filteredData.reduce((sum, item) => sum + (parseFloat(item.margin) || 0), 0).toFixed(2)}
+                </span>
+                <span className="block">
+                  <strong>Total Net:</strong> {filteredData.reduce((sum, item) => sum + ((parseFloat(item.endPoints) || 0) - (parseFloat(item.margin) || 0)), 0).toFixed(2)}
+                </span>
+              </div>
             </div>
           )}
           {loading ? (
@@ -331,7 +344,6 @@ const SubATurnover = () => {
                     <tr className="bg-blue-200">
                       <th className="border border-gray-300 px-4 py-2">ID</th>
                       <th className="border border-gray-300 px-4 py-2"> User Name</th>
-                      <th className="border border-gray-300 px-4 py-2">Chips</th>
                       <th className="border border-gray-300 px-4 py-2">Play Points</th>
                       <th className="border border-gray-300 px-4 py-2">Won Points</th>
                       <th className="border border-gray-300 px-4 py-2">End Points</th>
@@ -345,7 +357,6 @@ const SubATurnover = () => {
                         <tr key={index} className="odd:bg-white even:bg-gray-100">
                           <td className="border border-gray-300 px-4 py-2">{item.id}</td>
                           <td className="border border-gray-300 px-4 py-2">{item.name}</td>
-                          <td className="border border-gray-300 px-4 py-2">{item.chips}</td>
                           <td className="border border-gray-300 px-4 py-2">{item.totalPlayPoints}</td>
                           <td className="border border-gray-300 px-4 py-2">{item.totalWonPoints}</td>
                           <td className="border border-gray-300 px-4 py-2">{item.endPoints}</td>
