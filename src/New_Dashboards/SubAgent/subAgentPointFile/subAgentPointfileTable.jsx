@@ -1,9 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const SubAgentPointFileTable = ({ backendData }) => {
-  if (!backendData || backendData.length === 0) {
-    return <p>No data found from the backend.</p>;
-  }
+  const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
+    if (!backendData || backendData.length === 0) {
+      return <p></p>;
+    }
+    const totalPages = Math.ceil(backendData.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const displayedData = backendData.slice(startIndex, startIndex + itemsPerPage);
+  
+    const handlePrevious = () => {
+      if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+    };
+  
+    const handleNext = () => {
+      if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+    };
 
   return (
     <div className="overflow-x-auto mt-6">
@@ -22,7 +35,7 @@ const SubAgentPointFileTable = ({ backendData }) => {
           </tr>
         </thead>
         <tbody>
-          {backendData.map((entry, index) => {
+          {displayedData.map((entry, index) => {
             const dateOnly = entry.createdAt.split('T')[0]; // Extract date
             const isPositive = entry.trnxAmount > 0;
             const inAmount = isPositive ? `₹${entry.trnxAmount}` : ''; // Show in "In" if positive
@@ -69,6 +82,26 @@ const SubAgentPointFileTable = ({ backendData }) => {
           })}
         </tbody>
       </table>
+      {/* Pagination Controls */}
+      <div className="pagination mt-4 flex justify-center items-center gap-4">
+        <button
+          onClick={handlePrevious}
+          disabled={currentPage === 1}
+          className={`px-4 py-2 rounded-lg ${currentPage === 1 ? "bg-gray-300" : "bg-blue-500 text-white hover:bg-blue-600"}`}
+        >
+          Previous
+        </button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={handleNext}
+          disabled={currentPage === totalPages}
+          className={`px-4 py-2 rounded-lg ${currentPage === totalPages ? "bg-gray-300" : "bg-blue-500 text-white hover:bg-blue-600"}`}
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };

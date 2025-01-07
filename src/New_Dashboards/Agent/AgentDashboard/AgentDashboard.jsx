@@ -65,13 +65,31 @@ const ADashboard = ({onUserClick}) => {
           const data = result || {};
           console.log("Processed Data:", data); // Debug processed data
 
+          const normalizePlayers = (players, key) =>
+            players.map((player) => ({
+              ...player,
+              chips: player[key] || 0, // Use `chips` or fallback to `coins` value
+            }));
+
+          const activePlayers = normalizePlayers(data.activeUsers?.activePlayersDetails || [], "coins");
+          const inactivePlayers = normalizePlayers(data.inactiveUsers?.inActivePlayersDetails || [], "chips");
+          const suspendedPlayers = normalizePlayers(data.suspendedUsers?.suspendedPlayerDetails || [], "chips");
+
+          const filteredInactivePlayers = inactivePlayers.filter(
+            (player) => !activePlayers.some((activePlayer) => activePlayer.playerId === player._id)
+          );
+    
+          const filteredSuspendedPlayers = suspendedPlayers.filter(
+            (player) => !activePlayers.some((activePlayer) => activePlayer.playerId === player._id)
+          );
+
           setDashboardData({
             activeUsers: data.activeUsers?.totalActiveCount || 0,
             inactiveUsers: data.inactiveUsers?.totalInactiveCount || 0,
             suspendedUsers: data.suspendedUsers?.suspendedUsersCount || 0,
-            activePlayersDetails: data.activeUsers?.activePlayersDetails || [],
-            inactivePlayersDetails: data.inactiveUsers?.inActivePlayersDetails || [],
-            suspendedPlayersDetails: data.suspendedUsers?.suspendedPlayerDetails || [],
+            activePlayersDetails: activePlayers,
+            inactivePlayersDetails: filteredInactivePlayers,
+            suspendedPlayersDetails: filteredSuspendedPlayers,
           });
       } catch (err) {
         console.error("Error fetching dashboard data:", err.message);
