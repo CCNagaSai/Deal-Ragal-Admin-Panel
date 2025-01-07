@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import FormTable from '../../Common/Report/Table';
 import './subAgentGameHistory.css'; 
-import { mData } from '../../Common/data/mData';
 import Cookies from "universal-cookie";
 import UserBetHistory from '../../Common/BoardHistory';
 
@@ -24,8 +22,9 @@ const SubAGameHistory = () => {
   const [showTable, setShowTable] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [noResults, setNoResults] = useState(false);
+  // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 10;
+  const itemsPerPage = 10;
 
   const idRef = useRef(null);
   const typeRef = useRef(null);
@@ -147,6 +146,9 @@ const SubAGameHistory = () => {
       });
     }
 
+    filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    setCurrentPage(1);
     setFilteredData(filtered);
     setShowTable(filtered.length > 0);
     setNoResults(filtered.length === 0); // Check if no results are found
@@ -162,11 +164,14 @@ const SubAGameHistory = () => {
       startDate: '',
       endDate: '',
     });
+    setCurrentPage(1);
     setDateRange('Select');
     setFilteredData(backendData); // Reset filters
     setShowTable(false); // Hide the table when cleared
     setIsSubmitted(false); // Reset the "submitted" state
   };
+
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   const totalPlayPoints = Array.isArray(filteredData)
     ? filteredData.reduce((acc, entry) => acc + parseFloat(entry.playPoints || 0), 0)
@@ -199,6 +204,9 @@ const SubAGameHistory = () => {
               const flattenedHistory = data.gameHistoryData.flatMap(
                 (entry) => entry.history || []
               );
+
+              flattenedHistory.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+              
               console.log("history", flattenedHistory)
               setBackendData(flattenedHistory);
               setFilteredData(flattenedHistory);
@@ -220,34 +228,23 @@ const SubAGameHistory = () => {
 
   console.log('Expanded Row:', expandedRow);
 
-  const paginateData = (data, currentPage, rowsPerPage) => {
-    // Filter data where play !== 0
-    const filteredData = data.filter(item => item.play !== 0);
-  
-    if (!filteredData || filteredData.length === 0) return [];
-    
-    const startIndex = (currentPage - 1) * rowsPerPage;
-    const endIndex = startIndex + rowsPerPage;
-    return filteredData.slice(startIndex, endIndex);
+  const handlePrevious = () => {
+    if (currentPage > 1) setCurrentPage((prevPage) => prevPage - 1);
   };
-  
-  // Handle page change
-  const handlePageChange = (pageNumber) => {
-    const totalPages = Math.ceil(filteredData.length / rowsPerPage);
-    if (pageNumber >= 1 && pageNumber <= totalPages) {
-      setCurrentPage(pageNumber);
-    }
+
+  const handleNext = () => {
+    if (currentPage < totalPages) setCurrentPage((prevPage) => prevPage + 1);
   };
-  
-  // Disable next button when there's no data
-  const isNextDisabled = currentPage * rowsPerPage >= filteredData.length;
-  const isPrevDisabled = currentPage === 1;
   
 
 
   const toggleRow = (rowId) => {
     setExpandedRow(expandedRow === rowId ? null : rowId);
   };
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const displayedData = filteredData.slice(startIndex, startIndex + itemsPerPage);
+  console.log(filteredData, "cccccccc");
 
   return (
     <div>
@@ -368,11 +365,9 @@ const SubAGameHistory = () => {
               </thead>
               <tbody>
                 {/* {filteredData.map((item, index) => ( */}
-                {paginateData(
-                  filteredData.filter((item) => item.play !== 0),
-                  currentPage,
-                  rowsPerPage
-                )
+                {filteredData
+                .filter((item) => item.play !== 0)
+                .slice(startIndex, startIndex + itemsPerPage)
                 .map((item, index) => (
                   <React.Fragment key={item.uuid}>
                   <tr key={index} className="odd:bg-white even:bg-gray-100">
@@ -418,18 +413,21 @@ const SubAGameHistory = () => {
             </table>
           </div>
           {/* Pagination controls */}
-          {/* Pagination controls */}
-          <div className="pagination">
+          <div className="pagination flex justify-between items-center mt-6">
             <button
-              style={{ marginRight: '10px' }}
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={isPrevDisabled}
+              className="prev px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+              disabled={currentPage === 1}
+              onClick={handlePrevious}
             >
               Previous
             </button>
+            <span className="page-info text-blue-700 font-semibold">
+              Page {currentPage} of {totalPages}
+            </span>
             <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={isNextDisabled}
+              className="next px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+              disabled={currentPage === totalPages}
+              onClick={handleNext}
             >
               Next
             </button>

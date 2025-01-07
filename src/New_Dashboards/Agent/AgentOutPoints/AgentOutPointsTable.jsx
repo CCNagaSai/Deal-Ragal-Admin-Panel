@@ -1,9 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const AgentOutPointTable = ({ backendData }) => {
-  if (!backendData || backendData.length === 0) {
-    return <p>No data found from the backend.</p>;
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  // Filter the data first
+  const filteredData = backendData?.filter(entry => entry.trnxAmount < 0) || [];
+
+  if (filteredData.length === 0) {
+    return ;
   }
+
+  // Pagination calculations based on the filtered data
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const displayedData = filteredData.slice(startIndex, startIndex + itemsPerPage);
+
+  const handlePrevious = () => {
+    if (currentPage > 1) setCurrentPage(prev => prev - 1);
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) setCurrentPage(prev => prev + 1);
+  };
 
   return (
     <div className="overflow-x-auto mt-6">
@@ -21,9 +40,7 @@ const AgentOutPointTable = ({ backendData }) => {
           </tr>
         </thead>
         <tbody>
-          {backendData
-            .filter(entry => entry.trnxAmount < 0) // Only include rows where "Out" has a value
-            .map((entry, index) => {
+          {displayedData.map((entry, index) => {
               const dateOnly = entry.createdAt.split('T')[0];
               const isPositive = entry.trnxAmount > 0;
               const outAmount = `₹${Math.abs(entry.trnxAmount)}`; // Show the absolute value in "Out"
@@ -77,6 +94,26 @@ const AgentOutPointTable = ({ backendData }) => {
             })}
         </tbody>
       </table>
+      {/* Pagination Controls */}
+      <div className="pagination mt-4 flex justify-center items-center gap-4">
+        <button
+          onClick={handlePrevious}
+          disabled={currentPage === 1}
+          className={`px-4 py-2 rounded-lg ${currentPage === 1 ? 'bg-gray-300' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+        >
+          Previous
+        </button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={handleNext}
+          disabled={currentPage === totalPages}
+          className={`px-4 py-2 rounded-lg ${currentPage === totalPages ? 'bg-gray-300' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };
