@@ -145,7 +145,7 @@ function PlayerTab({ }) {
 
   const formatNumber = (num) => {
     if (num % 1 === 0) return num; // If it's an integer, return as is
-    return parseFloat(num.toFixed(2)); // Round to 2 decimal places for numbers with decimals
+    return parseFloat(num?.toFixed(2) || 0); // Round to 2 decimal places for numbers with decimals
   };
   
 
