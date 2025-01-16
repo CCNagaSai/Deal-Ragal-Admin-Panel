@@ -59,7 +59,7 @@ function PlayerTab({ gameName }) {
 
   //--------------------------- Paggeation and No Of Pages ------------------------------------
   // Filter the user data based on date range and search term
-  const filteredUsers = gameHistoryData.filter((user) => {
+  const filteredUsers = gameHistoryData?.filter((user) => {
 
     const registrationDate = new Date(user.createdAt);
     const from = fromDate ? new Date(fromDate) : null;
@@ -82,9 +82,9 @@ function PlayerTab({ gameName }) {
   const endIndex = startIndex + pageSize;
 
   // Filter the user data for the current page
-  const usersOnCurrentPage = filteredUsers.slice(startIndex, endIndex);
+  const usersOnCurrentPage = filteredUsers?.slice(startIndex, endIndex);
 
-  const totalPages = Math.ceil(filteredUsers.length / pageSize);
+  const totalPages = Math.ceil(filteredUsers?.length / pageSize);
 
   const goToPage = (page) => {
     if (page >= 1 && page <= totalPages) {
