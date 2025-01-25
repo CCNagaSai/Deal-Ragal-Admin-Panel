@@ -129,6 +129,29 @@ const ATurnover = () => {
     setSortConfig({ key, direction });
   };
 
+  
+  const handleFilterChange = () => {
+    const filteredData = originalData.filter((user) => {
+      const matchesUsername =
+        !filters.username || user.name.toLowerCase().includes(filters.username.toLowerCase());
+      const matchesStatus =
+        !filters.status ||
+        (filters.status === "Active" && user.status) ||
+        (filters.status === "Inactive" && !user.status);
+  
+      return matchesUsername && matchesStatus;
+    });
+  
+    setCurrentPage(1);
+    setData(filteredData);
+  };
+  
+  const handleClear = () => {
+    setFilters({ username: "", status: "" });
+    setCurrentPage(1);
+    setData(originalData); // Reset to original data
+  };
+
   const handlePrevious = () => {
     if (currentPage > 1) setCurrentPage((prevPage) => prevPage - 1);
   };
@@ -168,14 +191,14 @@ const ATurnover = () => {
             <div className="flex gap-4">
               <button
                 type="button"
-                // onClick={handleFilterChange}
+                onClick={handleFilterChange}
                 className="bg-blue-500 text-white p-2 sm:p-3 rounded-lg font-bold hover:bg-blue-600"
               >
                 Apply Filters
               </button>
               <button
                 type="button"
-                // onClick={handleClear}
+                onClick={handleClear}
                 className="bg-blue-500 text-white p-2 sm:p-3 rounded-lg font-bold hover:bg-blue-600"
               >
                 Clear Filters
