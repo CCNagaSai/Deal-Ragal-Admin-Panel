@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
-import UserTurnOverInSubAgent from "./UserTurnOverInSubAgent";
+import AdminAgentTurnover from './AdminAgentTurnOver';
 
 const cookies = new Cookies();
 
-const ATurnover = () => {
+const AdminTurnoverReport = () => {
   const navigate = useNavigate();
 
   // State
@@ -18,6 +18,7 @@ const ATurnover = () => {
   const [expandedRow, setExpandedRow] = useState(null);
   const [filters, setFilters] = useState({ username: "", status: "" });
   const [originalData, setOriginalData] = useState([]);
+  const [agents, setAgents] = useState("");
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -35,6 +36,7 @@ const ATurnover = () => {
     tokenRef.current = cookies.get("token");
   }, []);
 
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -50,7 +52,7 @@ const ATurnover = () => {
         }
 
         const response = await fetch(
-          `http://93.127.194.87:9999/admin/shop/ShopList?agentId=${id}`,
+          `http://93.127.194.87:9999/admin/agent/AgentList`,
           {
             method: "GET",
             headers: {
@@ -65,9 +67,45 @@ const ATurnover = () => {
         }
 
         const result = await response.json();
-        const shopList = result.shopList || [];
+        const shopList = result.agentList || [];
         setOriginalData(shopList);
         setData(shopList);
+
+        const fetchBackendDataForAgents = async () => {
+          const allBackendData = {};
+          for (const shop of shopList) {
+            const AgentId = shop._id;
+            const responseBackend = await fetch(
+              `http://93.127.194.87:9999/admin/agent/RouletteGameHistory?subAgentId=${AgentId}`,
+              {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                  token: token,
+                },
+              }
+            );
+
+            if (responseBackend.ok) {
+              const data = await responseBackend.json();
+              if (data && Array.isArray(data.gameHistoryData)) {
+                const flattenedHistory = data.gameHistoryData.flatMap(
+                  (entry) => entry.history || []
+                );
+
+                flattenedHistory.sort(
+                  (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+                );
+
+                allBackendData[AgentId] = flattenedHistory;
+              }
+            }
+          }
+          setBackendData(allBackendData);
+          setLoading(false);
+        };
+
+        fetchBackendDataForAgents();
 
         // Fetch backend data (roulette game history) for each sub-agent
         const fetchBackendDataForSubAgents = async () => {
@@ -188,7 +226,7 @@ const ATurnover = () => {
       <div className="user-details bg-white p-4 sm:p-6 rounded-md shadow-md">
         <div className="user-summary text-sm sm:text-lg font-bold mb-4">
           <span>
-            TOTAL SUB-AGENTS: ({data.length})
+            TOTAL AGENTS: ({data.length})
           </span>
         </div>
 
@@ -200,7 +238,7 @@ const ATurnover = () => {
                   onClick={() => handleSort("name")}
                   className="px-2 sm:px-4 py-2 bg-blue-500 text-white cursor-pointer hover:bg-blue-700"
                 >
-                  Sub-Agent Name
+                  Agent Name
                 </th>
                 <th
                   onClick={() => handleSort("chips")}
@@ -233,7 +271,7 @@ const ATurnover = () => {
                 <th 
                   className="px-2 sm:px-4 py-2 bg-blue-500 text-white"
                 >
-                  view users
+                  View Sub Agents
                 </th>
               </tr>
             </thead>
@@ -286,7 +324,7 @@ const ATurnover = () => {
         {expandedRow === row._id && (
           <tr className="bg-gray-100">
             <td colSpan="10" className="border border-gray-300 px-4 py-2">
-              <UserTurnOverInSubAgent subAgentId={row._id} />
+              <AdminAgentTurnover AgentId={row._id} />
             </td>
           </tr>
         )}
@@ -322,4 +360,4 @@ const ATurnover = () => {
   );
 };
 
-export default ATurnover;
+export default AdminTurnoverReport;

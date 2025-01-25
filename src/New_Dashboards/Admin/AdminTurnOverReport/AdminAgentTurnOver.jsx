@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
-import UserTurnOverInSubAgent from "./UserTurnOverInSubAgent";
+import UserTurnOverInSubAgent from "../../Agent/AgentTurnOver/UserTurnOverInSubAgent";
 
 const cookies = new Cookies();
 
-const ATurnover = () => {
+const AdminAgentTurnover = ({AgentId}) => {
   const navigate = useNavigate();
 
   // State
@@ -50,7 +50,7 @@ const ATurnover = () => {
         }
 
         const response = await fetch(
-          `http://93.127.194.87:9999/admin/shop/ShopList?agentId=${id}`,
+          `http://93.127.194.87:9999/admin/shop/ShopList?agentId=${AgentId}`,
           {
             method: "GET",
             headers: {
@@ -73,9 +73,9 @@ const ATurnover = () => {
         const fetchBackendDataForSubAgents = async () => {
           const allBackendData = {};
           for (const shop of shopList) {
-            const subAgentId = shop._id;
+            const AgentId = shop._id;
             const responseBackend = await fetch(
-              `http://93.127.194.87:9999/admin/agent/RouletteGameHistory?subAgentId=${subAgentId}`,
+              `http://93.127.194.87:9999/admin/agent/RouletteGameHistory?subAgentId=${AgentId}`,
               {
                 method: "GET",
                 headers: {
@@ -96,7 +96,7 @@ const ATurnover = () => {
                   (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
                 );
 
-                allBackendData[subAgentId] = flattenedHistory;
+                allBackendData[AgentId] = flattenedHistory;
               }
             }
           }
@@ -149,41 +149,6 @@ const ATurnover = () => {
       <h1 className="view-users-heading text-xl sm:text-2xl text-blue-500 text-left border-b-4 border-blue-500 pb-2 mb-6">
         Turn Over Report
       </h1>
-      {/* Filter Form */}
-      <div className="bg-[#e6ebff] p-5 rounded-lg shadow-lg m-1 sm:m-3">
-        <form className="flex flex-col items-center" onSubmit={(e) => e.preventDefault()}>
-          <div className="flex flex-col sm:flex-row justify-between sm:space-x-4 mb-0 sm:mb-5 w-full">
-            <div className="flex-1 mb-4 sm:mb-0">
-              <label className="block mb-2">Username:</label>
-              <input
-                type="text"
-                value={filters.username}
-                onChange={(e) => setFilters({ ...filters, username: e.target.value })}
-                className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
-                placeholder="Enter username"
-              />
-            </div>
-          </div>
-          <div className="flex justify-center w-full">
-            <div className="flex gap-4">
-              <button
-                type="button"
-                // onClick={handleFilterChange}
-                className="bg-blue-500 text-white p-2 sm:p-3 rounded-lg font-bold hover:bg-blue-600"
-              >
-                Apply Filters
-              </button>
-              <button
-                type="button"
-                // onClick={handleClear}
-                className="bg-blue-500 text-white p-2 sm:p-3 rounded-lg font-bold hover:bg-blue-600"
-              >
-                Clear Filters
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
 
       <div className="user-details bg-white p-4 sm:p-6 rounded-md shadow-md">
         <div className="user-summary text-sm sm:text-lg font-bold mb-4">
@@ -322,4 +287,4 @@ const ATurnover = () => {
   );
 };
 
-export default ATurnover;
+export default AdminAgentTurnover;
