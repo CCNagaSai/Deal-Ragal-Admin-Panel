@@ -6,6 +6,7 @@ import UserBetHistory from "../../Common/BoardHistory";
 const cookies = new Cookies();
 
 const SubAGameHistory = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
   const [backendData, setBackendData] = useState([]);
   const [expandedRow, setExpandedRow] = useState(null);
@@ -173,6 +174,7 @@ const SubAGameHistory = () => {
       if (id && token) {
         const fetchBackendData = async () => {
           if (!id || !token) return;
+          setIsLoading(true);
     
           try {
             let url = `http://93.127.194.87:9999/admin/agent/RouletteGameHistory?subAgentId=${id}&page=${currentPage}&limit=${itemsPerPage}`;
@@ -214,6 +216,8 @@ const SubAGameHistory = () => {
             }
           } catch (error) {
             console.error("Error:", error);
+          } finally {
+            setIsLoading(false); // Stop loading
           }
         };          
         fetchBackendData();
@@ -358,9 +362,12 @@ const handleNext = () => {
               </span>
             </div>
           )}
-
-          {/* Conditionally render the table */}
-          {showTable && (
+                {isLoading ? (
+  <div className="text-center py-4 font-bold text-blue-500">
+    Loading data...
+  </div>
+) : (
+          showTable && (
             <div>
               <div className="overflow-x-auto mt-8">
                 <table className="table-auto border-collapse border border-gray-300 w-full text-sm sm:text-base">
@@ -420,7 +427,7 @@ const handleNext = () => {
                               {item.afterplaypoint}
                             </td>
                             <td className="border border-gray-300 px-4 py-2">
-                              {new Date(item.createdAt).toLocaleString(
+                              {new Date(item.createdAt).toUTCString(
                                 "en-GB",
                                 {
                                   day: "2-digit",
@@ -480,7 +487,7 @@ const handleNext = () => {
                 </button>
               </div>
             </div>
-          )}
+          ))}
         </div>
       </div>
     </div>

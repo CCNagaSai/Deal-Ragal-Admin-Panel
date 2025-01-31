@@ -6,6 +6,7 @@ import UserTurnOverInSubAgent from "./UserTurnOverInSubAgent";
 const cookies = new Cookies();
 
 const ATurnover = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedSubAgentId, setSelectedSubAgentId] = useState(null);
   const [filteredData, setFilteredData] = useState([]);
   const [backendData, setBackendData] = useState([]);
@@ -79,6 +80,7 @@ const ATurnover = () => {
         if (id && token) {
           const fetchBackendData = async () => {
             if (!id || !token) return;
+            setIsLoading(true);
       
             try {
               let url = `http://93.127.194.87:9999/admin/agent/turnover?agentId=${id}`;
@@ -118,6 +120,8 @@ const ATurnover = () => {
               }
             } catch (error) {
               console.error("Error:", error);
+            } finally {
+              setIsLoading(false); // Stop loading
             }
           };          
           fetchBackendData();
@@ -442,7 +446,7 @@ const ATurnover = () => {
             </span>
             <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
             <strong>Total End Points:</strong>{" "}
-            {filteredData.reduce((sum, item) => sum + (item.endPoints ?? 0), 0).toFixed(2)}
+            {filteredData.reduce((sum, item) => sum + (item.totalEndPoints ?? 0), 0).toFixed(2)}
             </span>
             <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
             <strong>Total Margin:</strong>{" "}
@@ -454,9 +458,12 @@ const ATurnover = () => {
             </span>
           </div>
         )}
-
-          {/* Conditionally render the table */}
-          {showTable && (
+                {isLoading ? (
+  <div className="text-center py-4 font-bold text-blue-500">
+    Loading data...
+  </div>
+) : (
+          showTable && (
             <div>
               <div className="overflow-x-auto mt-8">
                 <table className="table-auto border-collapse border border-gray-300 w-full text-sm sm:text-base">
@@ -556,7 +563,7 @@ const ATurnover = () => {
                         {filteredData.reduce((sum, item) => sum + (item.totalWonPoints ?? 0), 0).toFixed(2)}
                       </td>
                       <td className="border border-gray-300 px-4 py-2">
-                        {filteredData.reduce((sum, item) => sum + (item.endPoints ?? 0), 0).toFixed(2)}
+                        {filteredData.reduce((sum, item) => sum + (item.totalEndPoints ?? 0), 0).toFixed(2)}
                       </td>
                       <td className="border border-gray-300 px-4 py-2">
                         {filteredData.reduce((sum, item) => sum + ((2.5 / 100) * (item.totalPlayPoints ?? 0)), 0).toFixed(2)}
@@ -590,7 +597,7 @@ const ATurnover = () => {
                 </button>
               </div>
             </div>
-          )}
+          ))}
         </div>
       </div>
     </div>

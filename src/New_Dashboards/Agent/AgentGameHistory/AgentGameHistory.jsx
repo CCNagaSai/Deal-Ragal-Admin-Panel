@@ -8,6 +8,7 @@ import UserBetHistory from "../../Common/BoardHistory";
 const cookies = new Cookies();
 
 const AGameHistory = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
   const [backendData, setBackendData] = useState([]);
   const [expandedRow, setExpandedRow] = useState(null);
@@ -173,6 +174,7 @@ const AGameHistory = () => {
   useEffect(() => {
         if (id && token) {
           const fetchBackendData = async () => {
+            setIsLoading(true);
             try {
               let url = `http://93.127.194.87:9999/admin/agent/RouletteGameHistory?agentId=${id}&page=${currentPage}&limit=${itemsPerPage}`;
           
@@ -212,6 +214,8 @@ const AGameHistory = () => {
               }
             } catch (error) {
               console.error("Error:", error);
+            } finally {
+              setIsLoading(false); // Stop loading
             }
           };          
           fetchBackendData();
@@ -356,12 +360,12 @@ const AGameHistory = () => {
               </span>
             </div>
           )}
-
-          {/* Display Message if No Results */}
-          {noResults && <p>No records found based on the selected filters.</p>}
-
-          {/* Conditionally render the table */}
-          {showTable && (
+                       {isLoading ? (
+  <div className="text-center py-4 font-bold text-blue-500">
+    Loading data...
+  </div>
+) : (        
+          showTable && (
             <div>
               <div className="overflow-x-auto mt-8">
                 <table className="table-auto border-collapse border border-gray-300 w-full text-sm sm:text-base">
@@ -421,7 +425,7 @@ const AGameHistory = () => {
                               {item.afterplaypoint}
                             </td>
                             <td className="border border-gray-300 px-4 py-2">
-                              {new Date(item.createdAt).toLocaleString(
+                              {new Date(item.createdAt).toUTCString(
                                 "en-GB",
                                 {
                                   day: "2-digit",
@@ -481,7 +485,7 @@ const AGameHistory = () => {
                 </button>
               </div>
             </div>
-          )}
+          ))}
         </div>
       </div>
     </div>

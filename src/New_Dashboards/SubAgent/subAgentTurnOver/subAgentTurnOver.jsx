@@ -5,6 +5,7 @@ import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
 const SubATurnover = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
   const [backendData, setBackendData] = useState([]);
   const [expandedRow, setExpandedRow] = useState(null);
@@ -77,6 +78,7 @@ const SubATurnover = () => {
         if (id && token) {
           const fetchBackendData = async () => {
             if (!id || !token) return;
+            setIsLoading(true);
       
             try {
               let url = `http://93.127.194.87:9999/admin/agent/turnover?subAgentId=${id}`;
@@ -117,6 +119,8 @@ const SubATurnover = () => {
               }
             } catch (error) {
               console.error("Error:", error);
+            } finally {
+              setIsLoading(false); // Stop loading
             }
           };          
           fetchBackendData();
@@ -195,6 +199,7 @@ const SubATurnover = () => {
         }
       
         // Sort by date (most recent first)
+        
         filtered.sort((a, b) => new Date(b.lastPlayedDate) - new Date(a.lastPlayedDate));
       
         // Update state
@@ -387,9 +392,12 @@ const SubATurnover = () => {
             </span>
           </div>
         )}
-
-          {/* Conditionally render the table */}
-          {showTable && (
+        {isLoading ? (
+  <div className="text-center py-4 font-bold text-blue-500">
+    Loading data...
+  </div>
+) : (
+          showTable && (
             <div>
               <div className="overflow-x-auto mt-8">
                 <table className="table-auto border-collapse border border-gray-300 w-full text-sm sm:text-base">
@@ -413,7 +421,7 @@ const SubATurnover = () => {
                       </th>
                       <th className="border border-gray-300 px-4 py-2">Net</th>
                       <th className="border border-gray-300 px-4 py-2">
-                        Created At
+                        Last Played Date
                       </th>
                     </tr>
                   </thead>
@@ -459,12 +467,16 @@ const SubATurnover = () => {
                                 {formatValue(net)}
                               </td>
                               <td className="border border-gray-300 px-4 py-2">
-                                {new Date(item.lastPlayedDate).toLocaleString(
+                                {new Date(item.lastPlayedDate).toUTCString(
                                   "en-GB",
                                   {
                                     day: "2-digit",
                                     month: "2-digit",
                                     year: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    second: "2-digit",
+                                    hour12: true,
                                   }
                                 )}
                               </td>
@@ -518,7 +530,7 @@ const SubATurnover = () => {
                 </button>
               </div>
             </div>
-          )}
+          ))}
         </div>
       </div>
     </div>
