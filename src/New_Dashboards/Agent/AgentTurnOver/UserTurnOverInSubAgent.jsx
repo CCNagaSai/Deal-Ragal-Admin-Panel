@@ -7,8 +7,6 @@ const UserTurnOverInSubAgent = ({ subAgentId, onUserClick }) => {
   const [filteredData, setFilteredData] = useState([]);
     const [backendData, setBackendData] = useState([]);
     const [expandedRow, setExpandedRow] = useState(null);
-    const [loading, setLoading] = useState(false); // New loading state
-    const [noData, setNoData] = useState(false)
     const [filters, setFilters] = useState({
       gameName: "",
       userId: "",
@@ -74,168 +72,154 @@ const UserTurnOverInSubAgent = ({ subAgentId, onUserClick }) => {
       setColumns(isMobile ? mobileColumns : desktopColumns);
     }, [isMobile]);
   
-    // Handle filter change and date range calculations
-    const handleDateRangeChange = (range) => {
-      const today = new Date();
-      let startDate = new Date();
-      let endDate = new Date();
-  
-      switch (range) {
-        case "Today":
-          startDate.setDate(today.getDate());
-          endDate.setHours(23, 59, 59, 999);
-          break;
-        case "Yesterday":
-          startDate.setDate(today.getDate() - 1);
-          endDate.setDate(today.getDate() - 1);
-          startDate.setHours(0, 0, 0, 0);
-          endDate.setHours(23, 59, 59, 999);
-          break;
-        case "Last 7 Days":
-          startDate.setDate(today.getDate() - 7);
-          startDate.setHours(0, 0, 0, 0);
-          break;
-        case "Last 30 Days":
-          startDate.setDate(today.getDate() - 30);
-          startDate.setHours(0, 0, 0, 0);
-          break;
-        default:
-          break;
-      }
-  
-      // Set start and end date in filters and update the state
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        startDate: startDate.toISOString().split("T")[0],
-        endDate: endDate.toISOString().split("T")[0],
-      }));
-      setDateRange(range); // Update selected date range
-    };
-  
-    const handleManualDateChange = (e, field) => {
-      setFilters((prevFilters) => {
-        const newFilters = { ...prevFilters, [field]: e.target.value };
-        if (newFilters.startDate && newFilters.endDate) {
-          setDateRange("Select"); // Reset Date Range to Select if custom dates are entered
-        }
-        return newFilters;
-      });
-    };
-
     useEffect(() => {
-      if (backendData.length > 0) {
-        const aggregatedData = backendData.reduce((acc, entry) => {
-          const existingUser = acc.find((user) => user.username === entry.username);
-    
-          if (existingUser) {
-            existingUser.play += entry.play;
-            existingUser.won += entry.won;
-            existingUser.endPoints = existingUser.play - existingUser.won;
-            existingUser.createdAt =
-              new Date(existingUser.createdAt) > new Date(entry.createdAt)
-                ? existingUser.createdAt
-                : entry.createdAt;
-          } else {
-            acc.push({
-              ...entry,
-              endPoints: entry.play - entry.won,
-            });
-          }
-          return acc;
-        }, []);
-    
-        aggregatedData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    
-        setFilteredData(aggregatedData);
-        setShowTable(aggregatedData.length > 0);
-        setNoResults(aggregatedData.length === 0);
-      }
-    }, [backendData]);
-    
-    const handleClear = () => {
-      setFilters({
-        gameName: "",
-        userId: "",
-        handId: "",
-        startDate: "",
-        endDate: "",
-      });
-      setCurrentPage(1);
-      setDateRange("Select");
-      setFilteredData(backendData); // Reset filters
-      setShowTable(false); // Hide the table when cleared
-      setIsSubmitted(false); // Reset the "submitted" state
-    };
-  
-    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  
-    const totalPlayPoints = Array.isArray(filteredData)
-      ? filteredData.reduce(
-          (acc, entry) => acc + parseFloat(entry.playPoints || 0),
-          0
-        )
-      : 0;
-    const totalWinPoints = Array.isArray(filteredData)
-      ? filteredData.reduce(
-          (acc, entry) => acc + parseFloat(entry.winpoints || 0),
-          0
-        )
-      : 0;
-    const totalEndPoints = Array.isArray(filteredData)
-      ? filteredData.reduce(
-          (acc, entry) => acc + parseFloat(entry.endPoints || 0),
-          0
-        )
-      : 0;
-  
-      useEffect(() => {
-        if (id && token) {
-          const fetchBackendData = async () => {
-            try {
-              const response = await fetch(
-                `http://93.127.194.87:9999/admin/agent/RouletteGameHistory?subAgentId=${subAgentId}`,
-                {
+          if (id && token) {
+            const fetchBackendData = async () => {
+              if (!id || !token) return;
+        
+              try {
+                let url = `http://93.127.194.87:9999/admin/agent/turnover?subAgentId=${subAgentId}`;
+        
+                // Add filters dynamically
+                if (filters.userId) {
+                  url += `&username=${encodeURIComponent(filters.userId)}`;
+                }
+                if (filters.startDate && filters.endDate) {
+                  url += `&startDate=${filters.startDate}&endDate=${filters.endDate}`;
+                }
+        
+                console.log("Fetching Data from:", url);
+        
+                const response = await fetch(url, {
                   method: "GET",
                   headers: {
                     "Content-Type": "application/json",
                     token: token,
                   },
-                }
-              );
-      
-              if (response.ok) {
-                const data = await response.json();
-                if (data && Array.isArray(data.gameHistoryData)) {
-                  const flattenedHistory = data.gameHistoryData.flatMap(
-                    (entry) => entry.history || []
-                  );
-      
-                  flattenedHistory.sort(
-                    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-                  );
-      
-                  console.log("history", flattenedHistory);
-                  setBackendData(flattenedHistory);
-                  setFilteredData(flattenedHistory); // Automatically populate the table
-                  setShowTable(flattenedHistory.length > 0); // Show table immediately
+                });
+        
+                if (response.ok) {
+                  const data = await response.json();
+                  console.log("Data:", data);
+            
+                  if (data && Array.isArray(data.turnOverData)) {
+                    const flattenedHistory = data.turnOverData.flatMap((entry) => entry || []);
+                    flattenedHistory.sort((a, b) => new Date(b.lastPlayedDate) - new Date(a.lastPlayedDate));
+            
+                    setBackendData(flattenedHistory);
+                    setFilteredData(flattenedHistory);
+                  } else {
+                    console.error("Expected an array from the backend API:", data);
+                  }
                 } else {
-                  console.error("Expected an array from the backend API:", data);
+                  console.error("Failed to fetch backend data");
                 }
-              } else {
-                console.error("Failed to fetch backend data");
+              } catch (error) {
+                console.error("Error:", error);
               }
-            } catch (error) {
-              console.error("Error:", error);
-            }
-          };
-      
-          fetchBackendData();
-        }
-      }, [token, id]);
-      
-    console.log("backendsdata", backendData);
+            };          
+            fetchBackendData();
+          }
+        }, [token, id, filters]);
   
-    console.log("Expanded Row:", expandedRow);
+    
+        const handleDateRangeChange = (range) => {
+          const today = new Date();
+          let startDate = new Date();
+          let endDate = new Date();
+      
+          switch (range) {
+            case "Today":
+              startDate.setDate(today.getDate());
+              endDate.setHours(23, 59, 59, 999);
+              break;
+            case "Yesterday":
+              startDate.setDate(today.getDate() - 1);
+              endDate.setDate(today.getDate() - 1);
+              startDate.setHours(0, 0, 0, 0);
+              endDate.setHours(23, 59, 59, 999);
+              break;
+            case "Last 7 Days":
+              startDate.setDate(today.getDate() - 7);
+              startDate.setHours(0, 0, 0, 0);
+              break;
+            case "Last 30 Days":
+              startDate.setDate(today.getDate() - 30);
+              startDate.setHours(0, 0, 0, 0);
+              break;
+            default:
+              break;
+          }
+      
+          // Set start and end date in filters and update the state
+          setFilters((prevFilters) => ({
+            ...prevFilters,
+            startDate: startDate.toISOString().split("T")[0],
+            endDate: endDate.toISOString().split("T")[0],
+          }));
+          setDateRange(range); // Update selected date range
+        };
+      
+        const handleManualDateChange = (e, field) => {
+          setFilters((prevFilters) => {
+            const newFilters = { ...prevFilters, [field]: e.target.value };
+            if (newFilters.startDate && newFilters.endDate) {
+              setDateRange("Select"); // Reset Date Range to Select if custom dates are entered
+            }
+            return newFilters;
+          });
+        };
+      
+        const handleFilterChange = () => {
+          let filtered = backendData;
+        
+          // Filter by username
+          if (filters.username) {
+            filtered = filtered.filter((entry) =>
+              entry.username.toLowerCase().includes(filters.username.toLowerCase())
+            );          
+          }
+        
+          // Filter by date range only if both startDate and endDate are provided
+          if (filters.startDate && filters.endDate) {
+            const startDate = new Date(filters.startDate);
+            startDate.setHours(0, 0, 0, 0); // Start of the day
+            const endDate = new Date(filters.endDate);
+            endDate.setHours(23, 59, 59, 999); // End of the day
+        
+            filtered = filtered.filter((entry) => {
+              const entryDate = new Date(entry.lastPlayedDate);
+              return entryDate >= startDate && entryDate <= endDate;
+            });
+          }
+        
+          // Sort by date (most recent first)
+          filtered.sort((a, b) => new Date(b.lastPlayedDate) - new Date(a.lastPlayedDate));
+        
+          // Update state
+          setCurrentPage(1);
+          setFilteredData(filtered);
+          setShowTable(filtered.length > 0);
+          setNoResults(filtered.length === 0); // Check if no results are found
+          setIsSubmitted(true); // Indicate filters have been applied
+        };
+      
+        const handleClear = () => {
+          setFilters({
+            gameName: "",
+            userId: "",
+            handId: "",
+            startDate: "",
+            endDate: "",
+          });
+          setCurrentPage(1);
+          setDateRange("Select");
+          setFilteredData(backendData); // Reset filters
+          setShowTable(false); // Hide the table when cleared
+          setIsSubmitted(false); // Reset the "submitted" state
+        };
+      
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   
     const handlePrevious = () => {
       if (currentPage > 1) setCurrentPage((prevPage) => prevPage - 1);
@@ -262,13 +246,114 @@ const UserTurnOverInSubAgent = ({ subAgentId, onUserClick }) => {
       }
     }, [backendData, filters, isSubmitted]);
   
+    console.log("Backend Data:", backendData);
+    
+  
     return (
       <div>
         <div className="flex flex-col md:flex-row">
           <div className="flex-1 ml-[4px] mr-[4px] md:max-w-[1100px] mx-auto border border-blue-500 p-[5px]">
             <h2 className="text-blue-600 text-[18px] ml-1 md:text-xl font-bold  border-b border-blue-500 pb-1 ">
-              Turn Over Report{" "}
+              Sub Agent Turn Over Report{" "}
             </h2>
+  
+            {/* Filter Form */}
+            <div className="bg-[#e6ebff] p-5 rounded-lg shadow-lg m-1 sm:m-3">
+              <form
+                className="flex flex-col items-center"
+                onSubmit={(e) => e.preventDefault()}
+              >
+                {/* Row 1: Username (Desktop: Full row, Mobile: Shared with Start Date) */}
+                <div className="w-full flex flex-wrap gap-4 mb-5">
+                  <div className="flex-1 min-w-[140px] sm:w-full">
+                    <label className="block mb-2">Username:</label>
+                    <input
+                      type="text"
+                      value={filters.userId}
+                      onChange={(e) =>
+                        setFilters({ ...filters, userId: e.target.value })
+                      }
+                      className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
+                      placeholder="Enter username"
+                    />
+                  </div>
+  
+                  <div className="flex-1 min-w-[140px] sm:w-full sm:hidden">
+                    <label className="block mb-2">Start Date:</label>
+                    <input
+                      type="date"
+                      value={filters.startDate}
+                      onChange={(e) => handleManualDateChange(e, "startDate")}
+                      className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
+                    />
+                  </div>
+                </div>
+  
+                {/* Row 2: Start Date, End Date, and Date Range */}
+                <div className="w-full flex flex-wrap gap-4 mb-5">
+                  {/* Start Date: Shown here for Desktop */}
+                  <div className="flex-1 min-w-[140px] hidden sm:block">
+                    <label className="block mb-2">Start Date:</label>
+                    <input
+                      type="date"
+                      value={filters.startDate}
+                      onChange={(e) => handleManualDateChange(e, "startDate")}
+                      className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
+                    />
+                  </div>
+  
+                  {/* End Date */}
+                  <div className="flex-1 min-w-[140px]">
+                    <label className="block mb-2">End Date:</label>
+                    <input
+                      type="date"
+                      value={filters.endDate}
+                      onChange={(e) => handleManualDateChange(e, "endDate")}
+                      className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
+                    />
+                  </div>
+  
+                  {/* Date Range */}
+                  <div className="flex-1 min-w-[140px]">
+                    <label className="block mb-2">Date Range:</label>
+                    <select
+                      value={dateRange}
+                      onChange={(e) => handleDateRangeChange(e.target.value)}
+                      className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
+                    >
+                      <option value="Select">Select</option>
+                      <option value="Today">Today</option>
+                      <option value="Yesterday">Yesterday</option>
+                      <option value="Last 7 Days">Last 7 Days</option>
+                      <option value="Last 30 Days">Last 30 Days</option>
+                      <option value="Custom">Custom</option>
+                    </select>
+                  </div>
+                </div>
+  
+                {/* Submit and Clear Buttons */}
+                <div className="flex justify-center w-full">
+                  <div className="flex gap-4">
+                    <button
+                      type="button"
+                      onClick={handleFilterChange}
+                      className="bg-blue-500 text-white p-2 sm:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm sm:text-base w-20 sm:w-auto"
+                      style={{ width: "150px" }}
+                    >
+                      Apply Filters
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleClear}
+                      className="bg-blue-500 text-white p-2 sm:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm sm:text-base w-20 sm:w-auto"
+                      style={{ width: "150px" }}
+                    >
+                      Clear Filters
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
   
             {/* Show selected filters after submit */}
             {isSubmitted && (
@@ -281,39 +366,26 @@ const UserTurnOverInSubAgent = ({ subAgentId, onUserClick }) => {
               </span>
               <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
               <strong>Total Play Points:</strong>{" "}
-                {filteredData.reduce((sum, item) => sum + item.play, 0).toFixed(2)}
+                {filteredData.reduce((sum, item) => sum + (item.totalPlayPoints ?? 0), 0).toFixed(2)}
               </span>
               <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
               <strong>Total Won Points:</strong>{" "}
-                {filteredData.reduce((sum, item) => sum + item.won, 0).toFixed(2)}
+              {filteredData.reduce((sum, item) => sum + (item.totalWonPoints ?? 0), 0).toFixed(2)}
               </span>
               <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
               <strong>Total End Points:</strong>{" "}
-                {filteredData
-                  .reduce((sum, item) => sum + (item.play - item.won), 0)
-                  .toFixed(2)}
+              {filteredData.reduce((sum, item) => sum + (item.endPoints ?? 0), 0).toFixed(2)}
               </span>
               <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
               <strong>Total Margin:</strong>{" "}
-                {filteredData
-                  .reduce((sum, item) => sum + (2.5 / 100) * item.play, 0)
-                  .toFixed(2)}
+              {filteredData.reduce((sum, item) => sum + ((2.5 / 100) * (item.totalPlayPoints ?? 0)), 0).toFixed(2)}
               </span>
               <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
                 <strong>Total Net:</strong>{" "}
-                {filteredData
-                  .reduce(
-                    (sum, item) =>
-                      sum + (item.play - item.won - (2.5 / 100) * item.play),
-                    0
-                  )
-                  .toFixed(2)}
+                {filteredData.reduce((sum, item) => sum + ((item.endPoints ?? 0) - ((2.5 / 100) * (item.totalPlayPoints ?? 0))), 0).toFixed(2)}
               </span>
             </div>
           )}
-  
-            {/* Display Message if No Results */}
-            {noResults && <p>No records found based on the selected filters.</p>}
   
             {/* Conditionally render the table */}
             {showTable && (
@@ -347,19 +419,18 @@ const UserTurnOverInSubAgent = ({ subAgentId, onUserClick }) => {
                     <tbody>
                       {/* {filteredData.map((item, index) => ( */}
                       {filteredData
-                        .filter((item) => item.play !== 0)
                         .slice(startIndex, startIndex + itemsPerPage)
                         .map((item, index) => {
                           // Calculate derived values
-                          const playPoints = item.play;
-                          const wonPoints = item.won;
-                          const endPoints = playPoints - wonPoints;
-                          const margin = (2.5 / 100) * playPoints;
-                          const net = endPoints - margin;
+                          const playPoints = item.totalPlayPoints || 0;
+                          const wonPoints = item.totalWonPoints  || 0;
+                          const endPoints = item.endPoints || 0;
+                          const margin = (2.5 / 100) * item.totalPlayPoints || 0;
+                          const net = endPoints - margin || 0;
   
                           // Helper function to format numbers
                           const formatValue = (value) =>
-                            value % 1 === 0 ? value : value.toFixed(2);
+                            value % 1 === 0 ? value : value?.toFixed(2);
   
                           return (
                             <React.Fragment key={item.uuid}>
@@ -369,7 +440,7 @@ const UserTurnOverInSubAgent = ({ subAgentId, onUserClick }) => {
                               >
                                 {/* <td className="border border-gray-300 px-4 py-2">{item.userId}</td> */}
                                 <td className="border border-gray-300 px-4 py-2">
-                                  {item.username}
+                                  {item.name}
                                 </td>
                                 <td className="border border-gray-300 px-4 py-2">
                                   {formatValue(playPoints)}
@@ -387,7 +458,7 @@ const UserTurnOverInSubAgent = ({ subAgentId, onUserClick }) => {
                                   {formatValue(net)}
                                 </td>
                                 <td className="border border-gray-300 px-4 py-2">
-                                  {new Date(item.createdAt).toLocaleString(
+                                  {new Date(item.lastPlayedDate).toLocaleString(
                                     "en-GB",
                                     {
                                       day: "2-digit",
@@ -401,50 +472,28 @@ const UserTurnOverInSubAgent = ({ subAgentId, onUserClick }) => {
                           );
                         })}
                     </tbody>
+                    {/* Total row in tfoot */}
                     <tfoot>
-                      <tr className="bg-blue-100 font-bold">
+                      <tr className="bg-gray-200 font-bold">
+                        <td className="border border-gray-300 px-4 py-2">Total</td>
                         <td className="border border-gray-300 px-4 py-2">
-                          Total
+                          {filteredData.reduce((sum, item) => sum + (item.totalPlayPoints ?? 0), 0).toFixed(2)}
                         </td>
                         <td className="border border-gray-300 px-4 py-2">
-                          {filteredData
-                            .reduce((sum, item) => sum + item.play, 0)
-                            .toFixed(2)}
+                          {filteredData.reduce((sum, item) => sum + (item.totalWonPoints ?? 0), 0).toFixed(2)}
                         </td>
                         <td className="border border-gray-300 px-4 py-2">
-                          {filteredData
-                            .reduce((sum, item) => sum + item.won, 0)
-                            .toFixed(2)}
+                          {filteredData.reduce((sum, item) => sum + (item.endPoints ?? 0), 0).toFixed(2)}
                         </td>
                         <td className="border border-gray-300 px-4 py-2">
-                          {filteredData
-                            .reduce(
-                              (sum, item) => sum + (item.play - item.won),
-                              0
-                            )
-                            .toFixed(2)}
+                          {filteredData.reduce((sum, item) => sum + ((2.5 / 100) * (item.totalPlayPoints ?? 0)), 0).toFixed(2)}
                         </td>
                         <td className="border border-gray-300 px-4 py-2">
-                          {filteredData
-                            .reduce(
-                              (sum, item) => sum + (2.5 / 100) * item.play,
-                              0
-                            )
-                            .toFixed(2)}
+                          {filteredData.reduce((sum, item) => sum + ((item.endPoints ?? 0) - ((2.5 / 100) * (item.totalPlayPoints ?? 0))), 0).toFixed(2)}
                         </td>
-                        <td className="border border-gray-300 px-4 py-2">
-                          {filteredData
-                            .reduce(
-                              (sum, item) =>
-                                sum +
-                                (item.play - item.won - (2.5 / 100) * item.play),
-                              0
-                            )
-                            .toFixed(2)}
-                        </td>
-                        <td className="border border-gray-300 px-4 py-2">-</td>
                       </tr>
                     </tfoot>
+  
                   </table>
                 </div>
                 {/* Pagination controls */}

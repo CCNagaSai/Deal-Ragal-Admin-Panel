@@ -22,7 +22,7 @@ const SubAGameHistory = () => {
   const [showTable, setShowTable] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [noResults, setNoResults] = useState(false);
-  // Pagination state
+    const [totalPages, setTotalPages] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
@@ -128,8 +128,8 @@ const SubAGameHistory = () => {
     // Filter by username
     if (filters.userId) {
       filtered = filtered.filter((entry) =>
-        entry.username.toLowerCase().includes(filters.userId.toLowerCase())
-      );
+        entry.username.toLowerCase().includes(filters.username.toLowerCase())
+      );      
     }
 
     // Filter by date range
@@ -169,92 +169,75 @@ const SubAGameHistory = () => {
     setIsSubmitted(false); // Reset the "submitted" state
   };
 
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-
-  const totalPlayPoints = Array.isArray(filteredData)
-    ? filteredData.reduce(
-        (acc, entry) => acc + parseFloat(entry.playPoints || 0),
-        0
-      )
-    : 0;
-  const totalWinPoints = Array.isArray(filteredData)
-    ? filteredData.reduce(
-        (acc, entry) => acc + parseFloat(entry.winpoints || 0),
-        0
-      )
-    : 0;
-  const totalEndPoints = Array.isArray(filteredData)
-    ? filteredData.reduce(
-        (acc, entry) => acc + parseFloat(entry.endPoints || 0),
-        0
-      )
-    : 0;
-
-  useEffect(() => {
-    if (id && token) {
-      const fetchBackendData = async () => {
-        try {
-          const response = await fetch(
-            `http://93.127.194.87:9999/admin/agent/RouletteGameHistory?subAgentId=${id}`,
-            {
+    useEffect(() => {
+      if (id && token) {
+        const fetchBackendData = async () => {
+          if (!id || !token) return;
+    
+          try {
+            let url = `http://93.127.194.87:9999/admin/agent/RouletteGameHistory?subAgentId=${id}&page=${currentPage}&limit=${itemsPerPage}`;
+    
+            // Add filters dynamically
+            if (filters.userId) {
+              url += `&username=${encodeURIComponent(filters.userId)}`;
+            }
+            if (filters.startDate && filters.endDate) {
+              url += `&startDate=${filters.startDate}&endDate=${filters.endDate}`;
+            }
+    
+            console.log("Fetching Data from:", url);
+    
+            const response = await fetch(url, {
               method: "GET",
               headers: {
                 "Content-Type": "application/json",
                 token: token,
               },
-            }
-          );
-
-          if (response.ok) {
-            const data = await response.json();
-            if (data && Array.isArray(data.gameHistoryData)) {
-              const flattenedHistory = data.gameHistoryData.flatMap(
-                (entry) => entry.history || []
-              );
-
-              flattenedHistory.sort(
-                (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-              );
-
-              console.log("history", flattenedHistory);
-              setBackendData(flattenedHistory);
-              setFilteredData(flattenedHistory);
+            });
+    
+            if (response.ok) {
+              const data = await response.json();
+              console.log("Data:", data);
+        
+              if (data && Array.isArray(data.historyData)) {
+                const flattenedHistory = data.historyData.flatMap((entry) => entry || []);
+                flattenedHistory.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        
+                setBackendData(flattenedHistory);
+                setFilteredData(flattenedHistory);
+                setTotalPages(data.totalPages);
+              } else {
+                console.error("Expected an array from the backend API:", data);
+              }
             } else {
-              console.error("Expected an array from the backend API:", data);
+              console.error("Failed to fetch backend data");
             }
-          } else {
-            console.error("Failed to fetch backend data");
+          } catch (error) {
+            console.error("Error:", error);
           }
-        } catch (error) {
-          console.error("Error:", error);
-        }
-      };
+        };          
+        fetchBackendData();
+      }
+    }, [token, id, filters, currentPage]);
+ 
 
-      fetchBackendData();
-    }
-  }, [token, id]);
-  console.log("backendsdata", backendData);
-
-  console.log("Expanded Row:", expandedRow);
-
-  const handlePrevious = () => {
-    if (currentPage > 1) setCurrentPage((prevPage) => prevPage - 1);
-  };
-
-  const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage((prevPage) => prevPage + 1);
-  };
+const handlePrevious = () => {
+  if (currentPage > 1) {
+    setCurrentPage((prevPage) => prevPage - 1);
+  }
+};
+    
+const handleNext = () => {
+  if (currentPage < totalPages) {
+    setCurrentPage((prevPage) => prevPage + 1);
+  }
+};
 
   const toggleRow = (rowId) => {
     setExpandedRow(expandedRow === rowId ? null : rowId);
   };
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const displayedData = filteredData.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
-  console.log(filteredData, "cccccccc");
+  console.log( "cccccccc", filteredData);
 
   return (
     <div>
@@ -376,9 +359,6 @@ const SubAGameHistory = () => {
             </div>
           )}
 
-          {/* Display Message if No Results */}
-          {noResults && <p>No records found based on the selected filters.</p>}
-
           {/* Conditionally render the table */}
           {showTable && (
             <div>
@@ -412,8 +392,8 @@ const SubAGameHistory = () => {
                   <tbody>
                     {/* {filteredData.map((item, index) => ( */}
                     {filteredData
-                      .filter((item) => item.play !== 0)
-                      .slice(startIndex, startIndex + itemsPerPage)
+                      // .filter((item) => item.play !== 0)
+                      // .slice(startIndex, startIndex + itemsPerPage)
                       .map((item, index) => (
                         <React.Fragment key={item.uuid}>
                           <tr
