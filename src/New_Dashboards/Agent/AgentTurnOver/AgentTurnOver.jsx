@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./AgentTurnOver.css";
 import Cookies from "universal-cookie";
+import UserTurnOverInSubAgent from "./UserTurnOverInSubAgent";
 
 const cookies = new Cookies();
 
@@ -322,7 +323,7 @@ const ATurnover = () => {
       <div className="flex flex-col md:flex-row">
         <div className="flex-1 ml-[4px] mr-[4px] md:max-w-[1100px] mx-auto border border-blue-500 p-[5px]">
           <h2 className="text-blue-600 text-[18px] ml-1 md:text-xl font-bold  border-b border-blue-500 pb-1 ">
-            Turn Over Report{" "}
+            Agent Turn Over Report{" "}
           </h2>
 
           {/* Filter Form */}
@@ -334,7 +335,7 @@ const ATurnover = () => {
               {/* Row 1: Username (Desktop: Full row, Mobile: Shared with Start Date) */}
               <div className="w-full flex flex-wrap gap-4 mb-5">
                 <div className="flex-1 min-w-[140px] sm:w-full">
-                  <label className="block mb-2">Username:</label>
+                  <label className="block mb-2">Sub Agent Name:</label>
                   <input
                     type="text"
                     value={filters.userId}
@@ -463,7 +464,7 @@ const ATurnover = () => {
                     <tr className="bg-blue-200">
                       {/* <th className="border border-gray-300 px-4 py-2">User ID</th> */}
                       <th className="border border-gray-300 px-4 py-2">
-                        Username
+                        Sub Agent Name
                       </th>
                       <th className="border border-gray-300 px-4 py-2">
                         Play Points
@@ -479,7 +480,7 @@ const ATurnover = () => {
                       </th>
                       <th className="border border-gray-300 px-4 py-2">Net</th>
                       <th className="border border-gray-300 px-4 py-2">
-                        Created At
+                        Turn Over Report
                       </th>
                     </tr>
                   </thead>

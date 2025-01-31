@@ -252,13 +252,13 @@ const UserTurnOverInSubAgent = ({ subAgentId, onUserClick }) => {
     return (
       <div>
         <div className="flex flex-col md:flex-row">
-          <div className="flex-1 ml-[4px] mr-[4px] md:max-w-[1100px] mx-auto border border-blue-500 p-[5px]">
-            <h2 className="text-blue-600 text-[18px] ml-1 md:text-xl font-bold  border-b border-blue-500 pb-1 ">
+          <div className="flex-1 ml-[4px] mr-[4px] md:max-w-[1100px] mx-auto border border-green-500 p-[5px]">
+            <h2 className="text-green-600 text-[18px] ml-1 md:text-xl font-bold  border-b border-green-500 pb-1 ">
               Sub Agent Turn Over Report{" "}
             </h2>
   
             {/* Filter Form */}
-            <div className="bg-[#e6ebff] p-5 rounded-lg shadow-lg m-1 sm:m-3">
+            <div className="bg-green-50 p-5 rounded-lg shadow-lg m-1 sm:m-3">
               <form
                 className="flex flex-col items-center"
                 onSubmit={(e) => e.preventDefault()}
@@ -337,7 +337,7 @@ const UserTurnOverInSubAgent = ({ subAgentId, onUserClick }) => {
                     <button
                       type="button"
                       onClick={handleFilterChange}
-                      className="bg-blue-500 text-white p-2 sm:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm sm:text-base w-20 sm:w-auto"
+                      className="bg-green-400 text-white p-2 sm:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-green-600 text-sm sm:text-base w-20 sm:w-auto"
                       style={{ width: "150px" }}
                     >
                       Apply Filters
@@ -345,7 +345,7 @@ const UserTurnOverInSubAgent = ({ subAgentId, onUserClick }) => {
                     <button
                       type="button"
                       onClick={handleClear}
-                      className="bg-blue-500 text-white p-2 sm:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm sm:text-base w-20 sm:w-auto"
+                      className="bg-green-400 text-white p-2 sm:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-green-600 text-sm sm:text-base w-20 sm:w-auto"
                       style={{ width: "150px" }}
                     >
                       Clear Filters
@@ -357,7 +357,7 @@ const UserTurnOverInSubAgent = ({ subAgentId, onUserClick }) => {
   
             {/* Show selected filters after submit */}
             {isSubmitted && (
-            <div className="bg-[#e6ebff] p-2 flex flex-wrap sm:flex-nowrap gap-2 sm:gap-4 mt-2 rounded-md m-2 text-sm sm:text-base">
+            <div className="bg-green-50 p-2 flex flex-wrap sm:flex-nowrap gap-2 sm:gap-4 mt-2 rounded-md m-2 text-sm sm:text-base">
               <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
                 <strong>Start Date:</strong> {filters.startDate || "Not Selected"}
               </span>
@@ -393,7 +393,7 @@ const UserTurnOverInSubAgent = ({ subAgentId, onUserClick }) => {
                 <div className="overflow-x-auto mt-8">
                   <table className="table-auto border-collapse border border-gray-300 w-full text-sm sm:text-base">
                     <thead>
-                      <tr className="bg-blue-200">
+                      <tr className="bg-green-200">
                         {/* <th className="border border-gray-300 px-4 py-2">User ID</th> */}
                         <th className="border border-gray-300 px-4 py-2">
                           Username
@@ -499,17 +499,17 @@ const UserTurnOverInSubAgent = ({ subAgentId, onUserClick }) => {
                 {/* Pagination controls */}
                 <div className="pagination flex justify-between items-center mt-6">
                   <button
-                    className="prev px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                    className="prev px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
                     disabled={currentPage === 1}
                     onClick={handlePrevious}
                   >
                     Previous
                   </button>
-                  <span className="page-info text-blue-700 font-semibold">
+                  <span className="page-info text-green-700 font-semibold">
                     Page {currentPage} of {totalPages}
                   </span>
                   <button
-                    className="next px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                    className="next px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
                     disabled={currentPage === totalPages}
                     onClick={handleNext}
                   >
