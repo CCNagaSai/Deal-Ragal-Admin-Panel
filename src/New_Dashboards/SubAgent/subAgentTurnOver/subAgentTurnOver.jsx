@@ -467,19 +467,23 @@ const SubATurnover = () => {
                                 {formatValue(net)}
                               </td>
                               <td className="border border-gray-300 px-4 py-2">
-                                {new Date(item.lastPlayedDate).toUTCString(
-                                  "en-GB",
-                                  {
-                                    day: "2-digit",
-                                    month: "2-digit",
-                                    year: "numeric",
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                    second: "2-digit",
-                                    hour12: true,
-                                  }
-                                )}
-                              </td>
+                              {(() => {
+                                const date = new Date(item.lastPlayedDate);
+                                const options = {
+                                  weekday: "short",
+                                  day: "2-digit",
+                                  month: "short",
+                                  year: "numeric",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                  second: "2-digit",
+                                  hour12: true,
+                                  timeZone: "Asia/Kolkata",
+                                };
+                                const formattedDate = date.toLocaleString("en-GB", options);
+                                return `${formattedDate}, IST`;
+                              })()}
+                            </td>
                             </tr>
                           </React.Fragment>
                         );

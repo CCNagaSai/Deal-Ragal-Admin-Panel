@@ -425,18 +425,22 @@ const AGameHistory = () => {
                               {item.afterplaypoint}
                             </td>
                             <td className="border border-gray-300 px-4 py-2">
-                              {new Date(item.createdAt).toUTCString(
-                                "en-GB",
-                                {
+                              {(() => {
+                                const date = new Date(item.createdAt);
+                                const options = {
+                                  weekday: "short",
                                   day: "2-digit",
-                                  month: "2-digit",
+                                  month: "short",
                                   year: "numeric",
                                   hour: "2-digit",
                                   minute: "2-digit",
                                   second: "2-digit",
                                   hour12: true,
-                                }
-                              )}
+                                  timeZone: "Asia/Kolkata",
+                                };
+                                const formattedDate = date.toLocaleString("en-GB", options);
+                                return `${formattedDate}, IST`;
+                              })()}
                             </td>
                             <td className="border border-gray-300 px-4 py-2">
                               <button
