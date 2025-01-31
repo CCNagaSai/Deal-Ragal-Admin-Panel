@@ -5,6 +5,7 @@ import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
 const ATurnover = () => {
+  const [selectedSubAgentId, setSelectedSubAgentId] = useState(null);
   const [filteredData, setFilteredData] = useState([]);
   const [backendData, setBackendData] = useState([]);
   const [expandedRow, setExpandedRow] = useState(null);
@@ -73,119 +74,154 @@ const ATurnover = () => {
     setColumns(isMobile ? mobileColumns : desktopColumns);
   }, [isMobile]);
 
-  // Handle filter change and date range calculations
-  const handleDateRangeChange = (range) => {
-    const today = new Date();
-    let startDate = new Date();
-    let endDate = new Date();
+  useEffect(() => {
+        if (id && token) {
+          const fetchBackendData = async () => {
+            if (!id || !token) return;
+      
+            try {
+              let url = `http://93.127.194.87:9999/admin/agent/turnover?agentId=${id}`;
+      
+              // Add filters dynamically
+              if (filters.userId) {
+                url += `&username=${encodeURIComponent(filters.userId)}`;
+              }
+              if (filters.startDate && filters.endDate) {
+                url += `&startDate=${filters.startDate}&endDate=${filters.endDate}`;
+              }
+      
+              console.log("Fetching Data from:", url);
+      
+              const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                  token: token,
+                },
+              });
+      
+              if (response.ok) {
+                const data = await response.json();
+                console.log("Data:", data);
+          
+                if (data && Array.isArray(data.turnOverData)) {
+                  const flattenedHistory = data.turnOverData.flatMap((entry) => entry.subAgentData || []);
+          
+                  setBackendData(flattenedHistory);
+                  setFilteredData(flattenedHistory);
+                } else {
+                  console.error("Expected an array from the backend API:", data);
+                }
+              } else {
+                console.error("Failed to fetch backend data");
+              }
+            } catch (error) {
+              console.error("Error:", error);
+            }
+          };          
+          fetchBackendData();
+        }
+      }, [token, id, filters]);
 
-    switch (range) {
-      case "Today":
-        startDate.setDate(today.getDate());
-        endDate.setHours(23, 59, 59, 999);
-        break;
-      case "Yesterday":
-        startDate.setDate(today.getDate() - 1);
-        endDate.setDate(today.getDate() - 1);
-        startDate.setHours(0, 0, 0, 0);
-        endDate.setHours(23, 59, 59, 999);
-        break;
-      case "Last 7 Days":
-        startDate.setDate(today.getDate() - 7);
-        startDate.setHours(0, 0, 0, 0);
-        break;
-      case "Last 30 Days":
-        startDate.setDate(today.getDate() - 30);
-        startDate.setHours(0, 0, 0, 0);
-        break;
-      default:
-        break;
-    }
-
-    // Set start and end date in filters and update the state
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      startDate: startDate.toISOString().split("T")[0],
-      endDate: endDate.toISOString().split("T")[0],
-    }));
-    setDateRange(range); // Update selected date range
-  };
-
-  const handleManualDateChange = (e, field) => {
-    setFilters((prevFilters) => {
-      const newFilters = { ...prevFilters, [field]: e.target.value };
-      if (newFilters.startDate && newFilters.endDate) {
-        setDateRange("Select"); // Reset Date Range to Select if custom dates are entered
-      }
-      return newFilters;
-    });
-  };
-
-  const handleFilterChange = () => {
-    let filtered = backendData;
-
-    // Filter by date range
-    if (filters.startDate && filters.endDate) {
-      const startDate = new Date(filters.startDate);
-      startDate.setHours(0, 0, 0, 0); // Start of the day
-      const endDate = new Date(filters.endDate);
-      endDate.setHours(23, 59, 59, 999); // End of the day
-
-      filtered = filtered.filter((entry) => {
-        const entryDate = new Date(entry.createdAt);
-        return entryDate >= startDate && entryDate <= endDate;
-      });
-    }
-
-    // Aggregate data by username
-    const aggregatedData = filtered.reduce((acc, entry) => {
-      const existingUser = acc.find((user) => user.username === entry.username);
-
-      if (existingUser) {
-        existingUser.play += entry.play;
-        existingUser.won += entry.won;
-        existingUser.endPoints = existingUser.play - existingUser.won; // Update End Points
-        existingUser.createdAt =
-          new Date(existingUser.createdAt) > new Date(entry.createdAt)
-            ? existingUser.createdAt
-            : entry.createdAt; // Keep the most recent date
-      } else {
-        acc.push({
-          ...entry,
-          endPoints: entry.play - entry.won, // Calculate End Points
+  
+      const handleDateRangeChange = (range) => {
+        const today = new Date();
+        let startDate = new Date();
+        let endDate = new Date();
+    
+        switch (range) {
+          case "Today":
+            startDate.setDate(today.getDate());
+            endDate.setHours(23, 59, 59, 999);
+            break;
+          case "Yesterday":
+            startDate.setDate(today.getDate() - 1);
+            endDate.setDate(today.getDate() - 1);
+            startDate.setHours(0, 0, 0, 0);
+            endDate.setHours(23, 59, 59, 999);
+            break;
+          case "Last 7 Days":
+            startDate.setDate(today.getDate() - 7);
+            startDate.setHours(0, 0, 0, 0);
+            break;
+          case "Last 30 Days":
+            startDate.setDate(today.getDate() - 30);
+            startDate.setHours(0, 0, 0, 0);
+            break;
+          default:
+            break;
+        }
+    
+        // Set start and end date in filters and update the state
+        setFilters((prevFilters) => ({
+          ...prevFilters,
+          startDate: startDate.toISOString().split("T")[0],
+          endDate: endDate.toISOString().split("T")[0],
+        }));
+        setDateRange(range); // Update selected date range
+      };
+    
+      const handleManualDateChange = (e, field) => {
+        setFilters((prevFilters) => {
+          const newFilters = { ...prevFilters, [field]: e.target.value };
+          if (newFilters.startDate && newFilters.endDate) {
+            setDateRange("Select"); // Reset Date Range to Select if custom dates are entered
+          }
+          return newFilters;
         });
-      }
-
-      return acc;
-    }, []);
-
-    // Sort aggregated data by most recent `createdAt` date
-    aggregatedData.sort(
-      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-    );
-
-    setFilteredData(aggregatedData);
-    setShowTable(aggregatedData.length > 0);
-    setNoResults(aggregatedData.length === 0); // Show message if no results
-    setIsSubmitted(true); // Indicate filters have been applied
-  };
-
-  const handleClear = () => {
-    setFilters({
-      gameName: "",
-      userId: "",
-      handId: "",
-      startDate: "",
-      endDate: "",
-    });
-    setCurrentPage(1);
-    setDateRange("Select");
-    setFilteredData(backendData); // Reset filters
-    setShowTable(false); // Hide the table when cleared
-    setIsSubmitted(false); // Reset the "submitted" state
-  };
-
+      };
+    
+      const handleFilterChange = () => {
+        let filtered = backendData;
+      
+        // Filter by username
+        if (filters.username) {
+          filtered = filtered.filter((entry) =>
+            entry.username.toLowerCase().includes(filters.username.toLowerCase())
+          );          
+        }
+      
+        // Filter by date range only if both startDate and endDate are provided
+        if (filters.startDate && filters.endDate) {
+          const startDate = new Date(filters.startDate);
+          startDate.setHours(0, 0, 0, 0); // Start of the day
+          const endDate = new Date(filters.endDate);
+          endDate.setHours(23, 59, 59, 999); // End of the day
+      
+          // filtered = filtered.filter((entry) => {
+          //   const entryDate = new Date(entry.lastPlayedDate);
+          //   return entryDate >= startDate && entryDate <= endDate;
+          // });
+        }
+      
+        // Sort by date (most recent first)
+        filtered.sort((a, b) => new Date(b.lastPlayedDate) - new Date(a.lastPlayedDate));
+      
+        // Update state
+        setCurrentPage(1);
+        setFilteredData(filtered);
+        setShowTable(filtered.length > 0);
+        setNoResults(filtered.length === 0); // Check if no results are found
+        setIsSubmitted(true); // Indicate filters have been applied
+      };
+    
+      const handleClear = () => {
+        setFilters({
+          gameName: "",
+          userId: "",
+          handId: "",
+          startDate: "",
+          endDate: "",
+        });
+        setCurrentPage(1);
+        setDateRange("Select");
+        setFilteredData(backendData); // Reset filters
+        setShowTable(false); // Hide the table when cleared
+        setIsSubmitted(false); // Reset the "submitted" state
+      };
+    
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
 
   const totalPlayPoints = Array.isArray(filteredData)
     ? filteredData.reduce(
@@ -278,6 +314,9 @@ const ATurnover = () => {
     }
   }, [backendData, filters, isSubmitted]);
 
+  console.log("Backend Data:", backendData);
+  
+
   return (
     <div>
       <div className="flex flex-col md:flex-row">
@@ -287,7 +326,7 @@ const ATurnover = () => {
           </h2>
 
           {/* Filter Form */}
-          <div className="bg-[#e6ebff] p-4 rounded-lg shadow-lg m-1 sm:m-3">
+          <div className="bg-[#e6ebff] p-5 rounded-lg shadow-lg m-1 sm:m-3">
             <form
               className="flex flex-col items-center"
               onSubmit={(e) => e.preventDefault()}
@@ -394,38 +433,26 @@ const ATurnover = () => {
             </span>
             <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
             <strong>Total Play Points:</strong>{" "}
-              {filteredData.reduce((sum, item) => sum + item.play, 0).toFixed(2)}
+              {filteredData.reduce((sum, item) => sum + (item.totalPlayPoints ?? 0), 0).toFixed(2)}
             </span>
             <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
             <strong>Total Won Points:</strong>{" "}
-              {filteredData.reduce((sum, item) => sum + item.won, 0).toFixed(2)}
+            {filteredData.reduce((sum, item) => sum + (item.totalWonPoints ?? 0), 0).toFixed(2)}
             </span>
             <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
             <strong>Total End Points:</strong>{" "}
-              {filteredData
-                .reduce((sum, item) => sum + (item.play - item.won), 0)
-                .toFixed(2)}
+            {filteredData.reduce((sum, item) => sum + (item.endPoints ?? 0), 0).toFixed(2)}
             </span>
             <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
             <strong>Total Margin:</strong>{" "}
-              {filteredData
-                .reduce((sum, item) => sum + (2.5 / 100) * item.play, 0)
-                .toFixed(2)}
+            {filteredData.reduce((sum, item) => sum + ((2.5 / 100) * (item.totalPlayPoints ?? 0)), 0).toFixed(2)}
             </span>
             <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
               <strong>Total Net:</strong>{" "}
-              {filteredData
-                .reduce(
-                  (sum, item) =>
-                    sum + (item.play - item.won - (2.5 / 100) * item.play),
-                  0
-                )
-                .toFixed(2)}
+              {filteredData.reduce((sum, item) => sum + ((item.endPoints ?? 0) - ((2.5 / 100) * (item.totalPlayPoints ?? 0))), 0).toFixed(2)}
             </span>
           </div>
         )}
-          {/* Display Message if No Results */}
-          {noResults && <p>No records found based on the selected filters.</p>}
 
           {/* Conditionally render the table */}
           {showTable && (
@@ -459,19 +486,18 @@ const ATurnover = () => {
                   <tbody>
                     {/* {filteredData.map((item, index) => ( */}
                     {filteredData
-                      .filter((item) => item.play !== 0)
                       .slice(startIndex, startIndex + itemsPerPage)
                       .map((item, index) => {
                         // Calculate derived values
-                        const playPoints = item.play;
-                        const wonPoints = item.won;
-                        const endPoints = playPoints - wonPoints;
-                        const margin = (2.5 / 100) * playPoints;
-                        const net = endPoints - margin;
+                        const playPoints = item.totalPlayPoints || 0;
+                        const wonPoints = item.totalWonPoints  || 0;
+                        const endPoints = item.totalEndPoints || 0;
+                        const margin = item.totalMargin || 0;
+                        const net = endPoints - margin || 0;
 
                         // Helper function to format numbers
                         const formatValue = (value) =>
-                          value % 1 === 0 ? value : value.toFixed(2);
+                          value % 1 === 0 ? value : value?.toFixed(2);
 
                         return (
                           <React.Fragment key={item.uuid}>
@@ -481,7 +507,7 @@ const ATurnover = () => {
                             >
                               {/* <td className="border border-gray-300 px-4 py-2">{item.userId}</td> */}
                               <td className="border border-gray-300 px-4 py-2">
-                                {item.username}
+                                {item.subAgentName}
                               </td>
                               <td className="border border-gray-300 px-4 py-2">
                                 {formatValue(playPoints)}
@@ -499,64 +525,47 @@ const ATurnover = () => {
                                 {formatValue(net)}
                               </td>
                               <td className="border border-gray-300 px-4 py-2">
-                                {new Date(item.createdAt).toLocaleString(
-                                  "en-GB",
-                                  {
-                                    day: "2-digit",
-                                    month: "2-digit",
-                                    year: "numeric",
-                                  }
-                                )}
+                              <button
+                                onClick={() => setSelectedSubAgentId(selectedSubAgentId === item.subAgentId ? null : item.subAgentId)}
+                                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                              >
+                                {selectedSubAgentId === item.subAgentId ? 'Hide' : 'Show'}
+                              </button>
                               </td>
                             </tr>
+                            {selectedSubAgentId === item.subAgentId && (
+                              <tr className="bg-gray-100">
+                                <td colSpan="10" className="border border-gray-300 px-4 py-2">
+                                  <UserTurnOverInSubAgent subAgentId={item.subAgentId} />
+                                </td>
+                              </tr>
+                            )}
                           </React.Fragment>
                         );
                       })}
                   </tbody>
+                  {/* Total row in tfoot */}
                   <tfoot>
-                    <tr className="bg-blue-100 font-bold">
+                    <tr className="bg-gray-200 font-bold">
+                      <td className="border border-gray-300 px-4 py-2">Total</td>
                       <td className="border border-gray-300 px-4 py-2">
-                        Total
+                        {filteredData.reduce((sum, item) => sum + (item.totalPlayPoints ?? 0), 0).toFixed(2)}
                       </td>
                       <td className="border border-gray-300 px-4 py-2">
-                        {filteredData
-                          .reduce((sum, item) => sum + item.play, 0)
-                          .toFixed(2)}
+                        {filteredData.reduce((sum, item) => sum + (item.totalWonPoints ?? 0), 0).toFixed(2)}
                       </td>
                       <td className="border border-gray-300 px-4 py-2">
-                        {filteredData
-                          .reduce((sum, item) => sum + item.won, 0)
-                          .toFixed(2)}
+                        {filteredData.reduce((sum, item) => sum + (item.endPoints ?? 0), 0).toFixed(2)}
                       </td>
                       <td className="border border-gray-300 px-4 py-2">
-                        {filteredData
-                          .reduce(
-                            (sum, item) => sum + (item.play - item.won),
-                            0
-                          )
-                          .toFixed(2)}
+                        {filteredData.reduce((sum, item) => sum + ((2.5 / 100) * (item.totalPlayPoints ?? 0)), 0).toFixed(2)}
                       </td>
                       <td className="border border-gray-300 px-4 py-2">
-                        {filteredData
-                          .reduce(
-                            (sum, item) => sum + (2.5 / 100) * item.play,
-                            0
-                          )
-                          .toFixed(2)}
+                        {filteredData.reduce((sum, item) => sum + ((item.endPoints ?? 0) - ((2.5 / 100) * (item.totalPlayPoints ?? 0))), 0).toFixed(2)}
                       </td>
-                      <td className="border border-gray-300 px-4 py-2">
-                        {filteredData
-                          .reduce(
-                            (sum, item) =>
-                              sum +
-                              (item.play - item.won - (2.5 / 100) * item.play),
-                            0
-                          )
-                          .toFixed(2)}
-                      </td>
-                      <td className="border border-gray-300 px-4 py-2">-</td>
                     </tr>
                   </tfoot>
+
                 </table>
               </div>
               {/* Pagination controls */}
