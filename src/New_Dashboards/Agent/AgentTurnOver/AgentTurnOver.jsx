@@ -90,7 +90,15 @@ const ATurnover = () => {
                 url += `&username=${encodeURIComponent(filters.userId)}`;
               }
               if (filters.startDate && filters.endDate) {
-                url += `&startDate=${filters.startDate}&endDate=${filters.endDate}`;
+                let startDate = new Date(filters.startDate);
+                const endDate = new Date(filters.endDate);
+
+                startDate.setDate(startDate.getDate() - 1);
+
+                startDate.setUTCHours(18, 30, 0, 0);
+                endDate.setUTCHours(18, 29, 59, 999);
+            
+                url += `&startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`;
               }
       
               console.log("Fetching Data from:", url);
@@ -135,36 +143,53 @@ const ATurnover = () => {
         let endDate = new Date();
     
         switch (range) {
-          case "Today":
-            startDate.setDate(today.getDate());
-            endDate.setHours(23, 59, 59, 999);
-            break;
-          case "Yesterday":
-            startDate.setDate(today.getDate() - 1);
-            endDate.setDate(today.getDate() - 1);
-            startDate.setHours(0, 0, 0, 0);
-            endDate.setHours(23, 59, 59, 999);
-            break;
-          case "Last 7 Days":
-            startDate.setDate(today.getDate() - 7);
-            startDate.setHours(0, 0, 0, 0);
-            break;
-          case "Last 30 Days":
-            startDate.setDate(today.getDate() - 30);
-            startDate.setHours(0, 0, 0, 0);
-            break;
-          default:
-            break;
+            case "Today":
+                startDate = new Date(today);
+                endDate = new Date(today);
+                break;
+            case "Yesterday":
+                startDate.setDate(today.getDate() - 1);
+                endDate.setDate(today.getDate() - 1);
+                break;
+                case "This Week": {
+                  const dayOfWeek = today.getDay(); // Sunday - 0, Monday - 1, ..., Saturday - 6
+                  startDate = new Date(today);
+                  startDate.setDate(today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1)); // Move to Monday
+                  endDate = new Date(startDate);
+                  endDate.setDate(startDate.getDate() + 6); // Move to Sunday
+                  break;
+              }
+              case "Last Week": {
+                  const dayOfWeek = today.getDay();
+                  startDate = new Date(today);
+                  startDate.setDate(today.getDate() - dayOfWeek - 6); // Move to previous week's Monday
+                  endDate = new Date(startDate);
+                  endDate.setDate(startDate.getDate() + 6); // Move to Sunday of last week
+                  break;
+              }
+            case "This Month":
+                startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+                endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                break;
+            case "Last Month":
+                startDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+                endDate = new Date(today.getFullYear(), today.getMonth(), 0);
+                break;
+            default:
+                break;
         }
     
-        // Set start and end date in filters and update the state
+        const formatDate = (date) => {
+            return date.toLocaleDateString("en-GB").split('/').reverse().join('-');
+        };
+    
         setFilters((prevFilters) => ({
-          ...prevFilters,
-          startDate: startDate.toISOString().split("T")[0],
-          endDate: endDate.toISOString().split("T")[0],
+            ...prevFilters,
+            startDate: formatDate(startDate),
+            endDate: formatDate(endDate),
         }));
-        setDateRange(range); // Update selected date range
-      };
+        setDateRange(range);
+    };
     
       const handleManualDateChange = (e, field) => {
         setFilters((prevFilters) => {
@@ -397,8 +422,10 @@ const ATurnover = () => {
                     <option value="Select">Select</option>
                     <option value="Today">Today</option>
                     <option value="Yesterday">Yesterday</option>
-                    <option value="Last 7 Days">Last 7 Days</option>
-                    <option value="Last 30 Days">Last 30 Days</option>
+                    <option value="This Week">This Week</option>
+                    <option value="Last Week">Last Week</option>
+                    <option value="This Month">This Month</option>
+                    <option value="Last Month">Last Month</option>
                     <option value="Custom">Custom</option>
                   </select>
                 </div>
@@ -494,6 +521,7 @@ const ATurnover = () => {
                   <tbody>
                     {/* {filteredData.map((item, index) => ( */}
                     {filteredData
+                      .filter((item) => item.totalPlayPoints > 0)
                       .slice(startIndex, startIndex + itemsPerPage)
                       .map((item, index) => {
                         // Calculate derived values
