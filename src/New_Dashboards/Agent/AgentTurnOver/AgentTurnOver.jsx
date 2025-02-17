@@ -89,7 +89,7 @@ const ATurnover = () => {
         setIsLoading(true);
 
         try {
-          let url = `http://93.127.194.87:9999/admin/agent/turnover?agentId=${id}`;
+          let url = `http://65.0.54.193:9999/admin/agent/turnover?agentId=${id}`;
 
           // Add filters dynamically
           if (filters.userId) {

@@ -194,7 +194,7 @@ const AGameHistory = () => {
       const fetchBackendData = async () => {
         setIsLoading(true);
         try {
-          let url = `http://93.127.194.87:9999/admin/agent/RouletteGameHistory?agentId=${id}&page=${currentPage}&limit=${itemsPerPage}`;
+          let url = `http://65.0.54.193:9999/admin/agent/RouletteGameHistory?agentId=${id}&page=${currentPage}&limit=${itemsPerPage}`;
 
           if (filters.userId) {
             url += `&username=${encodeURIComponent(filters.userId)}`;

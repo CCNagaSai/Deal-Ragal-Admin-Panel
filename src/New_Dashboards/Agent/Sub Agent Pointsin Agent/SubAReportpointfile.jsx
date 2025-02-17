@@ -29,7 +29,7 @@ const SubAgentPointsInAgent = () => {
         }
 
         const response = await fetch(
-          `http://93.127.194.87:9999/admin/shop/ShopList?agentId=${id}`,
+          `http://65.0.54.193:9999/admin/shop/ShopList?agentId=${id}`,
           {
             method: "GET",
             headers: {

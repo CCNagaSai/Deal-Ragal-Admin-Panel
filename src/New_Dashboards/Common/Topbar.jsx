@@ -48,9 +48,9 @@ const Topbar = () => {
       let apiUrl = "";
 
       if (position === "Shop" && agentId) {
-        apiUrl = `http://93.127.194.87:9999/admin/shop/agentBalance?subAgentId=${agentId}`;
+        apiUrl = `http://65.0.54.193:9999/admin/shop/agentBalance?subAgentId=${agentId}`;
       } else if (position === "Agent" && agentId) {
-        apiUrl = `http://93.127.194.87:9999/admin/agent/agentBalance?agentId=${agentId}`;
+        apiUrl = `http://65.0.54.193:9999/admin/agent/agentBalance?agentId=${agentId}`;
       }
 
       if (apiUrl && token) {

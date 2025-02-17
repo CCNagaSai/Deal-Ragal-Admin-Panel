@@ -38,7 +38,7 @@ const SubAgentBalanceAdjust = ({ prefilledUser }) => {
 
         // Fetch users on component mount
         const response = await fetch(
-          `http://93.127.194.87:9999/admin/user/UserList?Id=${id}&type=Shop`,
+          `http://65.0.54.193:9999/admin/user/UserList?Id=${id}&type=Shop`,
           {
             method: "GET",
             headers: {
@@ -85,8 +85,8 @@ const SubAgentBalanceAdjust = ({ prefilledUser }) => {
   
     const apiUrl =
       adjustType === "add"
-        ? "http://93.127.194.87:9999/admin/user/addMoney"
-        : "http://93.127.194.87:9999/admin/user/deductMoney";
+        ? "http://65.0.54.193:9999/admin/user/addMoney"
+        : "http://65.0.54.193:9999/admin/user/deductMoney";
   
     try {
       const response = await fetch(apiUrl, {
@@ -123,7 +123,7 @@ const SubAgentBalanceAdjust = ({ prefilledUser }) => {
       }
 
         const updatedUserResponse = await fetch(
-          `http://93.127.194.87:9999/admin/user/UserList?Id=${id}&type=Shop`,
+          `http://65.0.54.193:9999/admin/user/UserList?Id=${id}&type=Shop`,
           {
             method: "GET",
             headers: {

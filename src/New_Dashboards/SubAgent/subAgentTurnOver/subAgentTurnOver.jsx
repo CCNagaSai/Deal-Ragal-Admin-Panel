@@ -87,7 +87,7 @@ const SubATurnover = () => {
         setIsLoading(true);
 
         try {
-          let url = `http://93.127.194.87:9999/admin/agent/turnover?subAgentId=${id}`;
+          let url = `http://65.0.54.193:9999/admin/agent/turnover?subAgentId=${id}`;
 
           // Add filters dynamically
           if (filters.userId) {

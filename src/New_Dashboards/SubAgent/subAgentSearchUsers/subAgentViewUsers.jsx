@@ -24,7 +24,7 @@ const SubAViewUser = ({ user, onBack }) => {
 
   const handlePasswordUpdate = async () => {
     try {
-      const response = await fetch("http://93.127.194.87:9999/admin/user/UpdatePassword", {
+      const response = await fetch("http://65.0.54.193:9999/admin/user/UpdatePassword", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -53,7 +53,7 @@ const SubAViewUser = ({ user, onBack }) => {
   const handleLockStatusUpdate = async () => {
     try {
       const response = await fetch(
-        `http://93.127.194.87:9999/admin/agent/changeUserStatus?agentId=${agentId}&userId=${user._id}`,
+        `http://65.0.54.193:9999/admin/agent/changeUserStatus?agentId=${agentId}&userId=${user._id}`,
         {
           method: "PUT",
           headers: {

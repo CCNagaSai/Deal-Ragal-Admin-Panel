@@ -45,7 +45,7 @@ function PlayerTab({ }) {
         if (cookies.get('logintype') === 'Agent') {
           // Use the provided API for agents
           const agentId = cookies.get('LoginUserId'); // Get the Agent ID
-          const response = await fetch(`http://93.127.194.87:9999/admin/user/agent/UserList?Id=${agentId}&type=Agent`);
+          const response = await fetch(`http://65.0.54.193:9999/admin/user/agent/UserList?Id=${agentId}&type=Agent`);
           
           if (!response.ok) {
             throw new Error(`Error fetching agent data: ${response.statusText}`);

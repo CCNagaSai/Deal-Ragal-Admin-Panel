@@ -37,8 +37,8 @@ const AgentBalanceAdjust = ({ prefilledType, prefilledUser }) => {
 
         const url =
           type === "User"
-            ? `http://93.127.194.87:9999/admin/user/agent/UserList?Id=${id}&type=${logintype}`
-            : `http://93.127.194.87:9999/admin/shop/ShopList?agentId=${id}`;
+            ? `http://65.0.54.193:9999/admin/user/agent/UserList?Id=${id}&type=${logintype}`
+            : `http://65.0.54.193:9999/admin/shop/ShopList?agentId=${id}`;
 
         const response = await fetch(url, {
           method: "GET",
@@ -88,11 +88,11 @@ const AgentBalanceAdjust = ({ prefilledType, prefilledUser }) => {
     const apiUrl =
       type === "User"
         ? adjustType === "add"
-          ? "http://93.127.194.87:9999/admin/agent/addMoneyToUser"
-          : "http://93.127.194.87:9999/admin/agent/deductMoneyToUser"
+          ? "http://65.0.54.193:9999/admin/agent/addMoneyToUser"
+          : "http://65.0.54.193:9999/admin/agent/deductMoneyToUser"
         : adjustType === "add"
-        ? "http://93.127.194.87:9999/admin/shop/shopAddMoney"
-        : "http://93.127.194.87:9999/admin/shop/shopDeductMoney";
+        ? "http://65.0.54.193:9999/admin/shop/shopAddMoney"
+        : "http://65.0.54.193:9999/admin/shop/shopDeductMoney";
 
     try {
       const response = await fetch(apiUrl, {
@@ -128,7 +128,7 @@ const AgentBalanceAdjust = ({ prefilledType, prefilledUser }) => {
       }
 
         const updatedUserResponse = await fetch(
-          `http://93.127.194.87:9999/admin/user/UserList?Id=${id}&type=Shop`,
+          `http://65.0.54.193:9999/admin/user/UserList?Id=${id}&type=Shop`,
           {
             method: "GET",
             headers: {
