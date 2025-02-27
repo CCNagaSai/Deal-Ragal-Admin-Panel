@@ -5,8 +5,9 @@ import { data } from "../../Common/data/data";
 import AgentInPointTable from "./AgentInPointsTable";
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
+const API_URL = import.meta.env.VITE_HOST_URL;
 
-const AReportInpoint = () => {
+const AReportInpoint = ({ agentId, type }) => {
   const [filters, setFilters] = useState({
     receiveBy: "",
     sentBy: "",
@@ -35,18 +36,18 @@ const AReportInpoint = () => {
   const typeRef = useRef(null);
   const tokenRef = useRef(null);
   useEffect(() => {
-    const id = cookies.get("LoginUserId");
-    const type = cookies.get("name");
+    const id = agentId || cookies.get("LoginUserId");
+    const types = type || cookies.get("name");
     const token = cookies.get("token");
     console.log("Cookies:", { id, type, token });
     idRef.current = id;
-    typeRef.current = type;
+    typeRef.current = types;
     tokenRef.current = token;
   }, []);
 
   useEffect(() => {
-      fetchBackendData();
-    }, []);
+    fetchBackendData();
+  }, [agentId, type]);
 
   const fetchBackendData = async () => {
     try {
@@ -64,7 +65,7 @@ const AReportInpoint = () => {
       console.log("Fetching with:", { id, type, token });
 
       const response = await fetch(
-        `http://65.0.54.193:9999/admin/usertransction/AgentTranscationData?Id=${id}&type=${type}`,
+        `${API_URL}/admin/usertransction/AgentTranscationData?Id=${id}&type=${type}`,
         {
           method: "GET",
           headers: {
@@ -163,33 +164,33 @@ const AReportInpoint = () => {
   const handleSubmit = () => {
     const { receiveBy, sentBy, startDate, endDate, username } = filters;
     let filtered = backendData;
-  
+
     console.log("Filters:", filters); // Log filters for debugging
-  
+
     if (receiveBy) {
       filtered = filtered.filter((entry) => {
-        let receiver = '';
+        let receiver = "";
         switch (entry.trnxTypeTxt) {
-          case 'Sub Agent Deduct Chips Added':
-            receiver = entry.name ? entry.name.toLowerCase() : ''; // Subagent is receiver
+          case "Sub Agent Deduct Chips Added":
+            receiver = entry.name ? entry.name.toLowerCase() : ""; // Subagent is receiver
             break;
-          case 'Add Chips to Sub Agent':
-            receiver = entry.shopname ? entry.shopname.toLowerCase() : ''; // Admin is receiver
+          case "Add Chips to Sub Agent":
+            receiver = entry.shopname ? entry.shopname.toLowerCase() : ""; // Admin is receiver
             break;
-          case 'Deduct amount Addeed Chips to agent':
-            receiver = entry.name ? entry.name.toLowerCase() : ''; // User is receiver
+          case "Deduct amount Addeed Chips to agent":
+            receiver = entry.name ? entry.name.toLowerCase() : ""; // User is receiver
             break;
-          case 'Add Chips to User':
-            receiver = entry.shopname ? entry.shopname.toLowerCase() : '';
+          case "Add Chips to User":
+            receiver = entry.shopname ? entry.shopname.toLowerCase() : "";
             break;
-          case 'Admin Addeed Chips':
-            receiver = entry.name ? entry.name.toLowerCase() : '';
+          case "Admin Addeed Chips":
+            receiver = entry.name ? entry.name.toLowerCase() : "";
             break;
-          case 'Admin duduct Chips':
-            receiver = entry.adminname ? entry.adminname.toLowerCase() : '';
+          case "Admin duduct Chips":
+            receiver = entry.adminname ? entry.adminname.toLowerCase() : "";
             break;
           default:
-            receiver = '';
+            receiver = "";
         }
         return receiver.includes(receiveBy.toLowerCase());
       });
@@ -198,33 +199,32 @@ const AReportInpoint = () => {
     // Filter by Sent By
     if (sentBy) {
       filtered = filtered.filter((entry) => {
-        let sender = '';
+        let sender = "";
         switch (entry.trnxTypeTxt) {
-          case 'Sub Agent Deduct Chips Added':
-            sender = entry.shopname ? entry.shopname.toLowerCase() : '';
+          case "Sub Agent Deduct Chips Added":
+            sender = entry.shopname ? entry.shopname.toLowerCase() : "";
             break;
-          case 'Add Chips to Sub Agent':
-            sender = entry.name ? entry.name.toLowerCase() : '';
+          case "Add Chips to Sub Agent":
+            sender = entry.name ? entry.name.toLowerCase() : "";
             break;
-          case 'Deduct amount Addeed Chips to agent':
-            sender = entry.shopid ? entry.shopid.toLowerCase() : '';
+          case "Deduct amount Addeed Chips to agent":
+            sender = entry.shopid ? entry.shopid.toLowerCase() : "";
             break;
-          case 'Add Chips to User':
-            sender = entry.name ? entry.name.toLowerCase() : '';
+          case "Add Chips to User":
+            sender = entry.name ? entry.name.toLowerCase() : "";
             break;
-          case 'Admin Addeed Chips':
-            sender = entry.adminname ? entry.adminname.toLowerCase() : '';
+          case "Admin Addeed Chips":
+            sender = entry.adminname ? entry.adminname.toLowerCase() : "";
             break;
-          case 'Admin duduct Chips':
-            sender = entry.name ? entry.name.toLowerCase() : '';
+          case "Admin duduct Chips":
+            sender = entry.name ? entry.name.toLowerCase() : "";
             break;
           default:
-            sender = '';
+            sender = "";
         }
         return sender.includes(sentBy.toLowerCase());
       });
     }
-
 
     if (username) {
       filtered = filtered.filter((entry) => {
@@ -241,21 +241,21 @@ const AReportInpoint = () => {
         );
       });
     }
-  
+
     // Filter by Date Range
     if (startDate && endDate) {
       const start = new Date(startDate);
       const end = new Date(endDate);
-  
+
       filtered = filtered.filter((entry) => {
-        const entryDate = new Date(entry.createdAt.split('T')[0]); // Extract only date part for comparison
+        const entryDate = new Date(entry.createdAt.split("T")[0]); // Extract only date part for comparison
         return entryDate >= start && entryDate <= end;
       });
     }
-  
+
     console.log("Filtered Data:", filtered); // Log filtered data for debugging
     setFilteredData(filtered);
-  
+
     // Only show table if there is data to display
     setShowTable(filtered.length > 0);
   };
@@ -289,17 +289,17 @@ const AReportInpoint = () => {
             >
               {/* First Row - Two Input Fields */}
               <div className="grid grid-cols-2 gap-4 mb-5 w-full">
-              <div className="flex-1">
-                <label className="block mb-2">Username:</label>
-                <input
-                  type="text"
-                  value={filters.username}
-                  onChange={(e) =>
-                    setFilters({ ...filters, username: e.target.value })
-                  }
-                  className="w-full p-3 border border-gray-300 rounded-lg"
-                />
-              </div>
+                <div className="flex-1">
+                  <label className="block mb-2">Username:</label>
+                  <input
+                    type="text"
+                    value={filters.username}
+                    onChange={(e) =>
+                      setFilters({ ...filters, username: e.target.value })
+                    }
+                    className="w-full p-3 border border-gray-300 rounded-lg"
+                  />
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-4 mb-5 w-full">
                 <div className="flex-1">
@@ -396,12 +396,10 @@ const AReportInpoint = () => {
           {/* Backend Data Table */}
           {loading ? (
             <p>Loading backend data...</p>
-          ) : (
-            showTable ? (
+          ) : showTable ? (
             <AgentInPointTable backendData={filteredData} />
           ) : (
             <p></p>
-          )
           )}
         </div>
       </div>

@@ -27,7 +27,7 @@ import ProgramAndResources from "./pages/settings/program&resourses";
 import Payment from "./pages/settings/payment";
 import Faq from "./pages/settings/faq";
 import Security from "./pages/settings/security";
-import AdminTurnOver from "./New_Dashboards/Admin/AdminTurnOverReport";
+// import AdminTurnOver from "./New_Dashboards/Admin/AdminTurnOverReport";
 import TermsAndCondition from "./pages/settings/terms&condition";
 import HomeFive from "./pages/homeFive";
 
@@ -38,19 +38,17 @@ import GameLogic from "./pages/gameLogic";
 import BotList from "./pages/Bot";
 import BotUpdate from "./pages/BotUpdate";
 import Deposit from "./pages/Deposit";
-import PayoutPendding from './pages/Payoutpendding'
-import SocialURL from './pages/SocialURL'
-import NoitceText from './pages/NoticeText'
-import NotificationList from './pages/Notification'
-import BannerList from './pages/Banner'
-import Botadd from './pages/Botadd'
-import PlayerAdd from './pages/Playeradd'
-import Mail from './pages/Mail'
-import Playeredit from './pages/PlayerUpdate'
+import PayoutPendding from "./pages/Payoutpendding";
+import SocialURL from "./pages/SocialURL";
+import NoitceText from "./pages/NoticeText";
+import NotificationList from "./pages/Notification";
+import BannerList from "./pages/Banner";
+import Botadd from "./pages/Botadd";
+import PlayerAdd from "./pages/Playeradd";
+import Mail from "./pages/Mail";
+import Playeredit from "./pages/PlayerUpdate";
 
-
-
-import CoinManagement from './pages/CoinManagement'
+import CoinManagement from "./pages/CoinManagement";
 
 // import AgentDashboard from "./pages/agentdashboard";
 import {
@@ -84,29 +82,61 @@ import {
   SubAgentTurnOver,
 } from "./New_Dashboards/SubAgent/SubAgentTabs";
 
+// import AdminDashboard from "./New_Dashboards/Admin/AdminTabs";
+import {
+  AdminDashboard,
+  GamebetInformation,
+  AdminTableManagement,
+  AdminGameLogic,
+  AdminSearchUsers,
+  AdminBalanceAdjustment,
+  AdminKickoffUsers,
+  CreateAgent,
+  SearchAgent,
+  AgentBalanceAdjustments,
+  ChangeAgentPassword,
+  CreateSubAgent,
+  SearchSubAgent,
+  SubAgentBalanceAdjustments,
+  ChangeSubAgentPassword,
+  AdminPointFile,
+  AdminInPoint,
+  AdminOutPoint,
+  AdminGameHistory,
+  AdminTurnOver,
+  AdminTranscations,
+  AgentTranscations,
+  SubAgentTranscations,
+  AdminSocialURL,
+  AdminNoticeText,
+  AdminSettings,
+  ChangeAdminPwd,
+  TestingTable,
+  ActivePlayerDetails,
+  AgentSubAgentPointFile,
+  CreateUser,
+  ChangeUserPassword,
+} from "./New_Dashboards/Admin/AdminTabs";
+
 import ShopDashboard from "./pages/shopdashboard";
 
 import AgentManagement from "./pages/agentManagement";
-import Agentdit from './pages/AgentUpdate'
-import AgentAdd from './pages/agentadd'
-
+import Agentdit from "./pages/AgentUpdate";
+import AgentAdd from "./pages/agentadd";
 
 import ShopManagement from "./pages/ShopManagment";
-import ShopAdd from './pages/shopadd'
-import Shopdit from './pages/ShopUpdate'
+import ShopAdd from "./pages/shopadd";
+import Shopdit from "./pages/ShopUpdate";
 
+import Commission from "./pages/commission";
+import GamebetInfo from "./pages/playingtabledata";
 
-import Commission from './pages/commission'
-import GamebetInfo from './pages/playingtabledata'
+import BetHistoryinfo from "./pages/BetHistory";
 
-
-import BetHistoryinfo from './pages/BetHistory'
-
-
-import Chnagepwd from './pages/Chnagepwd'
-import SubAgentTranscation from './pages/SubAgentTranscation'
-import AgentTranscation from './pages/AgentTranscation'
-import AdminTranscation from './pages/AdminTranscation'
+import Chnagepwd from "./pages/Chnagepwd";
+import SubAgentTranscation from "./pages/SubAgentTranscation";
+import AgentTranscation from "./pages/AgentTranscation";
+import AdminTranscation from "./pages/AdminTranscation";
 
 import TableTranscation from "./pages/tableManagment";
 import Cookies from "universal-cookie";
@@ -437,6 +467,142 @@ const router = createBrowserRouter([
       {
         path: "/shopdashboard",
         element: <SubAgentdash />,
+      },
+
+      //Admin Routes
+      {
+        path: "/admindashboard",
+        element: <AdminDashboard />,
+      },
+      {
+        path: "/admin/PlayingTableBet",
+        element: <GamebetInformation />,
+      },
+      {
+        path: "/admin/TableManagement",
+        element: <AdminTableManagement />,
+      },
+      {
+        path: "/admin/TableManagement",
+        element: <AdminTableManagement />,
+      },
+      {
+        path: "/admin/GameLogic",
+        element: <AdminGameLogic />,
+      },
+      {
+        path: "/admin/searchUsers",
+        element: <AdminSearchUsers />,
+      },
+      {
+        path: "/admin/BalanceAdjustment",
+        element: <AdminBalanceAdjustment />,
+      },
+      {
+        path: "/admin/KickoffUsers",
+        element: <AdminKickoffUsers />,
+      },
+      {
+        path: "/admin/CreateAgent",
+        element: <CreateAgent />,
+      },
+      {
+        path: "/admin/SearchAgent",
+        element: <SearchAgent />,
+      },
+      {
+        path: "/admin/AgentBalanceAdjustments",
+        element: <AgentBalanceAdjustments />,
+      },
+      {
+        path: "/admin/ChangeAgentPassword",
+        element: <ChangeAgentPassword />,
+      },
+      {
+        path: "/admin/CreateSubAgent",
+        element: <CreateSubAgent />,
+      },
+      {
+        path: "/admin/SearchSubAgent",
+        element: <SearchSubAgent />,
+      },
+      {
+        path: "/admin/SubAgentBalanceAdjustments",
+        element: <SubAgentBalanceAdjustments />,
+      },
+      {
+        path: "/admin/ChangeSubAgentPassword",
+        element: <ChangeSubAgentPassword />,
+      },
+      {
+        path: "/admin/PointFile",
+        element: <AdminPointFile />,
+      },
+      {
+        path: "/admin/InPoint",
+        element: <AdminInPoint />,
+      },
+      {
+        path: "/admin/OutPoint",
+        element: <AdminOutPoint />,
+      },
+      {
+        path: "/admin/GameHistory",
+        element: <AdminGameHistory />,
+      },
+      {
+        path: "/admin/AdminTurnOverReport",
+        element: <AdminTurnOver />,
+      },
+      {
+        path: "/admin/Transcations",
+        element: <AdminTranscations />,
+      },
+      {
+        path: "/admin/AgentTranscations",
+        element: <AgentTranscations />,
+      },
+      {
+        path: "/admin/SubAgentTranscations",
+        element: <SubAgentTranscations />,
+      },
+      {
+        path: "/admin/SocialURL",
+        element: <AdminSocialURL />,
+      },
+      {
+        path: "/admin/NoticeText",
+        element: <AdminNoticeText />,
+      },
+      {
+        path: "/admin/Settings",
+        element: <AdminSettings />,
+      },
+      {
+        path: "/admin/ChangePassword",
+        element: <ChangeAdminPwd />,
+      },
+      {
+        path: "/admin/ActivePlayerDetails",
+        element: <ActivePlayerDetails />,
+      },
+      {
+        path: "/admin/AgentSubAgentPointFile",
+        element: <AgentSubAgentPointFile />,
+      },
+      {
+        path: "/admin/CreateUser",
+        element: <CreateUser />,
+      },
+      {
+        path: "/admin/ChangeUserPassword",
+        element: <ChangeUserPassword />,
+      },
+
+      //Testing
+      {
+        path: "/admin/TestingTable",
+        element: <TestingTable />,
       },
     ],
   },
