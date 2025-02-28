@@ -103,13 +103,14 @@ const Topbar = () => {
   }, []);
 
   return (
-    <div className="flex items-center h-10">
+    <div className="flex items-center h-20 w-full relative">
       <img
         src="https://i.imgur.com/6493z1j.png"
         alt="Fairdeal Agent"
         className="w-6 h-6 mx-auto lg:ml-5 lg:mr-11 md:mx-4"
       />
 
+      {/* DESKTOP TOPBAR */}
       <div className="hidden md:flex z-50 flex-row justify-center items-center ml-6 md:ml-4 lg:ml-9">
         <div className="text-sm flex flex-col md:flex-row justify-center gap-4 items-center lg:gap-6">
           <p className="font-bold">
@@ -161,11 +162,12 @@ const Topbar = () => {
         </div>
       )}
 
+      {/* MOBILE MENU BUTTON */}
       <button
         ref={buttonRef}
         onClick={() => setIsMenuOpen(!isMenuOpen)}
         type="button"
-        className="inline-flex items-center mt-4 p-2 w-10 h-10 justify-center z-50 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none"
+        className="inline-flex items-center z-50 absolute right-4 p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none"
       >
         <svg
           className={`w-5 h-5 ${
@@ -184,6 +186,37 @@ const Topbar = () => {
           />
         </svg>
       </button>
+
+      {/* MOBILE DROPDOWN MENU */}
+      {isMenuOpen && (
+        <div
+          ref={menuRef}
+          className="absolute top-full right-4 mt-2 w-60 bg-white shadow-lg rounded-lg p-4 z-50 border border-gray-200 md:hidden"
+        >
+          <p className="font-bold">
+            Welcome: <span className="text-red-500 font-bold">{userName}</span>
+          </p>
+          <p>
+            Balance: <span className="text-red-500 font-bold">{balance}</span>
+          </p>
+          <p>
+            Position: <span className="text-red-500 font-bold">{position}</span>
+          </p>
+          <p className="text-gray-500 font-bold">{currentTime}</p>
+
+          <div className="flex flex-col gap-2 mt-3">
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs"
+              onClick={() => setShowLogoutPopup(true)}
+            >
+              LOGOUT
+            </button>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">
+              SWITCH TO CLASSIC
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
