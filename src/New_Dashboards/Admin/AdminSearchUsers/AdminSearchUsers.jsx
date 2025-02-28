@@ -20,6 +20,7 @@ const IshankUsersList = ({ onUserClick }) => {
   const [filters, setFilters] = useState({ username: "", status: "" });
   const [originalData, setOriginalData] = useState([]);
   const [inputPage, setInputPage] = useState("");
+  const [tempFilters, setTempFilters] = useState({ username: "", status: "" });
   // Pagination state
   const [totalPages, setTotalPages] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -50,9 +51,16 @@ const IshankUsersList = ({ onUserClick }) => {
         if (!id || !type) {
           throw new Error("Missing id or type from cookies");
         }
+
+        let url = `${API_URL}/admin/user/UserList?Id=${id}&type=Admin&page=${currentPage}&limit=10`;
+
+        if (filters.username) {
+          url += `&name=${encodeURIComponent(filters.username)}`;
+        }
+
         const response = await fetch(
           // `${API_URL}/admin/user/UserList?Id=id&type=Admin`,
-          `${API_URL}/admin/user/UserList?Id=id&type=Admin&page=${currentPage}&limit=10`,
+          url,
           {
             method: "GET",
             headers: {
@@ -79,27 +87,36 @@ const IshankUsersList = ({ onUserClick }) => {
     };
 
     fetchUserData();
-  }, [currentPage]);
+  }, [currentPage, filters]);
 
-  const handleFilterChange = () => {
-    const filteredData = originalData.filter((user) => {
-      const matchesUsername =
-        !filters.username ||
-        user.name.toLowerCase().includes(filters.username.toLowerCase());
-      const matchesStatus =
-        !filters.status ||
-        (filters.status === "Active" && user.status) ||
-        (filters.status === "Inactive" && !user.status);
+  // const handleFilterChange = () => {
+  //   const filteredData = originalData.filter((user) => {
+  //     const matchesUsername =
+  //       !filters.username ||
+  //       user.name.toLowerCase().includes(filters.username.toLowerCase());
+  //     const matchesStatus =
+  //       !filters.status ||
+  //       (filters.status === "Active" && user.status) ||
+  //       (filters.status === "Inactive" && !user.status);
 
-      return matchesUsername && matchesStatus;
-    });
+  //     return matchesUsername && matchesStatus;
+  //   });
 
-    setCurrentPage(1);
-    setData(filteredData);
+  //   setCurrentPage(1);
+  //   setData(filteredData);
+  // };
+
+  const handleFilterChange = (e) => {
+    setTempFilters((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
-
+  
+  
   const handleClear = () => {
     setFilters({ username: "", status: "" });
+    setTempFilters({ username: "", status: "" });
     setCurrentPage(1);
     setData(originalData); // Reset to original data
   };
@@ -157,6 +174,10 @@ const IshankUsersList = ({ onUserClick }) => {
     } else {
       alert(`Please enter a page number between 1 and ${totalPages}`);
     }
+  };
+
+  const handleApplyFilters = () => {
+    setFilters(tempFilters); // API call will be triggered by useEffect
   };
 
   const handleClearInput = () => {
@@ -229,11 +250,9 @@ const IshankUsersList = ({ onUserClick }) => {
               <label className="block mb-2">Username:</label>
               <input
                 type="text"
-                value={filters.username}
-                onChange={(e) => {
-                  setFilters({ ...filters, username: e.target.value });
-                  handleFilterChange(); // Trigger filter on change
-                }}
+                name="username"
+                value={tempFilters.username}
+                onChange={handleFilterChange}
                 className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
                 placeholder="Enter username"
               />
@@ -243,11 +262,9 @@ const IshankUsersList = ({ onUserClick }) => {
             <div className="flex-1 mb-4">
               <label className="block mb-2">Status:</label>
               <select
-                value={filters.status}
-                onChange={(e) => {
-                  setFilters({ ...filters, status: e.target.value });
-                  handleFilterChange(); // Trigger filter on change
-                }}
+                name="status"
+                value={tempFilters.status}
+                onChange={handleFilterChange}
                 className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
               >
                 <option value="">All</option>
@@ -260,13 +277,13 @@ const IshankUsersList = ({ onUserClick }) => {
           {/* Filter Buttons */}
           <div className="flex justify-center w-full">
             <div className="flex gap-4">
-              <button
-                type="button"
-                onClick={handleFilterChange}
-                className="bg-blue-500 text-white p-2 sm:p-3 rounded-lg font-bold hover:bg-blue-600"
-              >
-                Apply Filters
-              </button>
+            <button
+              type="button"
+              onClick={handleApplyFilters} // Now API runs only when clicked
+              className="bg-blue-500 text-white p-2 sm:p-3 rounded-lg font-bold hover:bg-blue-600"
+            >
+              Apply Filters
+            </button>
               <button
                 type="button"
                 onClick={handleClear}

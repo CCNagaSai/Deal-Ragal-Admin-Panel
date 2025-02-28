@@ -103,7 +103,7 @@ const Topbar = () => {
   }, []);
 
   return (
-    <div className="flex items-center h-20 w-full relative">
+    <div className="flex items-center h-15 w-full relative">
       <img
         src="https://i.imgur.com/6493z1j.png"
         alt="Fairdeal Agent"

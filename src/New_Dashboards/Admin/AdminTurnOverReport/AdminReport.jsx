@@ -480,7 +480,7 @@ const AdminTurnoverReport = () => {
                   .reduce(
                     (sum, item) =>
                       sum +
-                      ((item.endPoints ?? 0) -
+                      ((item.totalEndPoints ?? 0) -
                         (2.5 / 100) * (item.totalPlayPoints ?? 0)),
                     0
                   )
@@ -642,7 +642,7 @@ const AdminTurnoverReport = () => {
                             .reduce(
                               (sum, item) =>
                                 sum +
-                                ((item.endPoints ?? 0) -
+                                ((item.totalEndPoints ?? 0) -
                                   (2.5 / 100) * (item.totalPlayPoints ?? 0)),
                               0
                             )
