@@ -37,7 +37,7 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
 
         const url =
           type === "User"
-            ? `${API_URL}/admin/user/UserList?Id=id&type=Admin`
+            ? `${API_URL}/admin/user/UserList?Id=id&type=Admin&page=1&limit=500`
             : type === "Shop"
             ? `${API_URL}/admin/shop/ShopList?agentId=Admin`
             : type === "Agent"
@@ -57,7 +57,8 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
         }
 
         const result = await response.json();
-        setUsers(result.userList || result.shopList || result.agentList || []);
+        console.log("Api Response : ", result);
+        setUsers(result.users || result.shopList || result.agentList || []);
       } catch (err) {
         console.error("Error fetching partners:", err.message);
         setError("Failed to load partners. Please try again.");
@@ -71,26 +72,32 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     // Basic validation
     if (!type || !selectedUser || !amount || parseFloat(amount) <= 0) {
-      setError(
-        "Type, Partner, and Amount fields are mandatory. Amount must be positive."
-      );
+      setError("Type, Partner, and Amount fields are mandatory. Amount must be positive.");
       return;
     }
-
+  
     const selectedUserDetails = users.find((user) => user._id === selectedUser);
     const previousPoints = selectedUserDetails?.chips || 0;
-
+  
+    // Determine dynamic userId based on type
+    let userId = selectedUserDetails?._id;
+  
+    if (!userId) {
+      setError("Selected user not found. Please try again.");
+      return;
+    }
+  
     const payload = {
-      money: "100",
-      type: "Deposit",
-      userId: "67a354e6813bc442da304c4e",
+      money: amount,
+      type: adjustType === "add" ? "Deposit" : "Deduct",
+      userId: userId,
       adminname: "Super Admin",
-      adminid: "67821d92cfa2484794079d87",
+      adminid: id,
     };
-
+  
     const apiUrl =
       type === "Agent"
         ? adjustType === "add"
@@ -105,7 +112,7 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
           ? `${API_URL}/admin/user/addMoney`
           : `${API_URL}/admin/user/deductMoney`
         : null;
-
+  
     try {
       const response = await fetch(apiUrl, {
         method: "PUT",
@@ -115,9 +122,9 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
         },
         body: JSON.stringify(payload),
       });
-
+  
       const result = await response.json();
-
+  
       // Check API response for success or failure
       if (result.status === "ok") {
         const newPoints =
@@ -125,7 +132,7 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
           (adjustType === "add"
             ? previousPoints + parseFloat(amount)
             : previousPoints - parseFloat(amount));
-
+  
         setTransactionResult({
           success: true,
           message: `${
@@ -136,14 +143,13 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
           newPoints: newPoints,
         });
       } else {
-        // If status is not "ok", set the error message from the API
         setTransactionResult({
           success: false,
-          message:
-            result.msg || "Transaction failed. Please check your balance.",
+          message: 
+          result.msg || "Transaction failed. Please check your balance.",
         });
       }
-
+  
       const updatedUserResponse = await fetch(
         `${API_URL}/admin/user/UserList?Id=${id}&type=Shop`,
         {
@@ -154,23 +160,14 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
           },
         }
       );
-
+  
       if (!updatedUserResponse.ok) {
         throw new Error(`Failed to fetch updated user data`);
       }
-
+  
       const updatedUserData = await updatedUserResponse.json();
       setUsers(updatedUserData.userList || []);
-
-      // Update user's points locally
-      // setUsers((prevUsers) =>
-      //   prevUsers.map((user) =>
-      //     user._id === selectedUser
-      //       ? { ...user, chips: newPoints }
-      //       : user
-      //   )
-      // );
-
+  
       // Clear the form
       setType("");
       setSelectedUser("");
@@ -182,7 +179,7 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
       console.error("Error submitting form:", error);
       setError("Transaction failed. Please try again.");
     }
-  };
+  };  
 
   return (
     <div className="partner-adjustment-container">
@@ -231,7 +228,7 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
             <option value="" disabled>
               Select Type
             </option>
-            <option value="User">User</option>
+            {/* <option value="User">User</option> */}
             <option value="Agent">Agent</option>
             <option value="Shop">Sub Agent</option>
           </select>

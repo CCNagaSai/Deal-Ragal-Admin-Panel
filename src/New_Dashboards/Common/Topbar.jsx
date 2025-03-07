@@ -14,6 +14,11 @@ const Topbar = () => {
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleString());
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [balance, setBalance] = useState(0);
+  const [weekStart, setWeekStart] = useState("");
+  const [weekEnd, setWeekEnd] = useState("");
+  const [totalMargin, setTotalMargin] = useState(0);
+  const [net, setNet] = useState(0);
+
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
   const userName = cookies.get("email") || "Guest";
@@ -36,13 +41,15 @@ const Topbar = () => {
     }
   };
 
-  // Function to Fetch Balance Periodically
-  const fetchBalance = async () => {
+  // Function to Fetch Balance or Net Margin Data
+  const fetchBalanceOrMargin = async () => {
     let apiUrl = "";
     if (position === "Shop" && agentId) {
       apiUrl = `${API_URL}/admin/shop/agentBalance?subAgentId=${agentId}`;
     } else if (position === "Agent" && agentId) {
       apiUrl = `${API_URL}/admin/agent/agentBalance?agentId=${agentId}`;
+    } else if (position === "Super Admin") {
+      apiUrl = `${API_URL}/admin/agent/netmargin`;
     }
 
     if (apiUrl && token) {
@@ -57,24 +64,31 @@ const Topbar = () => {
 
         if (response.ok) {
           const data = await response.json();
-          if (data.agent.chips !== balance) {
-            setBalance(data.agent.chips || 0);
+          if (position === "Super Admin") {
+            const marginData = data.turnOverData[0] || {};
+            setWeekStart(data.weekStartDate.split("T")[0]);
+            setWeekEnd(data.weekEndDate.split("T")[0]);
+            setTotalMargin(marginData.totalMargin || 0);
+            setNet((marginData.totalEndPoints || 0) - (marginData.totalMargin || 0));
+          } else {
+            if (data.agent?.chips !== balance) {
+              setBalance(data.agent?.chips || 0);
+            }
           }
         } else {
-          console.error("Failed to fetch balance");
+          console.error("Failed to fetch data");
         }
       } catch (error) {
-        console.error("Error fetching balance:", error);
+        console.error("Error fetching data:", error);
       }
     }
   };
 
-  // Polling: Fetch balance every 2 seconds
+  // Polling: Fetch balance/net margin every 2 seconds
   useEffect(() => {
-    fetchBalance(); // Initial fetch when component mounts
-    const intervalId = setInterval(fetchBalance, 2000);
-
-    return () => clearInterval(intervalId); // Cleanup on unmount
+    fetchBalanceOrMargin();
+    const intervalId = setInterval(fetchBalanceOrMargin, 2000);
+    return () => clearInterval(intervalId);
   }, [position, agentId, token]);
 
   useEffect(() => {
@@ -116,10 +130,27 @@ const Topbar = () => {
           <p className="font-bold">
             Welcome: <span className="text-red-500 font-bold">{userName}</span>
           </p>
-          <p>
-            Balance: <span className="text-red-500 font-bold">{balance}</span>
-          </p>
-          <p>
+
+          {position === "Super Admin" ? (
+            <>
+              <p className="font-bold">
+                This Week ({weekStart} to {weekEnd}) 
+              </p>
+              <p className="font-bold">
+                Margin:{" "}
+                <span className="text-red-500 font-bold">{totalMargin}</span>
+              </p>
+              <p className="font-bold">
+                Net: <span className="text-red-500 font-bold">{net}</span>
+              </p>
+            </>
+          ) : (
+            <p className="font-bold">
+              Balance: <span className="text-red-500 font-bold">{balance}</span>
+            </p>
+          )}
+
+          <p className="font-bold">
             Position: <span className="text-red-500 font-bold">{position}</span>
           </p>
           <p className="text-l text-gray-500 font-bold mr-5">{currentTime}</p>
@@ -196,10 +227,27 @@ const Topbar = () => {
           <p className="font-bold">
             Welcome: <span className="text-red-500 font-bold">{userName}</span>
           </p>
-          <p>
-            Balance: <span className="text-red-500 font-bold">{balance}</span>
-          </p>
-          <p>
+
+          {position === "Super Admin" ? (
+            <>
+              <p className="font-bold">
+                This Week ({weekStart} to {weekEnd}) 
+              </p>
+              <p className="font-bold">
+                Margin:{" "}
+                <span className="text-red-500 font-bold">{totalMargin}</span>
+              </p>
+              <p className="font-bold">
+                Net: <span className="text-red-500 font-bold">{net}</span>
+              </p>
+            </>
+          ) : (
+            <p className="font-bold">
+              Balance: <span className="text-red-500 font-bold">{balance}</span>
+            </p>
+          )}
+
+          <p className="font-bold">
             Position: <span className="text-red-500 font-bold">{position}</span>
           </p>
           <p className="text-gray-500 font-bold">{currentTime}</p>

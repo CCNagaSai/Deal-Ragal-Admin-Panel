@@ -50,7 +50,8 @@ const SubAgentBalanceAdjust = ({ prefilledUser }) => {
         }
 
         const result = await response.json(); // Parse the JSON
-        setUsers(result.userList || []); // Set the users data
+        console.log("API Response:", result); // Debugging output
+        setUsers(result.users || []); // Set the users data
       } catch (err) {
         console.error("Error fetching user data:", err.message);
         setError("Failed to load user data. Please try again.");
