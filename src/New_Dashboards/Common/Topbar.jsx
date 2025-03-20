@@ -17,6 +17,7 @@ const Topbar = () => {
   const [weekStart, setWeekStart] = useState("");
   const [weekEnd, setWeekEnd] = useState("");
   const [totalMargin, setTotalMargin] = useState(0);
+  const [totalEndPoints, setTotalEndPoints] = useState(0);
   const [net, setNet] = useState(0);
 
   const menuRef = useRef(null);
@@ -66,9 +67,18 @@ const Topbar = () => {
           const data = await response.json();
           if (position === "Super Admin") {
             const marginData = data.turnOverData[0] || {};
-            setWeekStart(data.weekStartDate.split("T")[0]);
-            setWeekEnd(data.weekEndDate.split("T")[0]);
+            const convertToIST = (utcDateString) => {
+              const date = new Date(utcDateString);
+              return date.toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata" });
+          };
+          
+          // Setting IST dates
+          setWeekStart(convertToIST(data.weekStartDate));
+          setWeekEnd(convertToIST(data.weekEndDate));          
+            // setWeekStart(data.weekStartDate.split("T")[0]);
+            // setWeekEnd(data.weekEndDate.split("T")[0]);
             setTotalMargin(marginData.totalMargin || 0);
+            setTotalEndPoints(marginData.totalEndPoints || 0);
             setNet((marginData.totalEndPoints || 0) - (marginData.totalMargin || 0));
           } else {
             if (data.agent?.chips !== balance) {
@@ -137,11 +147,13 @@ const Topbar = () => {
                 This Week ({weekStart} to {weekEnd}) 
               </p>
               <p className="font-bold">
-                Margin:{" "}
-                <span className="text-red-500 font-bold">{totalMargin}</span>
+                Margin: <span className="text-red-500 font-bold">{totalMargin.toFixed(2)}</span>
               </p>
               <p className="font-bold">
-                Net: <span className="text-red-500 font-bold">{net}</span>
+                Net: <span className="text-red-500 font-bold">{net.toFixed(2)}</span>
+              </p>
+              <p className="font-bold">
+                End Points: <span className="text-red-500 font-bold">{totalEndPoints.toFixed(2)}</span>
               </p>
             </>
           ) : (
@@ -234,11 +246,13 @@ const Topbar = () => {
                 This Week ({weekStart} to {weekEnd}) 
               </p>
               <p className="font-bold">
-                Margin:{" "}
-                <span className="text-red-500 font-bold">{totalMargin}</span>
+                Margin: <span className="text-red-500 font-bold">{totalMargin.toFixed(2)}</span>
               </p>
               <p className="font-bold">
-                Net: <span className="text-red-500 font-bold">{net}</span>
+                Net: <span className="text-red-500 font-bold">{net.toFixed(2)}</span>
+              </p>
+              <p className="font-bold">
+                End Points: <span className="text-red-500 font-bold">{totalEndPoints.toFixed(2)}</span>
               </p>
             </>
           ) : (

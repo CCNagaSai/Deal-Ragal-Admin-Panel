@@ -67,7 +67,8 @@ const SubAKickoffUsers = ({ onUserClick }) => {
         if (!id || !type) throw new Error("Missing cookies.");
 
         const response = await fetch(
-          `${API_URL}/admin/user/agent/UserList?Id=${id}&type=${type}`,
+          `${API_URL}/admin/user/UserList?Id=${id}&type=${type}`,
+
           {
             headers: { "Content-Type": "application/json", token },
           }
@@ -75,8 +76,8 @@ const SubAKickoffUsers = ({ onUserClick }) => {
 
         if (!response.ok) throw new Error(`Error: ${response.status}`);
         const result = await response.json();
-        setData(result.userList || []);
-        setOriginalData(result.userList || []);
+        setData(result.users || []);
+        setOriginalData(result.users || []);
       } catch (err) {
         console.error("User List API Error:", err.message);
         setError("Failed to load user data.");
