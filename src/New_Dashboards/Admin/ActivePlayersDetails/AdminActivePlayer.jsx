@@ -73,7 +73,7 @@ const AdminActivePlayers = ({ onUserClick }) => {
 
         const activePlayers = normalizePlayers(
           data.activeUsers?.activePlayersDetails || [],
-          "coins"
+          "chip"
         );
         const inactivePlayers = normalizePlayers(
           data.inactiveUsers?.inActivePlayersDetails || [],

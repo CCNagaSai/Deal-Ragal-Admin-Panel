@@ -37,7 +37,7 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
 
         const url =
           type === "User"
-            ? `${API_URL}/admin/user/UserList?Id=id&type=Admin&page=1&limit=500`
+            ? `${API_URL}/admin/user/UserList?Id=id&type=Admin&page=1&limit=5000`
             : type === "Shop"
             ? `${API_URL}/admin/shop/ShopList?agentId=Admin`
             : type === "Agent"
@@ -228,7 +228,7 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
             <option value="" disabled>
               Select Type
             </option>
-            {/* <option value="User">User</option> */}
+            <option value="User">User</option>
             <option value="Agent">Agent</option>
             <option value="Shop">Sub Agent</option>
           </select>

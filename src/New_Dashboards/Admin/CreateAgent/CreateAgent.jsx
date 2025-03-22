@@ -177,7 +177,7 @@ const IshankCreateAgent = () => {
       if (response.ok && result.status) {
         setSubmissionMessage({
           type: "success",
-          text: "User created successfully!",
+          text: "Agent created successfully!",
         });
         setFormData({
           username: "",
@@ -189,7 +189,7 @@ const IshankCreateAgent = () => {
       } else {
         setSubmissionMessage({
           type: "error",
-          text: result.message || "Failed to create user.",
+          text: result.message || "Failed to create Agent.",
         });
       }
     } catch (error) {
