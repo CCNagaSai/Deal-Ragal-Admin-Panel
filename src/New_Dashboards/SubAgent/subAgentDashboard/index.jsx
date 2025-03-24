@@ -4,7 +4,7 @@ import ReactDOM from "react-dom/client";
 import Sidebar from "../subAgentSidebar"; // Adjust path to Sidebar component
 import SubADashboard from "./subAgentDashboard";
 import Topbar from "../../Common/Topbar";
-import Dashboardplayers from "../../Create_Components/DashBoardPlayers/DashBoardPlayers";
+import Dashboard from "../../Create_Components/DashBoard/DashBoard";
 const SubAgentdash = () => {
   return (
     <div className="app">
@@ -16,7 +16,7 @@ const SubAgentdash = () => {
           <Sidebar />
         </div>
         <div className="Right">
-          <Dashboardplayers userRole="Sub-Agent" />
+          <Dashboard userRole="Sub-Agent" />
         </div>
       </div>
     </div>
