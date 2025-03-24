@@ -29,13 +29,12 @@ function SigninAdmin() {
   });
 
   const navigateToContacts = () => {
-    if (formData.logintype == "Shop") {
-      navigate("/shopdashboard");
-    } else if (formData.logintype == "Agent") {
-      navigate("/agentdashboard");
-    } else {
-      navigate("/dashboard");
+    if (formData.logintype == "Admin") {
+      navigate("/admindashboard");
     }
+    // else {
+    //   navigate("/dashboard");
+    // }
   };
 
   const handleChange = (e) => {
@@ -63,7 +62,7 @@ function SigninAdmin() {
       console.log("data api from :latatestUser :::...", response);
       return response;
     } catch (e) {
-      console.log("e :", e);
+      console.log("Login API Error: ", e);
     }
   };
 
@@ -77,8 +76,12 @@ function SigninAdmin() {
       cookies.set("token", resData.data.token);
       cookies.set("name", resData.data.type_name);
       cookies.set("email", resData.data.name);
-      cookies.set("logintype", "Admin");
+      // cookies.set("logintype", "Admin");
+      cookies.set("logintype", formData.logintype, { path: "/" }); // Store login type
       cookies.set("LoginUserId", resData.data._id);
+
+      // Store last visited dashboard path
+      cookies.set("dashboardPath", "/admindashboard");
 
       navigateToContacts();
     } else {

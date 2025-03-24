@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 import AgentBalanceAdjust from "../AgentBalanceAdjustment/AgentBalanceAdjust";
 import UserListInSubAgent from "./UserListInSubAgent";
+import { fetchAgentSubAgentList } from "../../Common/OfferState/DashboardOfferState";
 
 const cookies = new Cookies();
 const API_URL = import.meta.env.VITE_HOST_URL;
@@ -80,6 +81,31 @@ const ASubAgentsList = ({ onSubAgentClick }) => {
 
     fetchUserData();
   }, []);
+
+  // useEffect(() => {
+  //   const loadShops = async () => {
+  //     setLoading(true);
+  //     setError(null);
+
+  //     try {
+  //       const token = tokenRef.current;
+  //       const id = idRef.current;
+
+  //       const shopData = await fetchAgentSubAgentList(token, id);
+  //       setOriginalData(shopData);
+  //       setData(shopData);
+  //     } catch (err) {
+  //       console.error("Error fetching shop data:", err);
+  //       setError("Failed to load shop data. Please try again.");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   if (tokenRef.current && idRef.current) {
+  //     loadShops();
+  //   }
+  // }, []);
 
   const handleFilterChange = () => {
     const filteredData = originalData.filter((user) => {

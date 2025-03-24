@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import Cookies from "universal-cookie";
+import "./DashboardPlayers.css";
+import { fetchDashboardData } from "../../Common/OfferState/DashboardOfferState";
 const API_URL = import.meta.env.VITE_HOST_URL;
 
-const AdminActivePlayers = ({ onUserClick }) => {
+const Dashboardplayers = ({ userRole, onUserClick }) => {
   const [dashboardData, setDashboardData] = useState({
     activeUsers: 0,
     inactiveUsers: 0,
@@ -23,52 +25,80 @@ const AdminActivePlayers = ({ onUserClick }) => {
     tokenRef.current = cookies.get("token");
   }, []);
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const result = await fetchDashboardData(
+  //       userRole,
+  //       tokenRef.current,
+  //       idRef.current
+  //     );
+
+  //     if (result.success && result.data) {
+  //       const data = result.data;
+
+  //       const normalizePlayers = (players, key) =>
+  //         players.map((player) => ({
+  //           ...player,
+  //           chips: player[key] || 0, // Use `chips` or fallback to `coins`
+  //         }));
+
+  //       const activePlayers = normalizePlayers(
+  //         data.activeUsers?.activePlayersDetails || [],
+  //         "coins"
+  //       );
+  //       const inactivePlayers = normalizePlayers(
+  //         data.inactiveUsers?.inActivePlayersDetails || [],
+  //         "chips"
+  //       );
+  //       const suspendedPlayers = normalizePlayers(
+  //         data.suspendedUsers?.suspendedPlayerDetails || [],
+  //         "chips"
+  //       );
+
+  //       const filteredInactivePlayers = inactivePlayers.filter(
+  //         (player) =>
+  //           !activePlayers.some(
+  //             (activePlayer) => activePlayer.playerId === player._id
+  //           )
+  //       );
+
+  //       const filteredSuspendedPlayers = suspendedPlayers.filter(
+  //         (player) =>
+  //           !activePlayers.some(
+  //             (activePlayer) => activePlayer.playerId === player._id
+  //           )
+  //       );
+
+  //       setDashboardData({
+  //         activeUsers: data.activeUsers?.totalActiveCount || 0,
+  //         inactiveUsers: data.inactiveUsers?.totalInactiveCount || 0,
+  //         suspendedUsers: data.suspendedUsers?.suspendedUsersCount || 0,
+  //         activePlayersDetails: activePlayers,
+  //         inactivePlayersDetails: filteredInactivePlayers,
+  //         suspendedPlayersDetails: filteredSuspendedPlayers,
+  //       });
+  //     }
+  //     setLoading(false);
+  //   };
+
+  //   fetchData();
+  // }, [userRole]);
   useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        console.log("Fetching dashboard data...");
+    const fetchData = async () => {
+      setLoading(true);
+      const result = await fetchDashboardData(
+        userRole,
+        tokenRef.current,
+        idRef.current
+      );
 
-        setLoading(true);
-
-        const id = idRef.current;
-        const token = tokenRef.current;
-
-        if (!id || !token) {
-          console.error("Missing agent ID or token in cookies.");
-          return;
-        }
-
-        console.log("Sending request to backend with ID:", id);
-
-        const response = await fetch(
-          `${API_URL}/admin/agent/dashboradData?adminId=${id}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              token: token,
-            },
-          }
-        );
-
-        console.log("API response status:", response.status);
-
-        if (!response.ok) {
-          console.error(`HTTP error! Status: ${response.status}`);
-          return;
-        }
-
-        const result = await response.json();
-        console.log("Backend Response:", result); // Debug the backend response
-
-        // Check if result.data exists and log it
-        const data = result || {};
-        console.log("Processed Data:", data); // Debug processed data
+      if (result.success && result.data) {
+        const data = result.data;
 
         const normalizePlayers = (players, key) =>
           players.map((player) => ({
             ...player,
-            chips: player[key] || 0, // Use `chips` or fallback to `coins` value
+            chips: player[key] || 0, // Use `chips` or fallback to `coins`
           }));
 
         const activePlayers = normalizePlayers(
@@ -106,15 +136,16 @@ const AdminActivePlayers = ({ onUserClick }) => {
           inactivePlayersDetails: filteredInactivePlayers,
           suspendedPlayersDetails: filteredSuspendedPlayers,
         });
-      } catch (err) {
-        console.error("Error fetching dashboard data:", err.message);
-      } finally {
-        setLoading(false);
       }
+      setLoading(false);
     };
 
-    fetchDashboardData();
-  }, []);
+    fetchData(); // Initial fetch
+
+    const interval = setInterval(fetchData, 10000); // Refresh every 10 seconds
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, [userRole]);
 
   const handleCardClick = (cardType) => {
     setSelectedCard(cardType); // Set selected card to show the table
@@ -147,10 +178,10 @@ const AdminActivePlayers = ({ onUserClick }) => {
                   {player.chips}
                 </td>
                 {/* <td className="border border-gray-300 px-4 py-2">
-                  <button onClick={() => handleViewButtonClick(player)}>
-                    View
-                  </button>
-                </td> */}
+                   <button onClick={() => handleViewButtonClick(player)}>
+                     View
+                   </button>
+                 </td> */}
               </tr>
             ))
           )}
@@ -169,7 +200,7 @@ const AdminActivePlayers = ({ onUserClick }) => {
 
   return (
     <div className="dashboard-container">
-      <h1 className="dashboard-title">Dashboard</h1>
+      <h1 className="dashboard-title">{userRole} Dashboard</h1>
       <div className="card-container">
         <div className="card blue" onClick={() => handleCardClick("active")}>
           <div className="card-icon">
@@ -237,4 +268,4 @@ const AdminActivePlayers = ({ onUserClick }) => {
   );
 };
 
-export default AdminActivePlayers;
+export default Dashboardplayers;

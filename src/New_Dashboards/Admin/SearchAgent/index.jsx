@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import "../AdminDash.css";
 import AdminSidebar from "../AdminSidebar"; // Adjust path to Sidebar component
 import Topbar from "../../Common/Topbar";
-import IshankViewAgent from "./ViewAgent";
-import IshankAgentList from "./SearchAgent";
+import ViewUser from "../../Create_Components/ViewUser/ViewUsers";
+import UserList from "../../Create_Components/SearchUsers/SearchUsers";
+import AgentLists from "./SearchAgent";
+import ViewAgents from "./ViewAgent";
 
-const AdminSearchUsers = () => {
+const SearchAgent = () => {
   const [selectedUser, setSelectedUser] = useState(null); // State to store the selected user
 
   // Function to handle user click and set the selected user
@@ -30,15 +32,18 @@ const AdminSearchUsers = () => {
         <div className="Right">
           {selectedUser ? (
             // Render AViewUser when a user is selected
-            <IshankViewAgent user={selectedUser} onBack={handleBackToList} />
+            <ViewUser
+              user={selectedUser}
+              onBack={handleBackToList}
+              userRole="Agent"
+            />
           ) : (
             // Render AUsersList when no user is selected
-            <IshankAgentList onUserClick={handleUserClick} />
+            <UserList userRole="Agent" onUserClick={handleUserClick} />
           )}
         </div>
       </div>
     </div>
   );
 };
-
-export default AdminSearchUsers;
+export default SearchAgent;

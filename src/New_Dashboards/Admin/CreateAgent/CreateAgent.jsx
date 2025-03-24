@@ -5,7 +5,7 @@ import Cookies from "universal-cookie";
 const cookies = new Cookies();
 const API_URL = import.meta.env.VITE_HOST_URL;
 
-const IshankCreateAgent = () => {
+const CreateAgents = () => {
   const [selectedGames, setSelectedGames] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [agentId, setAgentId] = useState("");
@@ -177,7 +177,7 @@ const IshankCreateAgent = () => {
       if (response.ok && result.status) {
         setSubmissionMessage({
           type: "success",
-          text: "Agent created successfully!",
+          text: "User created successfully!",
         });
         setFormData({
           username: "",
@@ -189,7 +189,7 @@ const IshankCreateAgent = () => {
       } else {
         setSubmissionMessage({
           type: "error",
-          text: result.message || "Failed to create Agent.",
+          text: result.message || "Failed to create user.",
         });
       }
     } catch (error) {
@@ -331,4 +331,4 @@ const IshankCreateAgent = () => {
   );
 };
 
-export default IshankCreateAgent;
+export default CreateAgents;
