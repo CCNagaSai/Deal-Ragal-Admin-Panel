@@ -11,14 +11,15 @@ const AdminActivePlayers = ({ onUserClick }) => {
     inactivePlayersDetails: [],
   });
   const [loading, setLoading] = useState(true);
-  const [selectedCard, setSelectedCard] = useState(null); // Track which card is clicked
+  const [selectedCard, setSelectedCard] = useState(null);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [selectedPlayerId, setSelectedPlayerId] = useState(null);
 
   const idRef = useRef(null);
   const tokenRef = useRef(null);
   const cookies = new Cookies();
 
   useEffect(() => {
-    // Fetch the ID and token from cookies
     idRef.current = cookies.get("LoginUserId");
     tokenRef.current = cookies.get("token");
   }, []);
@@ -26,10 +27,7 @@ const AdminActivePlayers = ({ onUserClick }) => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        console.log("Fetching dashboard data...");
-
         setLoading(true);
-
         const id = idRef.current;
         const token = tokenRef.current;
 
@@ -37,8 +35,6 @@ const AdminActivePlayers = ({ onUserClick }) => {
           console.error("Missing agent ID or token in cookies.");
           return;
         }
-
-        console.log("Sending request to backend with ID:", id);
 
         const response = await fetch(
           `${API_URL}/admin/agent/dashboradData?adminId=${id}`,
@@ -51,19 +47,13 @@ const AdminActivePlayers = ({ onUserClick }) => {
           }
         );
 
-        console.log("API response status:", response.status);
-
         if (!response.ok) {
           console.error(`HTTP error! Status: ${response.status}`);
           return;
         }
 
         const result = await response.json();
-        console.log("Backend Response:", result); // Debug the backend response
-
-        // Check if result.data exists and log it
         const data = result || {};
-        console.log("Processed Data:", data); // Debug processed data
 
         const normalizePlayers = (players, key) =>
           players.map((player) => ({
@@ -120,37 +110,83 @@ const AdminActivePlayers = ({ onUserClick }) => {
     setSelectedCard(cardType); // Set selected card to show the table
   };
 
-  console.log("Dashboard Data:", dashboardData); // Debug the state after update
+  console.log("Dashboard Data:", dashboardData);
 
-  const renderDetailsTable = (playersDetails) => {
+  const handleEndSessionClick = (playerId) => {
+    setSelectedPlayerId(playerId);
+    setShowConfirm(true);
+  };
+
+  const confirmEndSession = async () => {
+    if (!selectedPlayerId) return;
+  
+    const token = tokenRef.current;
+    if (!token) {
+      console.error("Missing authentication token.");
+      return;
+    }
+  
+    try {
+      const response = await fetch(
+        `http://93.127.194.87:9999/admin/agent/logoutUser?playerId=${selectedPlayerId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            token: token, // ✅ Include authentication token
+          },
+        }
+      );
+  
+      if (response.ok) {
+        setDashboardData((prevData) => ({
+          ...prevData,
+          activePlayersDetails: prevData.activePlayersDetails.filter(
+            (player) => player._id !== selectedPlayerId
+          ),
+        }));
+      } else {
+        console.error("Failed to end session");
+      }
+    } catch (error) {
+      console.error("Error ending session:", error);
+    }
+  
+    setShowConfirm(false);
+    setSelectedPlayerId(null);
+  };
+  
+
+  const renderDetailsTable = (playersDetails, isActive = false) => {
     return (
       <table className="table-auto border-collapse border border-gray-300 w-full text-sm sm:text-base">
         <thead>
           <tr className="bg-blue-200">
             <th className="border border-gray-300 px-4 py-2">Name</th>
             <th className="border border-gray-300 px-4 py-2">Chips</th>
-            {/* <th className="border border-gray-300 px-4 py-2">Actions</th> */}
+            {isActive && <th className="border border-gray-300 px-4 py-2">Action</th>}
           </tr>
         </thead>
         <tbody>
           {playersDetails.length === 0 ? (
             <tr>
-              <td colSpan="3">No players available</td>
+              <td colSpan={isActive ? "3" : "2"}>No players available</td>
             </tr>
           ) : (
             playersDetails.map((player) => (
-              <tr key={player._id}>
-                <td className="border border-gray-300 px-4 py-2">
-                  {player.name}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {player.chips}
-                </td>
-                {/* <td className="border border-gray-300 px-4 py-2">
-                  <button onClick={() => handleViewButtonClick(player)}>
-                    View
-                  </button>
-                </td> */}
+              <tr key={player.playerId || player._id || index}> {/* Ensure unique key */}
+                <td className="border border-gray-300 px-4 py-2">{player.name}</td>
+                <td className="border border-gray-300 px-4 py-2">{player.chips}</td>
+                {isActive && (
+                  <td className="border border-gray-300 px-4 py-2">
+                    <button
+                      className="bg-red-500 text-white px-2 py-1 rounded"
+                      onClick={() => handleEndSessionClick(player.playerId || player._id)} // ✅ Use correct ID
+                    >
+                      End Session
+                    </button>
+                  </td>
+                )}
               </tr>
             ))
           )}
@@ -171,14 +207,14 @@ const AdminActivePlayers = ({ onUserClick }) => {
     <div className="dashboard-container">
       <h1 className="dashboard-title">Dashboard</h1>
       <div className="card-container">
-        <div className="card blue" onClick={() => handleCardClick("active")}>
+        <div className="card blue" onClick={() => setSelectedCard("active")}>
           <div className="card-icon">
             <i className="fas fa-user"></i>
           </div>
           <div className="card-content">
             <div className="icon-number-row">
               <i className="fas fa-user"></i>
-              <h2>{dashboardData.activeUsers}</h2>
+            <h2>{dashboardData.activeUsers}</h2>
             </div>
             <p>Active Players</p>
           </div>
@@ -194,7 +230,7 @@ const AdminActivePlayers = ({ onUserClick }) => {
           <div className="card-content">
             <div className="icon-number-row">
               <i className="fas fa-user-times"></i>
-              <h2>{dashboardData.inactiveUsers}</h2>
+            <h2>{dashboardData.inactiveUsers}</h2>
             </div>
             <p>Inactive Players</p>
           </div>
@@ -218,7 +254,7 @@ const AdminActivePlayers = ({ onUserClick }) => {
 
       {selectedCard === "active" && (
         <div className="details-table">
-          {renderDetailsTable(dashboardData.activePlayersDetails)}
+          {renderDetailsTable(dashboardData.activePlayersDetails, true)}
         </div>
       )}
 
@@ -228,9 +264,31 @@ const AdminActivePlayers = ({ onUserClick }) => {
         </div>
       )}
 
-      {selectedCard === "suspended" && (
+{selectedCard === "suspended" && (
         <div className="details-table">
           {renderDetailsTable(dashboardData.suspendedPlayersDetails)}
+        </div>
+      )}
+
+      {showConfirm && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded shadow-lg">
+            <p>Are you sure you want to end the session of this user?</p>
+            <div className="flex justify-end mt-4">
+              <button
+                className="bg-gray-300 px-4 py-2 mr-2 rounded"
+                onClick={() => setShowConfirm(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-red-500 text-white px-4 py-2 rounded"
+                onClick={confirmEndSession}
+              >
+                Yes, End Session
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
