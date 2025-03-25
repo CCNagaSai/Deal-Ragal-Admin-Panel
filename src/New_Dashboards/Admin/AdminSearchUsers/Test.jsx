@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../adminDash.css";
+import "../AdminDash.css";
 import AdminSidebar from "../AdminSidebar"; // Adjust path to Sidebar component
 import UserList from "../../Create_Components/SearchUsers/SearchUsers";
 
