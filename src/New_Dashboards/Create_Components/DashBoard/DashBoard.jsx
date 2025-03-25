@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Cookies from "universal-cookie";
-import "./Dashboard.css";
+import "./DashBoard.css";
 import { fetchDashboardData } from "../../Common/OfferState/DashboardOfferState";
 const API_URL = import.meta.env.VITE_HOST_URL;
 
