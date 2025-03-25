@@ -535,7 +535,7 @@ const fetchAgentUsers = async (
   if (!id || !token) return { users: [], totalPages: 1 };
 
   try {
-    let url = `${API_URL}/admin/user/agent/UserList?Id=${id}&type=${logintype}&page=${currentPage}&limit=${itemsPerPage}`;
+    let url = `${API_URL}/admin/user/agent/UserList?Id=${id}&type=Agent`;
 
     if (filters?._id) {
       url += `&username=${encodeURIComponent(filters._id)}`;
