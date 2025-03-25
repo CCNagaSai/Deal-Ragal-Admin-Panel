@@ -14,12 +14,6 @@ const Topbar = () => {
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleString());
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [balance, setBalance] = useState(0);
-  const [weekStart, setWeekStart] = useState("");
-  const [weekEnd, setWeekEnd] = useState("");
-  const [totalMargin, setTotalMargin] = useState(0);
-  const [totalEndPoints, setTotalEndPoints] = useState(0);
-  const [net, setNet] = useState(0);
-
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
   const userName = cookies.get("email") || "Guest";
@@ -42,8 +36,14 @@ const Topbar = () => {
     }
   };
 
-  // Function to Fetch Balance or Net Margin Data
-  const fetchBalanceOrMargin = async () => {
+  const [weekStartDate, setWeekStartDate] = useState("");
+  const [weekEndDate, setWeekEndDate] = useState("");
+  const [net, setNet] = useState(0);
+  const [margin, setMargin] = useState(0);
+  const [endpoint, setEndpoint] = useState(0);
+
+  // Function to Fetch Balance Periodically
+  const fetchBalance = async () => {
     let apiUrl = "";
     if (position === "Shop" && agentId) {
       apiUrl = `${API_URL}/admin/shop/agentBalance?subAgentId=${agentId}`;
@@ -65,40 +65,48 @@ const Topbar = () => {
 
         if (response.ok) {
           const data = await response.json();
+
           if (position === "Super Admin") {
-            const marginData = data.turnOverData[0] || {};
-            const convertToIST = (utcDateString) => {
-              const date = new Date(utcDateString);
-              return date.toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata" });
-          };
-          
-          // Setting IST dates
-          setWeekStart(convertToIST(data.weekStartDate));
-          setWeekEnd(convertToIST(data.weekEndDate));          
-            // setWeekStart(data.weekStartDate.split("T")[0]);
-            // setWeekEnd(data.weekEndDate.split("T")[0]);
-            setTotalMargin(marginData.totalMargin || 0);
-            setTotalEndPoints(marginData.totalEndPoints || 0);
-            setNet((marginData.totalEndPoints || 0) - (marginData.totalMargin || 0));
+            let totalEndPoints = 0;
+            let totalMargin = 0;
+
+            data.turnOverData?.forEach((item) => {
+              totalEndPoints += item.totalEndPoints || 0;
+              totalMargin += item.totalMargin || 0;
+            });
+
+            const calculatedNet = totalEndPoints - totalMargin;
+
+            // **Convert values to 2 decimal places**
+            setNet(parseFloat(calculatedNet.toFixed(2)));
+            setEndpoint(parseFloat(totalEndPoints.toFixed(2)));
+            setMargin(parseFloat(totalMargin.toFixed(2)));
+
+            setWeekStartDate(new Date(data.weekStartDate).toLocaleDateString());
+            setWeekEndDate(new Date(data.weekEndDate).toLocaleDateString());
+            // console.log("Raw Week Start Date:", data.weekStartDate);
+            // console.log("Raw Week End Date:", data.weekEndDate);
           } else {
-            if (data.agent?.chips !== balance) {
-              setBalance(data.agent?.chips || 0);
+            let newBalance = data.agent?.chips || data.shop?.chips || 0;
+            if (newBalance !== balance) {
+              setBalance(newBalance);
             }
           }
         } else {
-          console.error("Failed to fetch data");
+          console.error("Failed to fetch balance");
         }
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching balance:", error);
       }
     }
   };
 
-  // Polling: Fetch balance/net margin every 2 seconds
+  // Polling: Fetch balance every 2 seconds
   useEffect(() => {
-    fetchBalanceOrMargin();
-    const intervalId = setInterval(fetchBalanceOrMargin, 2000);
-    return () => clearInterval(intervalId);
+    fetchBalance(); // Initial fetch when component mounts
+    const intervalId = setInterval(fetchBalance, 2000);
+
+    return () => clearInterval(intervalId); // Cleanup on unmount
   }, [position, agentId, token]);
 
   useEffect(() => {
@@ -140,29 +148,33 @@ const Topbar = () => {
           <p className="font-bold">
             Welcome: <span className="text-red-500 font-bold">{userName}</span>
           </p>
-
           {position === "Super Admin" ? (
             <>
               <p className="font-bold">
-                This Week ({weekStart} to {weekEnd}) 
+                This Week:{" "}
+                <span className="text-red-500 font-bold">
+                  {weekStartDate} - {weekEndDate}
+                </span>
+              </p>
+
+              <p className="font-bold">
+                Net: <span className="text-red-500 font-bold">{net}</span>
               </p>
               <p className="font-bold">
-                Margin: <span className="text-red-500 font-bold">{totalMargin.toFixed(2)}</span>
+                Endpoint:{" "}
+                <span className="text-red-500 font-bold">{endpoint}</span>
               </p>
               <p className="font-bold">
-                Net: <span className="text-red-500 font-bold">{net.toFixed(2)}</span>
-              </p>
-              <p className="font-bold">
-                End Points: <span className="text-red-500 font-bold">{totalEndPoints.toFixed(2)}</span>
+                Margin: <span className="text-red-500 font-bold">{margin}</span>
               </p>
             </>
           ) : (
-            <p className="font-bold">
+            <p  className="font-bold">
               Balance: <span className="text-red-500 font-bold">{balance}</span>
             </p>
           )}
 
-          <p className="font-bold">
+          <p  className="font-bold">
             Position: <span className="text-red-500 font-bold">{position}</span>
           </p>
           <p className="text-l text-gray-500 font-bold mr-5">{currentTime}</p>
@@ -239,20 +251,24 @@ const Topbar = () => {
           <p className="font-bold">
             Welcome: <span className="text-red-500 font-bold">{userName}</span>
           </p>
-
           {position === "Super Admin" ? (
             <>
               <p className="font-bold">
-                This Week ({weekStart} to {weekEnd}) 
+                This Week:{" "}
+                <span className="text-red-500 font-bold">
+                  {weekStartDate} - {weekEndDate}
+                </span>
+              </p>
+
+              <p className="font-bold">
+                Net: <span className="text-red-500 font-bold">{net}</span>
               </p>
               <p className="font-bold">
-                Margin: <span className="text-red-500 font-bold">{totalMargin.toFixed(2)}</span>
+                Endpoint:{" "}
+                <span className="text-red-500 font-bold">{endpoint}</span>
               </p>
               <p className="font-bold">
-                Net: <span className="text-red-500 font-bold">{net.toFixed(2)}</span>
-              </p>
-              <p className="font-bold">
-                End Points: <span className="text-red-500 font-bold">{totalEndPoints.toFixed(2)}</span>
+                Margin: <span className="text-red-500 font-bold">{margin}</span>
               </p>
             </>
           ) : (
