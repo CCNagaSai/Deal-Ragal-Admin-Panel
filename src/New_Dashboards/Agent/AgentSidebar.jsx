@@ -41,6 +41,14 @@ function Sidebar() {
                   Search Users
                 </Link>
               </li>
+              {/* <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agent/test-user"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Test Search Users
+                </Link>
+              </li> */}
               <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
                 <Link
                   to="/agent/search-sub-agents"

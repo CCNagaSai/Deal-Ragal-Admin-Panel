@@ -5,7 +5,7 @@ import Cookies from "universal-cookie";
 const cookies = new Cookies();
 const API_URL = import.meta.env.VITE_HOST_URL;
 
-const IshankViewSubAgent = ({ user, onBack }) => {
+const ViewSubAgent = ({ user, onBack }) => {
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [isEditingLock, setIsEditingLock] = useState(false);
@@ -129,31 +129,6 @@ const IshankViewSubAgent = ({ user, onBack }) => {
           </div>
         </div>
 
-        {/* Information Section */}
-        <div className="section personal-info">
-          <h3>
-            <strong>Information</strong>
-          </h3>
-          <div className="row">
-            <div className="column">
-              <p>
-                <strong>Created By:</strong>{" "}
-                {user.agentDetails && Object.keys(user.agentDetails).length > 0
-                  ? user.agentDetails.name
-                  : "Admin"}
-              </p>
-            </div>
-            {user.agentDetails && Object.keys(user.agentDetails).length > 0 && (
-              <div className="column">
-                <p>
-                  <strong>Role:</strong> Agent
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-
-
         {/* Manage Details Section */}
         <div className="section manage-details">
           <h3>
@@ -220,4 +195,4 @@ const IshankViewSubAgent = ({ user, onBack }) => {
   );
 };
 
-export default IshankViewSubAgent;
+export default ViewSubAgent;

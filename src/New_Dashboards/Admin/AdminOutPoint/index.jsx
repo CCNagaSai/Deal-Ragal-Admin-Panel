@@ -3,7 +3,8 @@ import "../AdminDash.css";
 import ReactDOM from "react-dom/client";
 import AdminSidebar from "../AdminSidebar"; // Adjust path to Sidebar component
 import Topbar from "../../Common/Topbar";
-import IAdminOutpoint from "./AdminOutPoint";
+import AdminOutpoints from "./AdminOutPoint";
+import OutPointReport from "../../Create_Components/OutPoints/OutPoints";
 
 const AdminOutPoint = () => {
   return (
@@ -16,7 +17,7 @@ const AdminOutPoint = () => {
           <AdminSidebar />
         </div>
         <div className="Right">
-          <IAdminOutpoint />
+          <OutPointReport userRole="Admin" />
         </div>
       </div>
     </div>

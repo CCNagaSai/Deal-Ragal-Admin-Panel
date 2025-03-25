@@ -37,6 +37,8 @@ const AdminPointFileTable = ({ backendData }) => {
     }
   };
 
+  console.log("Displayed Data", displayedData);
+
   // Clear input and reset to page 1
   const handleClearInput = () => {
     setInputPage("");

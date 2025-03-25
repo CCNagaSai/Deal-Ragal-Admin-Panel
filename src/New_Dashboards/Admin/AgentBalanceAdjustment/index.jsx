@@ -1,5 +1,5 @@
 import React from "react";
-import "../AdminDash.css";
+import "../Admindash.css";
 import ReactDOM from "react-dom/client";
 import Sidebar from "../AdminSidebar"; // Adjust path to Sidebar component
 import AgentBalanceAdjust from "../../Agent/AgentBalanceAdjustment/AgentBalanceAdjust";

@@ -5,40 +5,24 @@ import Cookies from "universal-cookie";
 const API_URL = import.meta.env.VITE_HOST_URL;
 const cookies = new Cookies();
 
-const IshankViewUser = ({ user, onBack }) => {
+const AdminViewUser = ({ user, onBack }) => {
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [isEditingLock, setIsEditingLock] = useState(false);
-  const [lockStatus, setLockStatus] = useState(user.status ? "Active" : "Inactive");
+  const [lockStatus, setLockStatus] = useState(
+    user.status ? "Active" : "Inactive"
+  );
 
   const tokenRef = useRef(null);
+  const agentIdRef = useRef(null);
 
   useEffect(() => {
     tokenRef.current = cookies.get("token");
+    agentIdRef.current = cookies.get("LoginUserId");
   }, []);
 
   const token = tokenRef.current;
-
-  // Determine "Created By" and "Role"
-  let createdBy = "N/A";
-  let role = "N/A";
-
-  if (user.agentDetails?.id === user.agentId) {
-    createdBy = user.agentDetails.name;
-    role = "Agent";
-  } else if (user.subAgent?.id === user.agentId) {
-    createdBy = user.subAgent.name;
-    role = "Sub Agent";
-  } else if (user.adminDetails?.id === user.agentId) {
-    createdBy = user.adminDetails.name;
-    role = "Admin";
-  }
-
-  // Check if the user was created by a subAgent, then display who created them
-  const subAgentCreator =
-    role === "Sub Agent" && user.subAgentByAgent
-      ? user.subAgentByAgent.name
-      : null;
+  const agentId = agentIdRef.current;
 
   const handlePasswordUpdate = async () => {
     try {
@@ -54,7 +38,9 @@ const IshankViewUser = ({ user, onBack }) => {
         }),
       });
 
-      if (!response.ok) throw new Error("Failed to update password.");
+      if (!response.ok) {
+        throw new Error("Failed to update password.");
+      }
 
       const result = await response.json();
       console.log("Password update response:", result);
@@ -76,11 +62,13 @@ const IshankViewUser = ({ user, onBack }) => {
         },
         body: JSON.stringify({
           userId: user._id,
-          status: lockStatus === "Active",
+          status: lockStatus === "Active", // Converts "Active"/"Inactive" to true/false
         }),
       });
 
-      if (!response.ok) throw new Error("Failed to update lock status.");
+      if (!response.ok) {
+        throw new Error("Failed to update lock status.");
+      }
 
       const result = await response.json();
       console.log("Lock status update response:", result);
@@ -101,45 +89,55 @@ const IshankViewUser = ({ user, onBack }) => {
       <div className="user-details">
         {/* Personal Information Section */}
         <div className="section personal-info">
-          <h3><strong>Personal Information</strong></h3>
+          <h3>
+            <strong>Personal Information</strong>
+          </h3>
           <div className="row">
             <div className="column">
-              <p><strong>User Name:</strong> {user.name || "N/A"}</p>
-              <p><strong>Total Bets:</strong> {user.totalBets || 0}</p>
+              <p>
+                <strong>User Name:</strong> {user.name || "N/A"}
+              </p>
+              <p>
+                <strong>Total Bets:</strong> {user.totalBets || 0}
+              </p>
             </div>
             <div className="column">
-              <p><strong>Total Wons:</strong> {user.totalWons || 0}</p>
-              <p><strong>Lock Status:</strong> {lockStatus}</p>
+              <p>
+                <strong>Total Wons:</strong> {user.totalWons || 0}
+              </p>
+              <p>
+                <strong>Lock Status:</strong> {lockStatus}
+              </p>
             </div>
             <div className="column">
-              <p><strong>Points:</strong> {user.chips || 0}</p>
-              <p><strong>Last Login:</strong> {user.lastLoginDate || "N/A"}</p>
+              <p>
+                <strong>Points:</strong> {user.chips || 0}
+              </p>
+              <p>
+                <strong>Last Login:</strong> {user.lastLoginDate || "N/A"}
+              </p>
             </div>
-          </div>
-        </div>
-
-        {/* Information Section */}
-        <div className="section personal-info">
-          <h3><strong>Information</strong></h3>
-          <div className="row">
             <div className="column">
-              <p><strong>Created By:</strong> {createdBy}</p>
-              <p><strong>Role:</strong> {role}</p>
+              <p>
+                <strong>Created By:</strong> {user.chips || "N/A"}
+              </p>
+              <p>
+                <strong>Role:</strong> {user.lastLoginDate || "N/A"}
+              </p>
             </div>
-            {subAgentCreator && (
-              <div className="column">
-                <p><strong>Sub Agent is Created By:</strong> {subAgentCreator}</p>
-              </div>
-            )}
           </div>
         </div>
 
         {/* Manage Details Section */}
         <div className="section manage-details">
-          <h3><strong>Manage Details</strong></h3>
+          <h3>
+            <strong>Manage Details</strong>
+          </h3>
           <div className="row">
             <div className="column">
-              <p><strong>Password:</strong> *********</p>
+              <p>
+                <strong>Password:</strong> *********
+              </p>
               {isEditingPassword ? (
                 <div>
                   <input
@@ -148,24 +146,40 @@ const IshankViewUser = ({ user, onBack }) => {
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="Enter new password"
                   />
-                  <button onClick={handlePasswordUpdate}>Update Password</button>
+                  <button onClick={handlePasswordUpdate}>
+                    Update Password
+                  </button>
                 </div>
               ) : (
-                <p className="edit-link" onClick={() => setIsEditingPassword(true)}>Edit</p>
+                <p
+                  className="edit-link"
+                  onClick={() => setIsEditingPassword(true)}
+                >
+                  Edit
+                </p>
               )}
             </div>
             <div className="column">
-              <p><strong>Lock:</strong></p>
+              <p>
+                <strong>Lock:</strong>
+              </p>
               {isEditingLock ? (
                 <div>
-                  <select value={lockStatus} onChange={(e) => setLockStatus(e.target.value)}>
+                  <select
+                    value={lockStatus}
+                    onChange={(e) => setLockStatus(e.target.value)}
+                  >
                     <option value="Active">Active</option>
                     <option value="Inactive">Inactive</option>
                   </select>
-                  <button onClick={handleLockStatusUpdate}>Update Status</button>
+                  <button onClick={handleLockStatusUpdate}>
+                    Update Status
+                  </button>
                 </div>
               ) : (
-                <p className="edit-link" onClick={() => setIsEditingLock(true)}>Edit</p>
+                <p className="edit-link" onClick={() => setIsEditingLock(true)}>
+                  Edit
+                </p>
               )}
             </div>
           </div>
@@ -173,9 +187,11 @@ const IshankViewUser = ({ user, onBack }) => {
       </div>
 
       {/* Back Button */}
-      <button className="back-button" onClick={onBack}>Back to List</button>
+      <button className="back-button" onClick={onBack}>
+        Back to List
+      </button>
     </div>
   );
 };
 
-export default IshankViewUser;
+export default AdminViewUser;

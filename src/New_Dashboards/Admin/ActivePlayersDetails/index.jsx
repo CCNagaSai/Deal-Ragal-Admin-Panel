@@ -2,9 +2,9 @@ import React from "react";
 import "../AdminDash.css";
 import ReactDOM from "react-dom/client";
 import AdminSidebar from "../AdminSidebar"; // Adjust path to Sidebar component
-import AdminActivePlayers from "./AdminActivePlayer";
+import ADashboard from "../../Agent/AgentDashboard/AgentDashboard";
 import Topbar from "../../Common/Topbar";
-
+import Dashboard from "../../Create_Components/DashBoard/DashBoard";
 const ActivePlayerDetails = () => {
   return (
     <div className="app">
@@ -16,7 +16,7 @@ const ActivePlayerDetails = () => {
           <AdminSidebar />
         </div>
         <div className="Right">
-          <AdminActivePlayers />
+          <Dashboard userRole="Admin" />
         </div>
       </div>
     </div>

@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import Cookies from "universal-cookie";
+import "./Dashboard.css";
+import { fetchDashboardData } from "../../Common/OfferState/DashboardOfferState";
 const API_URL = import.meta.env.VITE_HOST_URL;
 
-const AdminActivePlayers = ({ onUserClick }) => {
+const Dashboard = ({ userRole, onUserClick }) => {
   const [dashboardData, setDashboardData] = useState({
     activeUsers: 0,
     inactiveUsers: 0,
@@ -25,35 +27,18 @@ const AdminActivePlayers = ({ onUserClick }) => {
   }, []);
 
   useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        setLoading(true);
-        const id = idRef.current;
-        const token = tokenRef.current;
+    const fetchData = async () => {
+      setLoading(true);
+      const result = await fetchDashboardData(
+        userRole,
+        tokenRef.current,
+        idRef.current
+      );
+      console.log("API Response:", result); // ✅ Debug API Response
 
-        if (!id || !token) {
-          console.error("Missing agent ID or token in cookies.");
-          return;
-        }
-
-        const response = await fetch(
-          `${API_URL}/admin/agent/dashboradData?adminId=${id}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              token: token,
-            },
-          }
-        );
-
-        if (!response.ok) {
-          console.error(`HTTP error! Status: ${response.status}`);
-          return;
-        }
-
-        const result = await response.json();
-        const data = result || {};
+      if (result.success && result.data) {
+        console.log("Active Users Data:", result.data.activeUsers); // ✅ Debug Active Users
+        const data = result.data;
 
         const normalizePlayers = (players, key) =>
           players.map((player) => ({
@@ -96,15 +81,16 @@ const AdminActivePlayers = ({ onUserClick }) => {
           inactivePlayersDetails: filteredInactivePlayers,
           suspendedPlayersDetails: filteredSuspendedPlayers,
         });
-      } catch (err) {
-        console.error("Error fetching dashboard data:", err.message);
-      } finally {
-        setLoading(false);
       }
+      setLoading(false);
     };
 
-    fetchDashboardData();
-  }, []);
+    fetchData(); // Initial fetch
+
+    const interval = setInterval(fetchData, 5000); // Refresh every 5 seconds
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, [userRole]);
 
   const handleCardClick = (cardType) => {
     setSelectedCard(cardType); // Set selected card to show the table
@@ -119,13 +105,13 @@ const AdminActivePlayers = ({ onUserClick }) => {
 
   const confirmEndSession = async () => {
     if (!selectedPlayerId) return;
-  
+
     const token = tokenRef.current;
     if (!token) {
       console.error("Missing authentication token.");
       return;
     }
-  
+
     try {
       const response = await fetch(
         `http://93.127.194.87:9999/admin/agent/logoutUser?playerId=${selectedPlayerId}`,
@@ -137,7 +123,7 @@ const AdminActivePlayers = ({ onUserClick }) => {
           },
         }
       );
-  
+
       if (response.ok) {
         setDashboardData((prevData) => ({
           ...prevData,
@@ -151,11 +137,10 @@ const AdminActivePlayers = ({ onUserClick }) => {
     } catch (error) {
       console.error("Error ending session:", error);
     }
-  
+
     setShowConfirm(false);
     setSelectedPlayerId(null);
   };
-  
 
   const renderDetailsTable = (playersDetails, isActive = false) => {
     return (
@@ -164,7 +149,9 @@ const AdminActivePlayers = ({ onUserClick }) => {
           <tr className="bg-blue-200">
             <th className="border border-gray-300 px-4 py-2">Name</th>
             <th className="border border-gray-300 px-4 py-2">Chips</th>
-            {isActive && <th className="border border-gray-300 px-4 py-2">Action</th>}
+            {isActive && (
+              <th className="border border-gray-300 px-4 py-2">Action</th>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -174,14 +161,22 @@ const AdminActivePlayers = ({ onUserClick }) => {
             </tr>
           ) : (
             playersDetails.map((player) => (
-              <tr key={player.playerId || player._id || index}> {/* Ensure unique key */}
-                <td className="border border-gray-300 px-4 py-2">{player.name}</td>
-                <td className="border border-gray-300 px-4 py-2">{player.chips}</td>
+              <tr key={player.playerId || player._id || index}>
+                {" "}
+                {/* Ensure unique key */}
+                <td className="border border-gray-300 px-4 py-2">
+                  {player.name}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {player.chips}
+                </td>
                 {isActive && (
                   <td className="border border-gray-300 px-4 py-2">
                     <button
                       className="bg-red-500 text-white px-2 py-1 rounded"
-                      onClick={() => handleEndSessionClick(player.playerId || player._id)} // ✅ Use correct ID
+                      onClick={() =>
+                        handleEndSessionClick(player.playerId || player._id)
+                      } // ✅ Use correct ID
                     >
                       End Session
                     </button>
@@ -205,7 +200,7 @@ const AdminActivePlayers = ({ onUserClick }) => {
 
   return (
     <div className="dashboard-container">
-      <h1 className="dashboard-title">Dashboard</h1>
+      <h1 className="dashboard-title">{userRole} Dashboard</h1>
       <div className="card-container">
         <div className="card blue" onClick={() => setSelectedCard("active")}>
           <div className="card-icon">
@@ -214,7 +209,7 @@ const AdminActivePlayers = ({ onUserClick }) => {
           <div className="card-content">
             <div className="icon-number-row">
               <i className="fas fa-user"></i>
-            <h2>{dashboardData.activeUsers}</h2>
+              <h2>{dashboardData.activeUsers}</h2>
             </div>
             <p>Active Players</p>
           </div>
@@ -230,7 +225,7 @@ const AdminActivePlayers = ({ onUserClick }) => {
           <div className="card-content">
             <div className="icon-number-row">
               <i className="fas fa-user-times"></i>
-            <h2>{dashboardData.inactiveUsers}</h2>
+              <h2>{dashboardData.inactiveUsers}</h2>
             </div>
             <p>Inactive Players</p>
           </div>
@@ -264,7 +259,7 @@ const AdminActivePlayers = ({ onUserClick }) => {
         </div>
       )}
 
-{selectedCard === "suspended" && (
+      {selectedCard === "suspended" && (
         <div className="details-table">
           {renderDetailsTable(dashboardData.suspendedPlayersDetails)}
         </div>
@@ -295,4 +290,4 @@ const AdminActivePlayers = ({ onUserClick }) => {
   );
 };
 
-export default AdminActivePlayers;
+export default Dashboard;

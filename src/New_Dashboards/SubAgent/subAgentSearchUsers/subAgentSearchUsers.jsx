@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 import SubAgentBalanceAdjust from "../subAgentBalanceAdjustment/subAgentBalanceAdjust";
+import { fetchSubAgentUserList } from "../../Common/OfferState/DashboardOfferState";
 
 const cookies = new Cookies();
 const API_URL = import.meta.env.VITE_HOST_URL;
@@ -66,8 +67,8 @@ const SubAUsersList = ({ onUserClick }) => {
 
         const result = await response.json(); // Parse the JSON
         console.log("API Response:", result); // Debugging output
-        setOriginalData(result.users || []); // Save the original data
-        setData(result.users || []); // Set the data
+        setOriginalData(result.userList || result.users || []); // Save the original data
+        setData(result.userList || result.users || []); // Set the data
       } catch (err) {
         console.error("Error fetching user data:", err.message);
         setError("Failed to load user data. Please try again.");
@@ -78,6 +79,32 @@ const SubAUsersList = ({ onUserClick }) => {
 
     fetchUserData();
   }, []);
+
+  // useEffect(() => {
+  //   const loadUsers = async () => {
+  //     setLoading(true);
+  //     setError(null);
+
+  //     try {
+  //       const token = tokenRef.current;
+  //       const id = idRef.current;
+  //       const type = typeRef.current;
+
+  //       const userList = await fetchSubAgentUserList(token, id, type);
+  //       setOriginalData(userList);
+  //       setData(userList);
+  //     } catch (err) {
+  //       console.error("Error fetching user list:", err);
+  //       setError("Failed to load user list. Please try again.");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   if (tokenRef.current && idRef.current && typeRef.current) {
+  //     loadUsers();
+  //   }
+  // }, []);
 
   const handleFilterChange = () => {
     const filteredData = originalData.filter((user) => {

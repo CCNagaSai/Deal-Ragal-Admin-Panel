@@ -6,8 +6,7 @@ import AdminSidebar from "../AdminSidebar";
 
 function AdminGameLogic() {
   let location = useLocation();
-  // let gameName = location.search.split("=")[1];
-  let gameName = "ROULETTE";
+  let gameName = location.search.split("=")[1];
   console.log("Location ", location, gameName);
 
   return (

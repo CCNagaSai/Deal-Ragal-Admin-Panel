@@ -32,6 +32,7 @@ function betHistory(data) {
                 : parseFloat(betValue);
           }
         }
+        
 
         for (let j = 0; j <= 155; j++) {
 
