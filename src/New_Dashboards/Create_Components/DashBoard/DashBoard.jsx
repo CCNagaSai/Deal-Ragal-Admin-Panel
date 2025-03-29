@@ -16,6 +16,8 @@ const Dashboard = ({ userRole, onUserClick }) => {
   const [selectedCard, setSelectedCard] = useState(null);
   const [showConfirm, setShowConfirm] = useState(false);
   const [selectedPlayerId, setSelectedPlayerId] = useState(null);
+  const [socketPlayers, setSocketPlayers] = useState([]); // State for socket players
+
 
   const idRef = useRef(null);
   const tokenRef = useRef(null);
@@ -85,15 +87,57 @@ const Dashboard = ({ userRole, onUserClick }) => {
       setLoading(false);
     };
 
-    fetchData(); // Initial fetch
+  const fetchSocketPlayers = async () => {
+    try {
+      const token = tokenRef.current;
+      if (!token) {
+        console.error("Missing authentication token.");
+        return;
+      }
 
-    const interval = setInterval(fetchData, 5000); // Refresh every 5 seconds
+      const response = await fetch(
+        "http://93.127.194.87:9999/admin/agent/activeUsers",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            token: token, // Include authentication token
+          },
+        }
+      );
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("Socket Players Data:", result); // Debug API response
+        if (result.success && result.data) {
+          setSocketPlayers(
+            result.data.map((player) => ({
+              ...player,
+              coins: player.coins || 0, // Ensure coins field exists
+            }))
+          );
+        }
+      } else {
+        console.error("Failed to fetch socket players data.");
+      }
+    } catch (error) {
+      console.error("Error fetching socket players:", error);
+    }
+  };
+
+  fetchData(); // Initial fetch
+  fetchSocketPlayers();
+
+  const interval = setInterval(() => {
+    fetchData(); 
+    fetchSocketPlayers(); // Refresh socket players periodically
+  }, 5000); // Refresh every 5 seconds
 
     return () => clearInterval(interval); // Cleanup on unmount
   }, [userRole]);
 
   const handleCardClick = (cardType) => {
-    setSelectedCard(cardType); // Set selected card to show the table
+    setSelectedCard(cardType);
   };
 
   console.log("Dashboard Data:", dashboardData);
@@ -244,6 +288,18 @@ const Dashboard = ({ userRole, onUserClick }) => {
           </div>
         </div>
       </div>
+      <div className="card green" onClick={() => handleCardClick("socket")}>
+        <div className="card-icon">
+          <i className="fas fa-plug"></i>
+        </div>
+        <div className="card-content">
+          <div className="icon-number-row">
+            <i className="fas fa-plug"></i>
+            <h2>{socketPlayers.length}</h2>
+          </div>
+          <p>Socket Players</p>
+        </div>
+      </div>
 
       <div className="online-users-section"></div>
 
@@ -262,6 +318,11 @@ const Dashboard = ({ userRole, onUserClick }) => {
       {selectedCard === "suspended" && (
         <div className="details-table">
           {renderDetailsTable(dashboardData.suspendedPlayersDetails)}
+        </div>
+      )}
+      {selectedCard === "socket" && (
+        <div className="details-table">
+          {renderDetailsTable(socketPlayers, true)}
         </div>
       )}
 

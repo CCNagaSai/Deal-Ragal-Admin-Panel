@@ -102,10 +102,13 @@ const Dashboardplayers = ({ userRole, onUserClick }) => {
             chips: player[key] || 0, // Use `chips` or fallback to `coins`
           }));
 
-        const activePlayers = normalizePlayers(
-          data.activeUsers?.activePlayersDetails || [],
-          "chip"
-        );
+          const chipKey = userRole === "Admin" ? "chip" : "coins";
+
+          const activePlayers = normalizePlayers(
+            data.activeUsers?.activePlayersDetails || [],
+            chipKey
+          );
+          
         const inactivePlayers = normalizePlayers(
           data.inactiveUsers?.inActivePlayersDetails || [],
           "chips"
