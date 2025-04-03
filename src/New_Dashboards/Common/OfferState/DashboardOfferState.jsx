@@ -683,7 +683,7 @@ const AdminfetchPartners = async (
 
     const url =
       type === "User"
-        ? `${API_URL}/admin/user/UserList?Id=id&type=Admin&page=1&limit=500`
+        ? `${API_URL}/admin/user/UserList?Id=id&type=Admin&page=1&limit=5000`
         : type === "Shop"
         ? `${API_URL}/admin/shop/ShopList?agentId=Admin`
         : type === "Agent"
