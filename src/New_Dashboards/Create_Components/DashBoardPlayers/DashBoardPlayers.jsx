@@ -118,12 +118,25 @@ const Dashboardplayers = ({ userRole, onUserClick }) => {
           "chips"
         );
 
+        // Enhance active players with chips from inactive list if available
+        const mergedActivePlayers = activePlayers.map((activePlayer) => {
+          const matchingInactive = inactivePlayers.find(
+            (inactive) => inactive._id === activePlayer.playerId
+          );
+          return {
+            ...activePlayer,
+            chips: matchingInactive?.chips ?? activePlayer.chips,
+          };
+        });
+
+        // Now filter out these merged players from inactive so they don't appear twice
         const filteredInactivePlayers = inactivePlayers.filter(
           (player) =>
             !activePlayers.some(
               (activePlayer) => activePlayer.playerId === player._id
             )
         );
+
 
         const filteredSuspendedPlayers = suspendedPlayers.filter(
           (player) =>
@@ -136,7 +149,8 @@ const Dashboardplayers = ({ userRole, onUserClick }) => {
           activeUsers: data.activeUsers?.totalActiveCount || 0,
           inactiveUsers: data.inactiveUsers?.totalInactiveCount || 0,
           suspendedUsers: data.suspendedUsers?.suspendedUsersCount || 0,
-          activePlayersDetails: activePlayers,
+          // activePlayersDetails: activePlayers,
+          activePlayersDetails: mergedActivePlayers,
           inactivePlayersDetails: filteredInactivePlayers,
           suspendedPlayersDetails: filteredSuspendedPlayers,
         });
