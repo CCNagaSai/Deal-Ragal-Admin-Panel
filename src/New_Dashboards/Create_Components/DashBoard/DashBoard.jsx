@@ -123,9 +123,9 @@ const Dashboard = ({ userRole, onUserClick }) => {
     } catch (error) {
       console.error("Error fetching socket players:", error);
     }
-  };
+    };
 
-  fetchData(); // Initial fetch
+    fetchData(); // Initial fetch
   fetchSocketPlayers();
 
   const interval = setInterval(() => {
@@ -184,6 +184,9 @@ const Dashboard = ({ userRole, onUserClick }) => {
 
     setShowConfirm(false);
     setSelectedPlayerId(null);
+  };
+  const getTotalChips = (players) => {
+    return players.reduce((sum, player) => sum + Number(player.chips || 0), 0);
   };
 
   const renderDetailsTable = (playersDetails, isActive = false) => {
@@ -305,6 +308,25 @@ const Dashboard = ({ userRole, onUserClick }) => {
 
       {selectedCard === "active" && (
         <div className="details-table">
+          {/* 👇 Enhanced Summary Section */}
+          <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+            <div className="flex flex-col">
+              <span className="text-lg text-gray-500">
+                Total Active Players
+              </span>
+              <span className="text-2xl font-semibold text-gray-800">
+                {dashboardData.activePlayersDetails.length}
+              </span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-lg text-gray-500">Total Chips</span>
+              <span className="text-2xl font-semibold text-indigo-600">
+                {getTotalChips(dashboardData.activePlayersDetails)}
+              </span>
+            </div>
+          </div>
+
+          {/* 👇 Player Table */}
           {renderDetailsTable(dashboardData.activePlayersDetails, true)}
         </div>
       )}

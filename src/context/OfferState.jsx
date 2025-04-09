@@ -277,7 +277,7 @@ const OfferState = (props) => {
     try {
       console.log("PlayerList :::::::", `${API_URL}/admin/user/UserList`);
       const response = await fetch(
-        `${API_URL}/admin/user/UserList?Id=` + uid + `&type=` + type,
+        `${API_URL}/admin/user/UserList?Id=67821d92cfa2484794079d87` + `&type=` + type +  `&page=1&limit=5000`,
         {
           method: "GET",
           headers: {
@@ -299,7 +299,7 @@ const OfferState = (props) => {
 
         return [];
       } else {
-        return await json.userList;
+        return await json.users;
       }
     } catch (e) {
       console.log("e :", e);
